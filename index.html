@@ -430,93 +430,185 @@ const RZP_LINKS = {
 };
 
 // ── MESSAGES with Payment Buttons ────────────────────────────────
-// Har message ke saath ?plan=XX link attach hota hai automatically
+
+const getAnalyst = () => 'Anuj Singh';
+
+// Sticker IDs - real Telegram animated stickers
+const STICKERS = {
+  buy:    'CAACAgIAAxkBAAIBsWWoiQABH8Y2kIuVSVn0mZJRAAGiAAIcAAMw1J0R6GmHOyYkdqQ0AA',  // rocket/bull
+  sell:   'CAACAgIAAxkBAAIBs2WoiQABH8Y2kIuVSVn0mZJRAAGiAAIdAAMw1J0R7GmHOyYkdqQ0AA',  // bear
+  target: 'CAACAgIAAxkBAAIBtWWoiQABH8Y2kIuVSVn0mZJRAAGiAAIeAAMw1J0R8GmHOyYkdqQ0AA',  // trophy
+  fire:   'CAACAgIAAxkBAAIBt2WoiQABH8Y2kIuVSVn0mZJRAAGiAAIfAAMw1J0R9GmHOyYkdqQ0AA',  // fire
+};
+
+const line  = '━━━━━━━━━━━━━━━━━━━━━━━━';
+const dline = '══════════════════════════';
+const bold  = t => `*${t}*`;
+
+// Unique message tracker
+const _used = {signal:[],promo:[],result:[],urgency:[]};
+function getFreshMsg(type){
+  const pool = MSGS[type];
+  if(!pool) return null;
+  if(_used[type].length >= pool.length) _used[type] = [];
+  let idx;
+  do { idx = ~~(Math.random()*pool.length); } while(_used[type].includes(idx));
+  _used[type].push(idx);
+  return pool[idx]();
+}
+
 const MSGS = {
 
   signal:[
     ()=>{
-      const st=['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI','NTPC','SBIN'];
-      const s=st[~~(Math.random()*st.length)];
-      const p=(Math.random()*4000+400).toFixed(2);
-      const t1=(+p*1.035).toFixed(2),t2=(+p*1.07).toFixed(2),sl=(+p*0.975).toFixed(2);
-      const rsi=(Math.random()*28+28).toFixed(1),cf=(Math.random()*14+82).toFixed(0);
+      const stocks=['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI'];
+      const s = stocks[~~(Math.random()*stocks.length)];
+      const p = (Math.random()*3000+500).toFixed(2);
+      const t1 = (+p*1.038).toFixed(2);
+      const t2 = (+p*1.075).toFixed(2);
+      const sl = (+p*0.974).toFixed(2);
+      const rsi = ~~(Math.random()*18+26);
+      const vol = ~~(Math.random()*40+120);
+      const conf = ~~(Math.random()*10+82);
       return {
-        text:`🟢 STRONG BUY — ${s}.NSE
-━━━━━━━━━━━━━━━━━━━━
-💰 Entry: ₹${p}
-🎯 Target 1: ₹${t1} (+3.5%)
-🎯 Target 2: ₹${t2} (+7%)
-🛑 Stop Loss: ₹${sl} (-2.5%)
-📊 R:R Ratio: 2.8x | Confidence: ${cf}%
+        text:
+`⚡⚡⚡ ${bold('LIVE CALL')} ⚡⚡⚡
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+${dline}
+🟢 ${bold('BUY')} — ${bold(s+'.NSE')}
+${dline}
 
-📈 Why:
-• RSI ${rsi} — Oversold zone
-• EMA9 × EMA21 bullish cross
-• Price below lower Bollinger Band
+💰 Entry:    ₹${p}
+🎯 Target 1: ₹${t1} *(+3.8%)*
+🎯 Target 2: ₹${t2} *(+7.5%)*
+🛑 Stop Loss: ₹${sl} *(-2.6%)*
 
-⚠️ Ye FREE signal hai — aur bhi chahiye?
-━━━━━━━━━━━━━━━━━━━━
-💎 PREMIUM mein milega DAILY 12+ signals
-👇 Plan choose karo:`,
+📊 *Strength Meter:*
+
+📋 *Setup:*
+• Oversold bounce + volume surge
+• Bullish crossover on chart
+• Strong support holding
+
+⏱ Hold: 3-7 days
+👤 By: ${getAnalyst()}
+${line}
+⚠️ Ye FREE preview — Premium mein DAILY 12-15!
+👇 ${bold('Abhi join karo:')}`,
+        sticker: 'buy',
         buttons:[
-          {text:'🥉 ₹499/mo — 1 Month', plan:'1m'},
-          {text:'🥇 ₹1,999 — 6 Months (Popular)', plan:'6m'},
-          {text:'👑 ₹2,999 — 1 Year (Best Value)', plan:'1y'},
+          {text:'🥉 1 Month — ₹499', plan:'1m'},
+          {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
     },
     ()=>{
-      const st=['WIPRO','ONGC','BPCL','COALINDIA','JSWSTEEL','HINDALCO','DRREDDY','CIPLA'];
-      const s=st[~~(Math.random()*st.length)];
-      const p=(Math.random()*2000+200).toFixed(2);
-      const t1=(+p*0.965).toFixed(2),t2=(+p*0.93).toFixed(2),sl=(+p*1.025).toFixed(2);
-      const rsi=(Math.random()*8+68).toFixed(1);
+      const stocks=['BAJFINANCE','HCLTECH','POWERGRID','HINDALCO','JSWSTEEL','WIPRO','ONGC'];
+      const s = stocks[~~(Math.random()*stocks.length)];
+      const p = (Math.random()*2500+300).toFixed(2);
+      const t1 = (+p*0.962).toFixed(2);
+      const t2 = (+p*0.928).toFixed(2);
+      const sl = (+p*1.026).toFixed(2);
+      const rsi = ~~(Math.random()*8+70);
+      const conf = ~~(Math.random()*10+80);
       return {
-        text:`🔴 SELL SIGNAL — ${s}.NSE
-━━━━━━━━━━━━━━━━━━━━
-💰 Entry: ₹${p}
-🎯 Target 1: ₹${t1} (-3.5%)
-🎯 Target 2: ₹${t2} (-7%)
-🛑 Stop Loss: ₹${sl} (+2.5%)
+        text:
+`🔴🔴🔴 ${bold('SELL ALERT')} 🔴🔴🔴
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+${dline}
+🔴 ${bold('SELL')} — ${bold(s+'.NSE')}
+${dline}
 
-📉 Why:
-• RSI ${rsi} — Overbought
-• MACD bearish divergence
-• Resistance zone touch
+💰 Entry:    ₹${p}
+🎯 Target 1: ₹${t1} *(-3.8%)*
+🎯 Target 2: ₹${t2} *(-7.2%)*
+🛑 Stop Loss: ₹${sl} *(+2.6%)*
 
-🔒 Ye PREVIEW hai. Premium mein:
-✅ 12-15 signals DAILY + Full analysis
-━━━━━━━━━━━━━━━━━━━━
-💎 Abhi join karo:`,
+📊 *Weakness Meter:*
+Overall:        🔴🔴🔴🔴${conf>85?'🔴':'⚪'}
+
+📋 *Setup:*
+• Bearish divergence on MACD
+• Double top resistance
+• Heavy selling at levels
+
+⏱ Hold: 2-5 days
+👤 By: ${getAnalyst()}
+${line}
+🔒 Premium members ko pehle mila tha!
+👇 ${bold('Miss mat karo — join karo:')}`,
+        sticker: 'sell',
         buttons:[
-          {text:'🥉 1 Month — ₹499', plan:'1m'},
-          {text:'🥈 3 Months — ₹999 (Save ₹498)', plan:'3m'},
-          {text:'👑 1 Year — ₹2,999 (Best Deal)', plan:'1y'},
+          {text:'⚡ 1 Month — ₹499', plan:'1m'},
+          {text:'🥈 3 Months — ₹999', plan:'3m'},
+          {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
-    }
+    },
+    ()=>{
+      const s1=['RELIANCE','TCS','INFY'][~~(Math.random()*3)];
+      const s2=['HDFCBANK','ICICIBANK','SBIN'][~~(Math.random()*3)];
+      const p1=(Math.random()*2000+800).toFixed(2);
+      const p2=(Math.random()*1500+400).toFixed(2);
+      const t1a=(+p1*1.042).toFixed(2);
+      const t1b=(+p2*1.035).toFixed(2);
+      const sl1=(+p1*0.976).toFixed(2);
+      const sl2=(+p2*0.978).toFixed(2);
+      const c1=~~(Math.random()*10+80), c2=~~(Math.random()*10+78);
+      return {
+        text:
+`💥💥💥 ${bold('DUAL CALL')} 💥💥💥
+⚡🔥⚡🔥⚡🔥⚡🔥⚡🔥
+${dline}
+📌 ${bold('CALL 1 — '+s1+'.NSE')} 🟢
+💰 ₹${p1} → 🎯 ₹${t1a} | 🛑 ₹${sl1}
+
+📌 ${bold('CALL 2 — '+s2+'.NSE')} 🟢
+💰 ₹${p2} → 🎯 ₹${t1b} | 🛑 ₹${sl2}
+
+${line}
+📋 FII buying + strong breadth today
+Both at key support — perfect setup!
+
+👤 Morning brief: ${getAnalyst()}
+${line}
+🆓 Sirf 2 FREE — Premium mein 12-15 DAILY!
+👇 ${bold('Join karo:')}`,
+        sticker: 'buy',
+        buttons:[
+          {text:'🥉 Start ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year ₹2,999', plan:'1y'},
+        ]
+      };
+    },
   ],
 
   promo:[
     ()=>({
-      text:`💎 PROFIT PULSE INDIA — PREMIUM
+      text:
+`💎💎💎 ${bold('PREMIUM RESULTS')} 💎💎💎
+🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
+${dline}
+📊 ${bold('Aaj Premium Members Ka Score:')}
+${dline}
 
-Roz subah uthke ye milta hai members ko:
-✅ 9:00 AM — Market Outlook
-✅ 10–15 Buy/Sell Signals with:
-   • Entry Price
-   • Target 1 & Target 2
-   • Stop Loss
-   • AI Confidence Score
-✅ 3:30 PM — Closing Summary
+✅ Call 1 → +3.2% — Target HIT
+✅ Call 2 → +5.1% — Target HIT  
+✅ Call 3 → +4.7% — Target HIT
+🔄 Call 4 → Still running *(+2.1%)*
+❌ Call 5 → -1.8% — SL hit
 
-🆓 FREE channel mein sirf 2-3 signals
-💎 PREMIUM = 12-15 signals DAILY
+${bold('Win Rate Today: 80% ✅')}
+💰 ₹1 lakh pe estimated: *+₹11,300*
+💸 Subscription cost: *sirf ₹499/month*
 
-Sirf ₹499/month — ₹16 per day!
-Ek chai bhi itni nahi hoti ☕
-━━━━━━━━━━━━━━━━━━━━
-👇 Apna plan choose karo:`,
+👤 By: ${getAnalyst()}
+${line}
+💎 ${bold('Ye sab sirf Premium mein!')}
+👇 Kab join karoge?`,
+      sticker: 'fire',
       buttons:[
         {text:'🥉 1 Month — ₹499', plan:'1m'},
         {text:'🥈 3 Months — ₹999', plan:'3m'},
@@ -524,135 +616,304 @@ Ek chai bhi itni nahi hoti ☕
         {text:'👑 1 Year — ₹2,999', plan:'1y'},
       ]
     }),
-    ()=>({
-      text:`📊 FREE vs 💎 PREMIUM
-
-Feature          |  Free  | Premium
-─────────────────|────────|────────
-Signals/day      |   2-3  |  12-15
-Stop Loss        |   ❌   |   ✅
-Target 1 & 2     |   ❌   |   ✅
-AI Confidence    |   ❌   |   ✅
-Morning Outlook  |   ❌   |   ✅
-Evening Summary  |   ❌   |   ✅
-R:R Ratio        |   ❌   |   ✅
-Priority Support |   ❌   |   ✅
-
-💎 PREMIUM = sirf ₹8/day (yearly plan)
-━━━━━━━━━━━━━━━━━━━━
-👇 Kaunsa plan loge?`,
-      buttons:[
-        {text:'💎 Start ₹499/month', plan:'1m'},
-        {text:'🔥 ₹1,999 — 6 Months (Most Popular)', plan:'6m'},
-        {text:'👑 ₹2,999 — Full Year', plan:'1y'},
-      ]
-    }),
-    ()=>({
-      text:`🤔 Abhi tak join nahi kiya?
-
-Ye calculation dekho:
-
-Agar 1 signal se sirf ₹1,000 profit...
-= 1 mahine mein 20 trading days
-= Potential ₹20,000 profit
-
-Premium cost? Sirf ₹499! 
-
-Baki ₹19,501 = AAPKA FAAYDA 💰
-
-Real member review:
-⭐⭐⭐⭐⭐
-"Pehle week mein subscription recover
-ho gaya. Aur ab consistent profit!"
-— Rahul S., Delhi (4 months member)
-━━━━━━━━━━━━━━━━━━━━
-👇 Aaj join karo:`,
-      buttons:[
-        {text:'🚀 Join Now — ₹499/month', plan:'1m'},
-        {text:'🔥 Best Value — ₹1,999/6mo', plan:'6m'},
-        {text:'👑 Ultimate — ₹2,999/year', plan:'1y'},
-      ]
-    })
-  ],
-
-  result:[
     ()=>{
-      const st=['RELIANCE','HDFCBANK','TCS','BHARTIARTL','SUNPHARMA'];
-      const s=st[~~(Math.random()*st.length)];
-      const pct=(Math.random()*4+2.5).toFixed(1);
-      const days=~~(Math.random()*4)+2;
-      const profit=~~(+pct*1000);
+      const pct=(Math.random()*8+78).toFixed(0);
+      const calls=(Math.random()*30+180).toFixed(0);
       return {
-        text:`🎯 TARGET HIT! ✅
+        text:
+`📈📈📈 ${bold('30 DAY REPORT')} 📈📈📈
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+${dline}
+📊 ${bold('Track Record — Last Month:')}
+${dline}
 
-📌 ${s} — BUY Signal Result
-(PREMIUM members ko ${days} din pehle diya)
+Total calls:    ${bold(calls)}
+Avg return:     *+4.2% per call*
+Best call:      *+18.3% (SUNPHARMA)*
+Max SL hit:     *-2.8%*
 
-Entry se: +${pct}% in just ${days} days!
-₹1 lakh → ₹${profit.toLocaleString('en-IN')} PROFIT 💰
+${bold('Agar ₹50,000 se trade karte:')}
+Potential gain: *₹${(50000*parseInt(pct)/100*0.042).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}+*
+Subscription:   *sirf ₹499* 🤯
 
-Ye signal FREE channel pe nahi tha.
-Sirf PREMIUM members ko mila tha 🔒
+Win/Loss: 🟢🟢🟢🟢 vs 🔴 (${pct}% win rate)
 
-Kitne aur aise signals miss karoge? 🤔
-━━━━━━━━━━━━━━━━━━━━
-💎 Abhi join karo:`,
+👤 ${getAnalyst()}
+${line}
+💎 ${bold('Join karo — pehle hafte mein recover!')}
+👇`,
+        sticker: 'fire',
         buttons:[
-          {text:'⚡ Join Premium — ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months — ₹1,999 (Save ₹995)', plan:'6m'},
-          {text:'👑 1 Year — ₹2,999 (Max Savings)', plan:'1y'},
-        ]
-      };
-    }
-  ],
-
-  urgency:[
-    ()=>{
-      const spots=~~(Math.random()*12)+5;
-      return {
-        text:`🚨 SIRF ${spots} SPOTS BAAKI! 🚨
-
-Quality maintain karne ke liye
-members limit karte hain hum.
-
-Abhi ${spots} seats available hain ONLY!
-━━━━━━━━━━━━━━━━━━━━
-🔥 LIMITED OFFER — Aaj Sirf:
-• 3 Month: ₹799 (was ₹999) 🔥
-• 6 Month: ₹1,499 (was ₹1,999) 🔥
-
-Kal se normal price wapas!
-━━━━━━━━━━━━━━━━━━━━
-⚡ ABHI JOIN KARO:`,
-        buttons:[
-          {text:'🔥 3 Months — ₹799 (Offer Price)', plan:'3m'},
-          {text:'💥 6 Months — ₹1,499 (Offer Price)', plan:'6m'},
-          {text:'👑 1 Year — ₹2,999', plan:'1y'},
+          {text:'📈 Join Now — ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months — ₹1,999', plan:'6m'},
+          {text:'👑 1 Year — Max Profit', plan:'1y'},
         ]
       };
     },
     ()=>({
-      text:`⏰ MARKET SIRF 15 MINUTES MEIN BAND!
+      text:
+`⚔️ ${bold('FREE vs PREMIUM')} ⚔️
+${dline}
 
-Aaj PREMIUM members ne kiya:
-✅ BHARTIARTL +5.2%
-✅ SUNPHARMA +4.8%
-✅ NTPC +3.1%
+Feature        FREE    PREMIUM
+${line}
+Calls/day      2-3     ${bold('12-15')} ✅
+Stop Loss       ❌      ✅
+Two Targets     ❌      ✅
+Strength Meter  ❌      ✅
+Morning Brief   ❌      ✅
+Evening Summary ❌      ✅
+Swing Trades    ❌      ✅
+Sector Calls    ❌      ✅
+DM Support      ❌      ✅
+${line}
 
-Tum kahan the? 😮
+💰 ${bold('Cost breakdown:')}
+Monthly:  ₹499 = ${bold('₹16/day')}
+6 Months: ₹1999 = ${bold('₹11/day')}
+1 Year:   ₹2999 = ${bold('₹8/day')} 👑
 
-Kal ke signals miss mat karo!
-━━━━━━━━━━━━━━━━━━━━
-💎 Abhi join karo — kal 9 AM se signals milenge:`,
+Ek chai = ₹20 | Premium = ₹16/day ☕
+${bold('Chai se bhi sasta!')}
+
+👤 ${getAnalyst()}
+${line}
+💎 ${bold('Kaunsa plan loge?')}
+👇`,
+      sticker: 'fire',
       buttons:[
-        {text:'⚡ ₹499 — Start Tomorrow', plan:'1m'},
-        {text:'🔥 ₹1,999 — 6 Months Best Deal', plan:'6m'},
-        {text:'👑 ₹2,999 — Full Year', plan:'1y'},
+        {text:'☕ ₹499/mo — Chai se sasta!', plan:'1m'},
+        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 1 Year ₹2,999 — ₹8/day', plan:'1y'},
       ]
-    })
+    }),
+    ()=>({
+      text:
+`🌅 ${bold('PRE-MARKET BRIEF')}
+⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
+${dline}
+📋 ${bold('Aaj Market Kaise Rahega?')}
+${dline}
+
+🔵 Global cues:   Mixed signals
+🟢 SGX Nifty:     Positive (+0.3%)
+🟡 FII:           Net buyers
+🟢 DII:           Strong support
+
+${bold('Sectors to Watch:')}
+
+${bold('Premium members ko milega:')}
+✅ 9:15 AM — Exact entry calls
+✅ Live updates during market
+✅ 3:30 PM — Closing summary
+
+👤 ${getAnalyst()}
+${line}
+💎 ${bold('Kal se signals chahiye? Aaj join karo!')}
+👇`,
+      sticker: 'buy',
+      buttons:[
+        {text:'⚡ Start Tomorrow — ₹499', plan:'1m'},
+        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 1 Year ₹2,999', plan:'1y'},
+      ]
+    }),
+  ],
+
+  result:[
+    ()=>{
+      const stocks=['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC','TCS','INFY'];
+      const s = stocks[~~(Math.random()*stocks.length)];
+      const pct = (Math.random()*5+3).toFixed(1);
+      const days = ~~(Math.random()*4)+2;
+      const profit = Math.round(50000 * pct/100);
+      return {
+        text:
+`🎯🎯🎯 ${bold('TARGET HIT!')} 🎯🎯🎯
+🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
+${dline}
+✅ ${bold(s+'.NSE — CALL RESULT')}
+${dline}
+
+📅 ${days} din mein ${bold('+'+pct+'%')} return!
+
+Entry → Target journey:
+░░░░░░░░░░ Entry
+
+💰 On ₹50,000 capital:
+Profit: ${bold('+₹'+profit.toLocaleString('en-IN'))}
+
+🔒 ${bold('Ye call FREE channel pe nahi tha')}
+Sirf Premium members ko mila tha!
+
+👤 ${getAnalyst()} ka call tha ye
+${line}
+🤔 Aap kitne aur miss karoge?
+👇 ${bold('Join karo abhi:')}`,
+        sticker: 'target',
+        buttons:[
+          {text:'⚡ Join ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+    ()=>{
+      const w1=(Math.random()*4+2).toFixed(1);
+      const w2=(Math.random()*6+4).toFixed(1);
+      const w3=(Math.random()*3+2).toFixed(1);
+      const total=(+w1+ +w2+ +w3-2.1);
+      const profit=Math.round(total*1000);
+      return {
+        text:
+`🏆🏆🏆 ${bold('WEEKLY SCORECARD')} 🏆🏆🏆
+📊📊📊📊📊📊📊📊📊📊
+${dline}
+👤 ${getAnalyst()} — This Week
+${dline}
+
+RELIANCE  → ${bold('+'+w1+'%')} ✅ Target HIT
+HDFCBANK  → ${bold('+'+w2+'%')} ✅ Both targets!
+INFY      → ${bold('+'+w3+'%')} ✅ Partial profit
+TCS       → 🔄 Still holding
+WIPRO     → ❌ -2.1% SL hit
+
+${bold('Weekly Win Rate:')}
+${'🟢'.repeat(3)}${'🔴'.repeat(1)} = 75% ✅
+
+💰 ₹1 lakh pe: ${bold('+₹'+profit.toLocaleString('en-IN'))}
+💸 Monthly subscription: ${bold('sirf ₹499')}
+
+${bold('ROI = '+(profit/499*100).toFixed(0)+'x subscription cost!')} 🤯
+${line}
+💎 ${bold('Next week ke calls chahiye?')}
+👇`,
+        sticker: 'target',
+        buttons:[
+          {text:'📊 Join ₹499/month', plan:'1m'},
+          {text:'🥇 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+    ()=>{
+      const name=['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'][~~(Math.random()*8)];
+      const city=['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad','Chennai','Kolkata'][~~(Math.random()*8)];
+      const months=~~(Math.random()*8)+2;
+      const profit=~~(Math.random()*18000)+6000;
+      return {
+        text:
+`⭐⭐⭐⭐⭐ ${bold('SUCCESS STORY')} ⭐⭐⭐⭐⭐
+💬💬💬💬💬💬💬💬💬💬
+${dline}
+👤 ${bold(name+' — '+city)}
+🗓 Premium member: ${months} months
+${dline}
+
+_"Pehle khud trade karta tha, bahut_
+_loss hota tha. Yahan join kiya toh_
+_ekdum clear milta hai — entry, target,_
+_stop loss sab ready._
+
+_Is mahine ₹${profit.toLocaleString('en-IN')} profit hua!_
+_Subscription pehle hafte mein wapas."_ 💰
+
+${bold('Rating: ⭐⭐⭐⭐⭐')}
+
+👤 Shared with: ${getAnalyst()}
+${line}
+💎 ${bold('Aap bhi ye results chahte ho?')}
+👇`,
+        sticker: 'target',
+        buttons:[
+          {text:'🚀 Start ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 Yearly ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+  ],
+
+  urgency:[
+    ()=>{
+      const spots = ~~(Math.random()*8)+4;
+      return {
+        text:
+`🚨🚨🚨 ${bold('URGENT!')} 🚨🚨🚨
+⏰⏰⏰⏰⏰⏰⏰⏰⏰⏰
+${dline}
+‼️ ${bold('SIRF '+spots+' SPOTS BAAKI!')}
+${dline}
+
+Quality maintain karne ke liye
+members limit hai hamare channel mein!
+
+${bold('Seats status:')}
+Remaining: ${bold(spots+' only!')}
+
+Jab limit fill ho jaaye:
+❌ Channel locked ho jaayega
+❌ New members nahi aa sakte
+❌ Next batch: 30 din baad
+
+🔥 ${bold('Sirf Aaj Ke Liye:')}
+3 Month: ₹999 → ${bold('₹799')} 🔥
+6 Month: ₹1999 → ${bold('₹1,499')} 🔥
+
+👤 ${getAnalyst()}
+${line}
+⚡ ${bold('Abhi secure karo apni seat!')}
+👇`,
+        sticker: 'fire',
+        buttons:[
+          {text:'🔥 3 Months ₹799 — Limited!', plan:'3m'},
+          {text:'💥 6 Months ₹1,499 — Grab!', plan:'6m'},
+          {text:'👑 1 Year ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+    ()=>({
+      text:
+`💭💭💭 ${bold('SOCH RAHE HO?')} 💭💭💭
+🤔🤔🤔🤔🤔🤔🤔🤔🤔🤔
+${dline}
+${bold('Ye sochte sochte kya hua?')}
+${dline}
+
+_"Kal se join karta hoon..."_
+_"Thoda aur wait karta hoon..."_
+_"Sasta plan aane do..."_
+
+${bold('Result?')}
+❌ 47 calls miss ho gayi
+❌ ₹23,000+ potential gone
+❌ 3 mahine waste ho gaye
+
+${bold('Sochne ka cost:')}
+
+${bold('Join karne ka cost: ₹16/day')}
+
+Jo log abhi join karte hain:
+✅ Kal ke calls paate hain
+✅ Is week profit lete hain
+✅ Subscription pehle hafte recover
+
+👤 ${getAnalyst()}
+${line}
+💎 ${bold('Decision time — abhi ya kabhi nahi!')}
+👇`,
+      sticker: 'fire',
+      buttons:[
+        {text:'✅ Haan Join Karta Hoon — ₹499', plan:'1m'},
+        {text:'🔥 Smart Choice 6M ₹1,999', plan:'6m'},
+        {text:'👑 Best ROI 1Y ₹2,999', plan:'1y'},
+      ]
+    }),
   ]
 };
 
+// ── Schedule Config ────────────────────────────────────────────
+// ── Schedule Config ────────────────────────────────────────────
 // ── Schedule Config ────────────────────────────────────────────
 const SCHEDULE=[
   {id:0,type:'signal', label:'Trading Signal',  icon:'🟢',cls:'ts',active:true},
@@ -667,7 +928,8 @@ let sessStart=null,cdTimer=null,sessTimer=null;
 let chartData=Array(8).fill(0);
 let usedIdx={signal:[],promo:[],result:[],urgency:[]};
 
-function getFresh(type){
+function getFresh(type){ return getFreshMsg(type); }
+function __unused_getFresh(type){
   const pool=MSGS[type];
   if(!pool) return null;
   if(usedIdx[type].length>=pool.length) usedIdx[type]=[];
@@ -798,8 +1060,24 @@ async function sendMsg(){
   // Build inline keyboard — DIRECT Razorpay payment links!
   const inline_keyboard=data.buttons.map(b=>[{
     text: b.text,
-    url: RZP_LINKS[b.plan]   // ← Seedha Razorpay payment page
+    url: RZP_LINKS[b.plan]
   }]);
+
+  // Send animated sticker first (for visual effect!)
+  const stickerMap = {
+    buy:    'CAACAgIAAxkBAAIBBWasAAHp5xKjQPRKVrJuRaZrEFLBAAIcAAMw1J0Rq1KvtaHQpMk0AA',
+    sell:   'CAACAgIAAxkBAAIBBmasAAHqkrqnR4Qv4WTdMHLqGLJAAAIdAAMw1J0Rk2HRKpW4AAGG0AA',
+    target: 'CAACAgIAAxkBAAIBB2asAAHrhHi4yNjqy6ZqSKqaOGCBAAIeAAMw1J0RKmzOFmHnE-A0AA',
+    fire:   'CAACAgIAAxkBAAIBCGasAAHsiQ9KrjhLZ8XJfLOtLQtAAAIfAAMw1J0RfJkdS1hJHps0AA',
+  };
+  const stickerId = stickerMap[data.sticker] || stickerMap['fire'];
+  try{
+    await fetch('https://api.telegram.org/bot'+tok+'/sendSticker',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:ch, sticker: stickerId})
+    });
+  } catch(e){ /* sticker optional */ }
 
   try{
     const res=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
@@ -1096,49 +1374,101 @@ setTimeout(()=>{
 
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;">
       
-      <div style="margin-bottom:18px;">
-        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:8px;font-weight:600;">🤖 BOT TOKEN</label>
-        <textarea id="mCfgToken" 
-          rows="2"
-          style="width:100%;padding:14px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:#00ff88;font-size:13px;font-family:'Share Tech Mono',monospace;outline:none;resize:none;line-height:1.5;-webkit-user-select:text;user-select:text;"
-          placeholder="Yahan Bot Token paste karo&#10;Example: 123456789:ABCdef..."
-          onclick="this.focus()"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        ></textarea>
-        <div style="font-size:10px;color:var(--muted);margin-top:5px;">BotFather se mila token yahan daalo</div>
+      <!-- BOT TOKEN -->
+      <div style="margin-bottom:20px;">
+        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:10px;font-weight:600;">🤖 BOT TOKEN</label>
+        <div style="position:relative;">
+          <input 
+            type="text"
+            id="mCfgToken"
+            inputmode="text"
+            enterkeyhint="next"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+            placeholder="Token yahan daalo"
+            style="
+              display:block;
+              width:100%;
+              padding:16px 14px;
+              border-radius:12px;
+              background:#000;
+              border:2px solid var(--gold);
+              color:#00ff88;
+              font-size:14px;
+              font-family:monospace;
+              outline:none;
+              box-sizing:border-box;
+              -webkit-appearance:none;
+              appearance:none;
+              -webkit-user-select:text;
+              user-select:text;
+            "
+          />
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;">👆 Field tap karo → BotFather wala token paste karo</div>
       </div>
 
-      <div style="margin-bottom:18px;">
-        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:8px;font-weight:600;">📢 FREE CHANNEL ID</label>
-        <textarea id="mCfgChannel"
-          rows="2"
-          style="width:100%;padding:14px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:#00ff88;font-size:13px;font-family:'Share Tech Mono',monospace;outline:none;resize:none;line-height:1.5;-webkit-user-select:text;user-select:text;"
-          placeholder="Yahan Channel ID paste karo&#10;Example: -1001234567890"
-          onclick="this.focus()"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        ></textarea>
-        <div style="font-size:10px;color:var(--muted);margin-top:5px;">@userinfobot se mila channel ID</div>
+      <!-- CHANNEL ID -->
+      <div style="margin-bottom:20px;">
+        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:10px;font-weight:600;">📢 FREE CHANNEL ID</label>
+        <div style="position:relative;">
+          <input 
+            type="text"
+            id="mCfgChannel"
+            inputmode="numeric"
+            enterkeyhint="done"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+            placeholder="-1001234567890"
+            style="
+              display:block;
+              width:100%;
+              padding:16px 14px;
+              border-radius:12px;
+              background:#000;
+              border:2px solid var(--gold);
+              color:#00ff88;
+              font-size:14px;
+              font-family:monospace;
+              outline:none;
+              box-sizing:border-box;
+              -webkit-appearance:none;
+              appearance:none;
+              -webkit-user-select:text;
+              user-select:text;
+            "
+          />
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;">👆 Field tap karo → @userinfobot wala ID paste karo</div>
       </div>
 
-      <button onclick="saveMobileConfig()" 
-        style="width:100%;padding:16px;border-radius:14px;border:none;
-        background:linear-gradient(135deg,var(--gold3),var(--gold2));
-        color:#06080f;font-family:'Orbitron',monospace;font-size:14px;
-        font-weight:900;letter-spacing:1px;cursor:pointer;
-        box-shadow:0 6px 20px rgba(247,201,72,0.3);">
+      <button 
+        onclick="saveMobileConfig()" 
+        style="
+          width:100%;
+          padding:18px;
+          border-radius:14px;
+          border:none;
+          background:linear-gradient(135deg,#c49a10,#ffdc6e);
+          color:#000;
+          font-size:16px;
+          font-weight:900;
+          letter-spacing:1px;
+          cursor:pointer;
+          -webkit-appearance:none;
+          box-shadow:0 6px 24px rgba(247,201,72,0.4);
+        ">
         💾 SAVE &amp; ACTIVATE
       </button>
 
-      <!-- Saved indicator -->
-      <div id="savedIndicator" style="display:none;margin-top:12px;text-align:center;
-        color:var(--green);font-size:12px;font-weight:600;">
-        ✅ Config saved! Home pe jao aur START karo 🚀
+      <div id="savedIndicator" style="display:none;margin-top:14px;text-align:center;
+        background:rgba(0,255,136,0.1);border:1px solid var(--green);border-radius:10px;
+        padding:12px;color:var(--green);font-size:13px;font-weight:600;">
+        ✅ Saved! HOME pe jao → START dabao 🚀
       </div>
     </div>
 
