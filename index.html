@@ -8,9 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="PPI Bot"/>
 <meta name="theme-color" content="#06080f"/>
-<link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icon.png"/>
-<title>Profit Pulse — Bot</title>
+<title>Profit Pulse Bot</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -19,264 +17,200 @@
   --bg:#06080f;--bg2:#0d1120;--bg3:#111827;
   --border:#1a2540;--text:#e8edf5;--muted:#4a5568;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;
+  min-height:100vh;overscroll-behavior:none;}
 
-.bg-grid{position:fixed;inset:0;z-index:0;
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(247,201,72,0.03) 1px,transparent 1px),
   linear-gradient(90deg,rgba(247,201,72,0.03) 1px,transparent 1px);
-  background-size:50px 50px;animation:gridScroll 20s linear infinite;}
-@keyframes gridScroll{from{background-position:0 0}to{background-position:50px 50px}}
-.bg-glow{position:fixed;inset:0;z-index:0;
+  background-size:50px 50px;}
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(247,201,72,0.05) 0%,transparent 70%);}
 
-.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:22px 20px;}
+/* WRAP */
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;
+  padding:16px 14px 90px;}
 
 /* HEADER */
-.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
-.logo-txt{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--gold);letter-spacing:2px;}
-.logo-sub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
-.status-pill{display:flex;align-items:center;gap:8px;
-  border-radius:20px;padding:8px 16px;font-size:12px;font-family:'Orbitron',monospace;
-  font-weight:700;letter-spacing:1px;border:1px solid;}
-.status-pill.idle{color:var(--muted);border-color:var(--border);background:var(--bg2);}
-.status-pill.running{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.07);}
-.status-pill.running .sd{background:var(--green);animation:sdPulse 1.2s infinite;}
-.sd{width:8px;height:8px;border-radius:50%;background:var(--muted);}
-@keyframes sdPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.app-header{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.app-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--gold);}
+.app-logo span{display:block;font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
+.status-badge{display:flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);}
+.status-badge.running{color:var(--green);border-color:rgba(0,255,136,0.3);
+  background:rgba(0,255,136,0.07);}
+.sdot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+.status-badge.running .sdot{animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* CONFIG */
-.cfg-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  padding:20px 24px;margin-bottom:22px;}
-.cfg-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);
-  letter-spacing:2px;margin-bottom:16px;font-weight:700;}
-.cfg-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;}
-.cg label{font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px;display:block;}
-.cg input{width:100%;padding:10px 13px;border-radius:8px;
-  background:#07090f;border:1px solid var(--border);color:var(--text);
-  font-size:11px;font-family:'Share Tech Mono',monospace;outline:none;transition:0.2s;}
-.cg input:focus{border-color:var(--gold);}
-.cfg-save{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--gold3),var(--gold2));
-  color:#06080f;font-weight:700;font-size:11px;font-family:'Orbitron',monospace;
-  letter-spacing:1px;white-space:nowrap;transition:all 0.2s;}
-.cfg-save:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(247,201,72,0.35);}
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
 
 /* KPI */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
-.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.kpi.g::before{background:var(--gold);}
-.kpi.gr::before{background:var(--green);}
-.kpi.b::before{background:var(--blue);}
-.kpi.r::before{background:var(--red);}
-.kv{font-family:'Orbitron',monospace;font-size:24px;font-weight:700;margin-bottom:4px;}
-.kpi.g .kv{color:var(--gold);}
-.kpi.gr .kv{color:var(--green);}
-.kpi.b .kv{color:var(--blue);}
-.kpi.r .kv{color:var(--red);}
-.kl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  padding:16px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi-card.gold::before{background:var(--gold);}
+.kpi-card.green::before{background:var(--green);}
+.kpi-card.blue::before{background:var(--blue);}
+.kpi-card.red::before{background:var(--red);}
+.kpi-val{font-family:'Orbitron',monospace;font-size:26px;font-weight:700;margin-bottom:4px;}
+.kpi-card.gold .kpi-val{color:var(--gold);}
+.kpi-card.green .kpi-val{color:var(--green);}
+.kpi-card.blue .kpi-val{color:var(--blue);}
+.kpi-card.red .kpi-val{color:var(--red);}
+.kpi-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
 
-/* MAIN GRID */
-.main{display:grid;grid-template-columns:1fr 360px;gap:18px;}
+/* COUNTDOWN BOX */
+.countdown-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.cd-left .cd-label{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.cd-left .cd-val{font-family:'Orbitron',monospace;font-size:32px;font-weight:700;color:var(--gold);}
+.cd-left .cd-type{font-size:10px;color:var(--muted);margin-top:4px;}
+.cd-emoji{font-size:36px;}
 
-/* PANEL */
-.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;}
-.pt{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--gold);
-  letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+/* INTERVAL */
+.interval-label{font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;}
+.interval-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.iv-btn{padding:11px 4px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--muted);font-size:11px;cursor:pointer;
+  font-family:'Orbitron',monospace;text-align:center;transition:all 0.2s;}
+.iv-btn.active{border-color:var(--gold);background:rgba(247,201,72,0.1);color:var(--gold);}
 
-/* SCHEDULE */
-.sched-tbl{width:100%;border-collapse:collapse;}
-.sched-tbl th{font-size:9px;color:var(--muted);text-align:left;padding:7px 10px;
-  border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;}
-.sched-tbl td{padding:9px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
-.sched-tbl tr:hover td{background:rgba(255,255,255,0.02);}
-.tb{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.5px;font-family:'Orbitron',monospace;}
-.ts{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2);}
-.tp{background:rgba(247,201,72,0.1);color:var(--gold);border:1px solid rgba(247,201,72,0.2);}
-.tr_{background:rgba(56,189,248,0.1);color:var(--blue);border:1px solid rgba(56,189,248,0.2);}
-.tu{background:rgba(255,68,102,0.1);color:var(--red);border:1px solid rgba(255,68,102,0.2);}
-
-.tog{position:relative;width:34px;height:19px;cursor:pointer;display:inline-block;}
-.tog input{opacity:0;width:0;height:0;position:absolute;}
-.tog-track{position:absolute;inset:0;background:#1a2540;border-radius:10px;transition:0.3s;}
-.tog-thumb{position:absolute;top:3px;left:3px;width:13px;height:13px;
-  background:var(--muted);border-radius:50%;transition:0.3s;}
-.tog input:checked+.tog-track{background:rgba(0,255,136,0.15);border:1px solid var(--green);}
-.tog input:checked~.tog-thumb{transform:translateX(15px);background:var(--green);}
-
-/* RIGHT SIDE */
-.iv-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;}
-.iv{padding:7px 0;border-radius:7px;border:1px solid var(--border);
-  background:var(--bg3);color:var(--muted);font-size:10px;cursor:pointer;
-  font-family:'Orbitron',monospace;text-align:center;transition:0.2s;}
-.iv.on{border-color:var(--gold);background:rgba(247,201,72,0.08);color:var(--gold);}
-
-.nxt-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  padding:13px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
-.nxt-lbl{font-size:10px;color:var(--muted);}
-.nxt-val{font-family:'Orbitron',monospace;font-size:20px;color:var(--gold);font-weight:700;}
-.nxt-type{font-size:10px;color:var(--muted);margin-top:2px;}
-
-.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
-.ctrl{padding:11px 6px;border-radius:9px;border:none;cursor:pointer;
-  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1px;
-  transition:all 0.2s;text-align:center;}
-.c-start{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);color:var(--green);}
-.c-start:hover{background:rgba(0,255,136,0.15);}
-.c-stop{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.3);color:var(--red);}
-.c-stop:hover{background:rgba(255,68,102,0.15);}
-.c-now{background:rgba(247,201,72,0.08);border:1px solid rgba(247,201,72,0.3);color:var(--gold);}
-.c-now:hover{background:rgba(247,201,72,0.15);}
-.ctrl:disabled{opacity:0.35;cursor:not-allowed;}
-
-/* PREVIEW */
-.phone-hdr{display:flex;align-items:center;gap:10px;padding-bottom:12px;
-  border-bottom:1px solid var(--border);margin-bottom:12px;}
-.ph-av{width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold3),var(--gold));
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#06080f;}
-.ph-name{font-size:13px;font-weight:600;}
-.ph-status{font-size:10px;color:var(--green);}
-
-.typing-ind{display:none;align-items:center;gap:4px;padding:7px 12px;
-  background:#1a2540;border-radius:16px;width:fit-content;margin-bottom:10px;}
-.typing-ind.show{display:flex;}
-.typing-ind span{width:5px;height:5px;border-radius:50%;background:var(--muted);}
-.typing-ind span:nth-child(1){animation:td 1s 0s infinite;}
-.typing-ind span:nth-child(2){animation:td 1s 0.2s infinite;}
-.typing-ind span:nth-child(3){animation:td 1s 0.4s infinite;}
-@keyframes td{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
-
-.msg-bubble{background:#162416;border:1px solid rgba(0,255,136,0.12);
-  border-radius:12px 12px 12px 4px;padding:13px 15px;
-  font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.75;
-  color:#cce8cc;white-space:pre-wrap;word-break:break-word;
-  max-height:320px;overflow-y:auto;min-height:100px;position:relative;}
-.msg-bubble.pop{animation:msgPop 0.4s ease;}
-@keyframes msgPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* Inline buttons preview */
-.tg-btns{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
-.tg-btn-preview{background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25);
-  border-radius:8px;padding:8px 12px;font-size:11px;color:var(--blue);text-align:center;
-  font-family:'Share Tech Mono',monospace;}
-
-.msg-time{font-size:10px;color:var(--muted);text-align:right;margin-top:8px;}
+/* BUTTONS */
+.btn-start{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#00aa55,#00ff88);color:#000;
+  font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;
+  margin-bottom:10px;box-shadow:0 6px 24px rgba(0,255,136,0.25);transition:all 0.2s;}
+.btn-start:active{transform:scale(0.97);}
+.btn-stop{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#cc0033,#ff4466);color:#fff;
+  font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;
+  margin-bottom:10px;box-shadow:0 6px 24px rgba(255,68,102,0.25);transition:all 0.2s;
+  display:none;}
+.btn-stop:active{transform:scale(0.97);}
+.btn-now{width:100%;padding:14px;border-radius:12px;
+  border:1px solid rgba(247,201,72,0.4);background:rgba(247,201,72,0.08);
+  color:var(--gold);font-family:'Orbitron',monospace;font-size:12px;font-weight:700;
+  letter-spacing:1px;cursor:pointer;margin-bottom:16px;transition:all 0.2s;}
+.btn-now:active{transform:scale(0.97);}
 
 /* LOG */
-.log-box{background:#07090f;border:1px solid var(--border);border-radius:10px;
-  padding:12px;height:140px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:11px;}
-.le{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:10px;}
-.lt{color:var(--muted);white-space:nowrap;font-size:10px;}
-.lm.s{color:var(--green);}.lm.e{color:var(--red);}.lm.i{color:var(--blue);}.lm.w{color:var(--gold);}
+.log-title{font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);
+  letter-spacing:2px;margin-bottom:8px;}
+.log-box{background:#07090f;border:1px solid var(--border);border-radius:12px;
+  padding:12px;height:160px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:11px;}
+.log-entry{padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);
+  display:flex;gap:10px;}
+.log-time{color:var(--muted);white-space:nowrap;font-size:10px;}
+.log-msg.s{color:var(--green);}
+.log-msg.e{color:var(--red);}
+.log-msg.i{color:var(--blue);}
+.log-msg.w{color:var(--gold);}
 
-.mini-bars{display:flex;align-items:flex-end;gap:4px;height:46px;margin-top:10px;}
-.mb{flex:1;border-radius:3px 3px 0 0;
-  background:linear-gradient(180deg,var(--gold2),var(--gold3));min-height:3px;transition:height 0.5s;}
+/* CONFIG PAGE */
+.config-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+  padding:20px;margin-bottom:16px;}
+.config-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);
+  letter-spacing:2px;margin-bottom:16px;font-weight:700;}
+.field-group{margin-bottom:18px;}
+.field-label{font-size:11px;color:var(--gold);font-weight:600;
+  letter-spacing:0.5px;display:block;margin-bottom:8px;}
+.field-input{
+  display:block;width:100%;padding:15px 14px;border-radius:12px;
+  background:#000;border:2px solid rgba(247,201,72,0.4);
+  color:#00ff88;font-size:14px;font-family:'Share Tech Mono',monospace;
+  outline:none;-webkit-appearance:none;appearance:none;
+  -webkit-user-select:text;user-select:text;box-sizing:border-box;}
+.field-input:focus{border-color:var(--gold);}
+.field-hint{font-size:10px;color:var(--muted);margin-top:6px;}
+.btn-save{width:100%;padding:17px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold3),var(--gold2));
+  color:#000;font-family:'Orbitron',monospace;font-size:14px;font-weight:900;
+  letter-spacing:1px;box-shadow:0 6px 24px rgba(247,201,72,0.3);transition:all 0.2s;}
+.btn-save:active{transform:scale(0.97);}
+.save-success{display:none;margin-top:12px;padding:12px;border-radius:10px;
+  background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);
+  color:var(--green);font-size:13px;font-weight:600;text-align:center;}
+.save-success.show{display:block;}
 
-.toast{position:fixed;bottom:20px;right:20px;z-index:999;
-  background:var(--bg2);border:1px solid var(--green);border-radius:10px;
-  padding:12px 18px;font-size:13px;color:var(--green);
-  transform:translateY(70px);opacity:0;transition:all 0.3s;pointer-events:none;}
-.toast.show{transform:translateY(0);opacity:1;}
+.plan-list{background:var(--bg3);border:1px solid rgba(0,255,136,0.15);
+  border-radius:14px;padding:16px;}
+.plan-list-title{font-size:10px;color:var(--green);letter-spacing:2px;
+  font-family:'Orbitron',monospace;font-weight:700;margin-bottom:12px;}
+.plan-item{font-size:13px;color:var(--muted);padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);}
+.plan-item:last-child{border:none;}
+.plan-item span{color:var(--green);}
 
+/* PREVIEW PAGE */
+.phone-wrap{background:#0a0f1e;border:1px solid var(--border);
+  border-radius:16px;padding:16px;}
+.phone-header{display:flex;align-items:center;gap:10px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.phone-avatar{width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold3),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#000;flex-shrink:0;}
+.phone-name{font-size:14px;font-weight:600;}
+.phone-status{font-size:10px;color:var(--green);}
+.typing-dots{display:none;align-items:center;gap:4px;padding:8px 12px;
+  background:#1a2540;border-radius:14px;width:fit-content;margin-bottom:10px;}
+.typing-dots.show{display:flex;}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--muted);}
+.typing-dots span:nth-child(1){animation:td 1s 0s infinite;}
+.typing-dots span:nth-child(2){animation:td 1s 0.2s infinite;}
+.typing-dots span:nth-child(3){animation:td 1s 0.4s infinite;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:0.4}
+  30%{transform:translateY(-5px);opacity:1}}
+.msg-bubble{background:#162416;border:1px solid rgba(0,255,136,0.12);
+  border-radius:12px 12px 12px 4px;padding:14px;
+  font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.8;
+  color:#cce8cc;white-space:pre-wrap;word-break:break-word;
+  max-height:300px;overflow-y:auto;}
+.msg-bubble.pop{animation:msgpop 0.4s ease;}
+@keyframes msgpop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.preview-btns{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.preview-btn{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);
+  border-radius:8px;padding:10px;font-size:11px;color:var(--blue);
+  text-align:center;font-family:'Share Tech Mono',monospace;cursor:pointer;}
+.msg-time{font-size:10px;color:var(--muted);text-align:right;margin-top:8px;}
 
-/* ── MOBILE OPTIMIZATIONS ─────────────── */
-* { -webkit-tap-highlight-color: transparent; }
-body { overscroll-behavior: none; }
+/* STATS PAGE */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.chart-box{background:var(--bg2);border:1px solid var(--border);
+  border-radius:14px;padding:16px;}
+.chart-title{font-size:9px;color:var(--gold);letter-spacing:2px;
+  font-family:'Orbitron',monospace;margin-bottom:10px;}
+.mini-bars{display:flex;align-items:flex-end;gap:4px;height:50px;}
+.mbar{flex:1;border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,var(--gold2),var(--gold3));
+  min-height:3px;transition:height 0.5s;}
 
-.wrap { padding: 14px 12px; }
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(6,8,15,0.97);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:10px 0 calc(10px + env(safe-area-inset-bottom));}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:9px;color:var(--muted);cursor:pointer;padding:4px 0;
+  font-family:'Orbitron',monospace;letter-spacing:0.5px;transition:color 0.2s;}
+.nav-item.active{color:var(--gold);}
+.nav-icon{font-size:20px;}
 
-/* Bottom nav for mobile */
-.bottom-nav {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(6,8,15,0.97); backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
-  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
-  grid-template-columns: repeat(4, 1fr);
-}
-.bn-item {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  font-size: 9px; color: var(--muted); cursor: pointer;
-  font-family: 'Orbitron', monospace; letter-spacing: 0.5px;
-  padding: 4px 0; transition: color 0.2s;
-}
-.bn-item.active { color: var(--gold); }
-.bn-item span { font-size: 20px; }
-
-/* Page sections */
-.page { display: none; }
-.page.active { display: block; }
-
-/* Mobile card style */
-.mobile-status-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 20px; margin-bottom: 14px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.big-start-btn {
-  width: 100%; padding: 18px; border-radius: 16px; border: none;
-  font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 900;
-  letter-spacing: 2px; cursor: pointer; transition: all 0.2s;
-  margin-bottom: 12px; position: relative; overflow: hidden;
-}
-.big-start-btn.start {
-  background: linear-gradient(135deg, #00aa55, var(--green));
-  color: #06080f;
-  box-shadow: 0 8px 32px rgba(0,255,136,0.3);
-}
-.big-start-btn.stop {
-  background: linear-gradient(135deg, #cc0033, var(--red));
-  color: #fff;
-  box-shadow: 0 8px 32px rgba(255,68,102,0.3);
-}
-.big-start-btn:active { transform: scale(0.97); }
-
-.send-now-btn {
-  width: 100%; padding: 14px; border-radius: 12px;
-  border: 1px solid rgba(247,201,72,0.4);
-  background: rgba(247,201,72,0.08); color: var(--gold);
-  font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-  margin-bottom: 12px;
-}
-.send-now-btn:active { transform: scale(0.97); }
-
-/* Mobile interval selector */
-.iv-row-mobile { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
-.iv-mobile {
-  padding: 10px 4px; border-radius: 10px; border: 1px solid var(--border);
-  background: var(--bg3); color: var(--muted); font-size: 11px;
-  cursor: pointer; font-family: 'Orbitron', monospace; text-align: center;
-  transition: 0.2s;
-}
-.iv-mobile.on { border-color: var(--gold); background: rgba(247,201,72,0.1); color: var(--gold); }
-
-/* Mobile KPI */
-.kpi-row-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-
-/* Mobile log */
-.log-box { height: 200px; font-size: 11px; }
-
-/* Preview mobile */
-.msg-bubble { font-size: 12px; max-height: 250px; }
-
-@media (max-width: 768px) {
-  .bottom-nav { display: grid; }
-  .hdr { display: none; }
-  .cfg-box { display: none; }
-  .kpi-row { display: none; }
-  .main { display: none; }
-  .wrap { padding-bottom: 80px; }
-}
-
-@media(max-width:900px){
-  .main{grid-template-columns:1fr;}
-  .kpi-row{grid-template-columns:repeat(2,1fr);}
-  .cfg-grid{grid-template-columns:1fr 1fr;}
-}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  z-index:999;background:var(--bg2);border:1px solid var(--green);border-radius:12px;
+  padding:12px 20px;font-size:13px;color:var(--green);opacity:0;
+  transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err{border-color:var(--red);color:var(--red);}
 </style>
 </head>
 <body>
@@ -285,298 +219,595 @@ body { overscroll-behavior: none; }
 
 <div class="wrap">
 
-  <!-- HEADER -->
-  <div class="hdr">
-    <div>
-      <div class="logo-txt">⚡ PROFIT PULSE BOT</div>
-      <div style="display:flex;gap:6px;margin-top:4px">
-        <div class="logo-sub">AUTO MARKETING + PAYMENT SYSTEM</div>
-      </div>
+  <!-- APP HEADER -->
+  <div class="app-header">
+    <div class="app-logo">⚡ PPI BOT
+      <span>AUTO MARKETING</span>
     </div>
-    <div class="status-pill idle" id="statusPill">
-      <div class="sd"></div>
+    <div class="status-badge" id="statusBadge">
+      <div class="sdot"></div>
       <span id="statusTxt">IDLE</span>
     </div>
   </div>
 
-  <!-- ⚙️ CONFIG -->
-  <div class="cfg-box">
-    <div class="cfg-title">⚙️ CONFIGURATION</div>
-    <div class="cfg-grid">
-      <div class="cg">
-        <label>BOT TOKEN</label>
-        <input id="cfgToken" placeholder="123456789:ABCdef..."/>
+  <!-- ═══ PAGE: HOME ═══ -->
+  <div class="page active" id="pg-home">
+
+    <!-- KPI -->
+    <div class="kpi-grid">
+      <div class="kpi-card gold">
+        <div class="kpi-val" id="kSent">0</div>
+        <div class="kpi-label">Messages Sent</div>
       </div>
-      <div class="cg">
-        <label>FREE CHANNEL ID</label>
-        <input id="cfgChannel" placeholder="-1001234567890"/>
+      <div class="kpi-card green">
+        <div class="kpi-val" id="kSession">00:00</div>
+        <div class="kpi-label">Session Time</div>
       </div>
-      <button class="cfg-save" onclick="saveConfig()">💾 SAVE</button>
-    </div>
-  </div>
-
-  <!-- KPI -->
-  <div class="kpi-row">
-    <div class="kpi g"><div class="kv" id="kSent">0</div><div class="kl">Messages Sent</div></div>
-    <div class="kpi gr"><div class="kv" id="kSession">00:00</div><div class="kl">Session Time</div></div>
-    <div class="kpi b"><div class="kv" id="kNext">--:--</div><div class="kl">Next Message</div></div>
-    <div class="kpi r"><div class="kv" id="kErr">0</div><div class="kl">Errors</div></div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="main">
-
-    <!-- LEFT -->
-    <div style="display:flex;flex-direction:column;gap:16px;">
-
-      <!-- SCHEDULE -->
-      <div class="panel">
-        <div class="pt">📅 MESSAGE SCHEDULE</div>
-        <table class="sched-tbl">
-          <thead><tr>
-            <th>Type</th><th>Theme</th><th>Contains</th><th>Active</th>
-          </tr></thead>
-          <tbody id="schedBody"></tbody>
-        </table>
+      <div class="kpi-card blue">
+        <div class="kpi-val" id="kNext">--:--</div>
+        <div class="kpi-label">Next In</div>
       </div>
-
-      <!-- LOG -->
-      <div class="panel">
-        <div class="pt">📋 ACTIVITY LOG</div>
-        <div class="log-box" id="logBox">
-          <div class="le"><span class="lt">--:--:--</span><span class="lm i">System ready. Config fill karke START karo.</span></div>
-        </div>
-        <div style="margin-top:12px">
-          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">MESSAGES SENT (LAST 8)</div>
-          <div class="mini-bars" id="miniChart"></div>
-        </div>
+      <div class="kpi-card red">
+        <div class="kpi-val" id="kErr">0</div>
+        <div class="kpi-label">Errors</div>
       </div>
-
     </div>
 
-    <!-- RIGHT -->
-    <div style="display:flex;flex-direction:column;gap:14px;">
-
-      <!-- CONTROLS -->
-      <div class="panel">
-        <div class="pt">⚡ CONTROLS</div>
-
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:7px">SEND INTERVAL</div>
-        <div class="iv-row">
-          <div class="iv" onclick="setIv(30,this)">30s</div>
-          <div class="iv on" onclick="setIv(60,this)">1 min</div>
-          <div class="iv" onclick="setIv(300,this)">5 min</div>
-          <div class="iv" onclick="setIv(900,this)">15 min</div>
-        </div>
-
-        <div class="nxt-box">
-          <div>
-            <div class="nxt-lbl">NEXT MESSAGE IN</div>
-            <div class="nxt-val" id="nxtCd">--:--</div>
-            <div class="nxt-type" id="nxtType">Configure & Start</div>
-          </div>
-          <div style="font-size:26px" id="nxtEmoji">⏸</div>
-        </div>
-
-        <div class="ctrl-row">
-          <button class="ctrl c-start" id="btnStart" onclick="startBot()">▶ START</button>
-          <button class="ctrl c-stop" id="btnStop" onclick="stopBot()" disabled>⏹ STOP</button>
-          <button class="ctrl c-now" onclick="sendNow()">⚡ NOW</button>
-        </div>
+    <!-- COUNTDOWN -->
+    <div class="countdown-box">
+      <div class="cd-left">
+        <div class="cd-label">NEXT MESSAGE IN</div>
+        <div class="cd-val" id="cdVal">--:--</div>
+        <div class="cd-type" id="cdType">Configure & Start</div>
       </div>
-
-      <!-- PREVIEW -->
-      <div class="panel">
-        <div class="pt">📱 TELEGRAM PREVIEW</div>
-        <div style="background:#0a0f1e;border:1px solid var(--border);border-radius:12px;padding:14px;">
-          <div class="phone-hdr">
-            <div class="ph-av">PP</div>
-            <div>
-              <div class="ph-name">Profit Pulse India 🇮🇳</div>
-              <div class="ph-status">● Channel</div>
-            </div>
-          </div>
-          <div class="typing-ind" id="typingInd">
-            <span></span><span></span><span></span>
-          </div>
-          <div class="msg-bubble" id="msgPreview">Bot ready hai...
-
-START dabao aur dekho magic! ⚡
-
-💎 JOIN: your-site.netlify.app</div>
-          <div class="tg-btns" id="btnPreview">
-            <div class="tg-btn-preview">💎 Join Premium — ₹499/month →</div>
-          </div>
-          <div class="msg-time" id="msgTime">waiting...</div>
-        </div>
-      </div>
-
+      <div class="cd-emoji" id="cdEmoji">⏸</div>
     </div>
+
+    <!-- INTERVAL -->
+    <div class="interval-label">SEND INTERVAL</div>
+    <div class="interval-row">
+      <div class="iv-btn" onclick="setInterval2(30,this)">30s</div>
+      <div class="iv-btn active" onclick="setInterval2(60,this)">1 min</div>
+      <div class="iv-btn" onclick="setInterval2(300,this)">5 min</div>
+      <div class="iv-btn" onclick="setInterval2(900,this)">15 min</div>
+    </div>
+
+    <!-- CONTROL BUTTONS -->
+    <button class="btn-start" id="btnStart" onclick="startBot()">▶ START BOT</button>
+    <button class="btn-stop" id="btnStop" onclick="stopBot()">⏹ STOP BOT</button>
+    <button class="btn-now" onclick="sendNow()">⚡ SEND NOW</button>
+
+    <!-- LOG -->
+    <div class="log-title">ACTIVITY LOG</div>
+    <div class="log-box" id="logBox">
+      <div class="log-entry">
+        <span class="log-time">--:--:--</span>
+        <span class="log-msg i">Bot ready. CONFIG pe jao → Token & ID daalo → SAVE karo → START!</span>
+      </div>
+    </div>
+
   </div>
+
+  <!-- ═══ PAGE: CONFIG ═══ -->
+  <div class="page" id="pg-config">
+
+    <div class="config-card">
+      <div class="config-title">⚙️ BOT CONFIGURATION</div>
+
+      <div class="field-group">
+        <label class="field-label">🤖 BOT TOKEN</label>
+        <input
+          type="text"
+          id="inputToken"
+          class="field-input"
+          placeholder="123456789:ABCdef..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          inputmode="text"
+        />
+        <div class="field-hint">BotFather se mila token yahan daalo</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">📢 FREE CHANNEL ID</label>
+        <input
+          type="text"
+          id="inputChannel"
+          class="field-input"
+          placeholder="-1001234567890"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          inputmode="text"
+        />
+        <div class="field-hint">@userinfobot se mila channel ID (-100... se shuru hoga)</div>
+      </div>
+
+      <button class="btn-save" onclick="saveConfig()">💾 SAVE & ACTIVATE</button>
+      <div class="save-success" id="saveSuccess">✅ Config saved! HOME pe jao → START dabao 🚀</div>
+    </div>
+
+    <div class="plan-list">
+      <div class="plan-list-title">✅ PAYMENT LINKS ACTIVE</div>
+      <div class="plan-item">🥉 1 Month — <span>₹499 ✓</span></div>
+      <div class="plan-item">🥈 3 Months — <span>₹699 ✓</span></div>
+      <div class="plan-item">🥇 6 Months — <span>₹1,999 ✓</span></div>
+      <div class="plan-item">👑 1 Year — <span>₹2,999 ✓</span></div>
+    </div>
+
+  </div>
+
+  <!-- ═══ PAGE: PREVIEW ═══ -->
+  <div class="page" id="pg-preview">
+
+    <div class="phone-wrap">
+      <div class="phone-header">
+        <div class="phone-avatar">PP</div>
+        <div>
+          <div class="phone-name">Profit Pulse India 🇮🇳</div>
+          <div class="phone-status">● Channel</div>
+        </div>
+      </div>
+      <div class="typing-dots" id="typingDots">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="msg-bubble" id="msgPreview">Bot ready hai...
+
+START dabao aur pehla message
+channel pe jaayega! ⚡
+
+Buttons direct Razorpay pe
+le jaayenge — seedha payment! 💎</div>
+      <div class="preview-btns" id="previewBtns">
+        <div class="preview-btn">💎 Join Premium →</div>
+      </div>
+      <div class="msg-time" id="msgTime">waiting...</div>
+    </div>
+
+  </div>
+
+  <!-- ═══ PAGE: STATS ═══ -->
+  <div class="page" id="pg-stats">
+
+    <div class="stats-grid">
+      <div class="kpi-card gold">
+        <div class="kpi-val" id="sSent">0</div>
+        <div class="kpi-label">Total Sent</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-val" id="sErr">0</div>
+        <div class="kpi-label">Errors</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-val" id="sSess">00:00</div>
+        <div class="kpi-label">Session</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-val" id="sNext">--:--</div>
+        <div class="kpi-label">Next In</div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-title">MESSAGES SENT (LAST 8)</div>
+      <div class="mini-bars" id="chartBars"></div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="log-title">FULL LOG</div>
+      <div class="log-box" style="height:220px;" id="statsLog"></div>
+    </div>
+
+  </div>
+
 </div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="goPage('home')">
+    <div class="nav-icon">🏠</div>HOME
+  </div>
+  <div class="nav-item" id="nav-config" onclick="goPage('config')">
+    <div class="nav-icon">⚙️</div>CONFIG
+  </div>
+  <div class="nav-item" id="nav-preview" onclick="goPage('preview')">
+    <div class="nav-icon">📱</div>PREVIEW
+  </div>
+  <div class="nav-item" id="nav-stats" onclick="goPage('stats')">
+    <div class="nav-icon">📊</div>STATS
+  </div>
+</nav>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════
-// ⚙️ PAYMENT PAGE URL — Netlify URL yahan
-// ════════════════════════════════════════════
-// ✅ DIRECT RAZORPAY PAYMENT LINKS — Koi website nahi, seedha payment!
-const RZP_LINKS = {
-  '1m': 'https://rzp.io/rzp/sbs2Bc5m',   // ₹499  - 1 Month
-  '3m': 'https://rzp.io/rzp/L5w4PKzi',   // ₹699  - 3 Months
-  '6m': 'https://rzp.io/rzp/CxeWLGu',    // ₹1999 - 6 Months
-  '1y': 'https://rzp.io/rzp/ToSxb5OJ',   // ₹2999 - 1 Year
+// ════════════════════════════════════════════════════
+// ✅ RAZORPAY DIRECT PAYMENT LINKS
+// ════════════════════════════════════════════════════
+const RZP = {
+  '1m': 'https://rzp.io/rzp/sbs2Bc5m',
+  '3m': 'https://rzp.io/rzp/L5w4PKzi',
+  '6m': 'https://rzp.io/rzp/CxeWLGu',
+  '1y': 'https://rzp.io/rzp/ToSxb5OJ',
 };
 
-// ── MESSAGES with Payment Buttons ────────────────────────────────
+// ════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════
+let BOT_TOKEN    = '';
+let CHANNEL_ID   = '';
+let running      = false;
+let ivSec        = 60;
+let countdown    = 0;
+let sent         = 0;
+let errors       = 0;
+let sessStart    = null;
+let timerCD      = null;
+let timerSess    = null;
+let chartData    = [0,0,0,0,0,0,0,0];
+const msgUsed    = {signal:[],promo:[],result:[],urgency:[]};
 
-const getAnalyst = () => 'Anuj Singh';
+// ════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('pg-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'stats') syncStats();
+}
 
-// Sticker IDs - real Telegram animated stickers
-const STICKERS = {
-  buy:    'CAACAgIAAxkBAAIBsWWoiQABH8Y2kIuVSVn0mZJRAAGiAAIcAAMw1J0R6GmHOyYkdqQ0AA',  // rocket/bull
-  sell:   'CAACAgIAAxkBAAIBs2WoiQABH8Y2kIuVSVn0mZJRAAGiAAIdAAMw1J0R7GmHOyYkdqQ0AA',  // bear
-  target: 'CAACAgIAAxkBAAIBtWWoiQABH8Y2kIuVSVn0mZJRAAGiAAIeAAMw1J0R8GmHOyYkdqQ0AA',  // trophy
-  fire:   'CAACAgIAAxkBAAIBt2WoiQABH8Y2kIuVSVn0mZJRAAGiAAIfAAMw1J0R9GmHOyYkdqQ0AA',  // fire
-};
+// ════════════════════════════════════════════════════
+// CONFIG SAVE
+// ════════════════════════════════════════════════════
+function saveConfig() {
+  const t = document.getElementById('inputToken').value.trim();
+  const c = document.getElementById('inputChannel').value.trim();
 
-const line  = '━━━━━━━━━━━━━━━━━━━━━━━━';
-const dline = '══════════════════════════';
-const bold  = t => `*${t}*`;
+  if (!t) { showToast('⚠️ Bot Token daalo!', true); return; }
+  if (!c) { showToast('⚠️ Channel ID daalo!', true); return; }
+  if (!t.includes(':')) { showToast('⚠️ Token format galat hai!', true); return; }
+  if (!c.startsWith('-')) { showToast('⚠️ Channel ID - se shuru hona chahiye!', true); return; }
 
-// Unique message tracker
-const _used = {signal:[],promo:[],result:[],urgency:[]};
-function getFreshMsg(type){
+  BOT_TOKEN  = t;
+  CHANNEL_ID = c;
+
+  // Save to localStorage for persistence
+  try {
+    localStorage.setItem('ppi_token', t);
+    localStorage.setItem('ppi_channel', c);
+  } catch(e) {}
+
+  addLog('✅ Config saved! Token: ...'+t.slice(-8), 's');
+  showToast('✅ Saved! HOME pe jao → START karo!');
+
+  const suc = document.getElementById('saveSuccess');
+  suc.classList.add('show');
+  setTimeout(() => { suc.classList.remove('show'); goPage('home'); }, 2000);
+}
+
+// ════════════════════════════════════════════════════
+// INTERVAL
+// ════════════════════════════════════════════════════
+function setInterval2(sec, el) {
+  ivSec = sec;
+  document.querySelectorAll('.iv-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (running) { countdown = sec; }
+  addLog('Interval set: ' + sec + 's', 'i');
+}
+
+// ════════════════════════════════════════════════════
+// BOT START / STOP
+// ════════════════════════════════════════════════════
+function startBot() {
+  if (!BOT_TOKEN || !CHANNEL_ID) {
+    showToast('⚠️ Pehle CONFIG pe jao → Token & ID daalo!', true);
+    goPage('config');
+    return;
+  }
+
+  running   = true;
+  sessStart = Date.now();
+  countdown = 0; // send immediately
+
+  // UI update
+  document.getElementById('btnStart').style.display = 'none';
+  document.getElementById('btnStop').style.display  = 'block';
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge running';
+  document.getElementById('statusTxt').textContent = 'RUNNING';
+  document.getElementById('cdEmoji').textContent = '⚡';
+
+  addLog('🚀 Bot started!', 's');
+  showToast('✅ Bot started!');
+
+  // Send first message immediately
+  sendMessage();
+
+  // Countdown timer
+  timerCD = setInterval(() => {
+    if (!running) return;
+    countdown--;
+    updateCD();
+    if (countdown <= 0) {
+      sendMessage();
+      countdown = ivSec;
+    }
+  }, 1000);
+
+  // Session timer
+  timerSess = setInterval(updateSession, 1000);
+}
+
+function stopBot() {
+  running = false;
+  clearInterval(timerCD);
+  clearInterval(timerSess);
+
+  document.getElementById('btnStart').style.display = 'block';
+  document.getElementById('btnStop').style.display  = 'none';
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge';
+  document.getElementById('statusTxt').textContent = 'IDLE';
+  document.getElementById('cdEmoji').textContent = '⏸';
+  document.getElementById('cdVal').textContent = '--:--';
+  document.getElementById('kNext').textContent  = '--:--';
+  document.getElementById('cdType').textContent = 'Bot stopped';
+
+  addLog('⏹ Bot stopped', 'w');
+  showToast('⏹ Bot stopped');
+}
+
+function sendNow() {
+  if (!BOT_TOKEN || !CHANNEL_ID) {
+    showToast('⚠️ Pehle CONFIG set karo!', true);
+    goPage('config');
+    return;
+  }
+  sendMessage();
+  if (running) countdown = ivSec;
+}
+
+// ════════════════════════════════════════════════════
+// CORE SEND MESSAGE
+// ════════════════════════════════════════════════════
+async function sendMessage() {
+  const type = getNextType();
+  const data = getFreshMsg(type);
+  if (!data) return;
+
+  // Show typing in preview
+  document.getElementById('typingDots').classList.add('show');
+  document.getElementById('cdType').textContent = 'Sending: ' + type;
+
+  // Show typing indicator in preview tab
+  setTimeout(() => {
+    document.getElementById('typingDots').classList.remove('show');
+    showPreview(data);
+  }, 1200);
+
+  // Build inline keyboard with direct Razorpay links
+  const keyboard = data.buttons.map(b => [{
+    text: b.text,
+    url:  RZP[b.plan]
+  }]);
+
+  // 1. Send animated sticker first
+  try {
+    await fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendSticker', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({
+        chat_id: CHANNEL_ID,
+        sticker: data.sticker
+      })
+    });
+  } catch(e) { /* sticker is optional */ }
+
+  // 2. Send main message with payment buttons
+  try {
+    const res  = await fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({
+        chat_id:                  CHANNEL_ID,
+        text:                     data.text,
+        parse_mode:               'Markdown',
+        disable_web_page_preview: true,
+        reply_markup:             {inline_keyboard: keyboard}
+      })
+    });
+    const json = await res.json();
+
+    if (json.ok) {
+      sent++;
+      document.getElementById('kSent').textContent = sent;
+      chartData.push(1); chartData.shift();
+      buildChart();
+      addLog('✅ Sent: ' + type + ' — ' + data.buttons.length + ' payment buttons', 's');
+      showToast('✅ Message sent!');
+      // Switch to preview page to show sent message
+      goPage('preview');
+    } else {
+      errors++;
+      document.getElementById('kErr').textContent = errors;
+      addLog('❌ Error: ' + json.description, 'e');
+      showToast('❌ ' + json.description, true);
+    }
+  } catch(e) {
+    errors++;
+    document.getElementById('kErr').textContent = errors;
+    addLog('❌ Network error: ' + e.message, 'e');
+    showToast('❌ Network error!', true);
+  }
+}
+
+// ════════════════════════════════════════════════════
+// MESSAGE ROTATION — No repeats until all used
+// ════════════════════════════════════════════════════
+const TYPE_WEIGHTS = {signal:4, promo:3, result:2, urgency:1};
+
+function getNextType() {
+  const types = ['signal','promo','result','urgency'];
+  const pool  = [];
+  types.forEach(t => {
+    for (let i = 0; i < TYPE_WEIGHTS[t]; i++) pool.push(t);
+  });
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function getFreshMsg(type) {
   const pool = MSGS[type];
-  if(!pool) return null;
-  if(_used[type].length >= pool.length) _used[type] = [];
+  if (!pool || !pool.length) return null;
+  if (msgUsed[type].length >= pool.length) msgUsed[type] = [];
   let idx;
-  do { idx = ~~(Math.random()*pool.length); } while(_used[type].includes(idx));
-  _used[type].push(idx);
+  do { idx = Math.floor(Math.random() * pool.length); }
+  while (msgUsed[type].includes(idx));
+  msgUsed[type].push(idx);
   return pool[idx]();
 }
 
+// ════════════════════════════════════════════════════
+// MESSAGES — No AI word, Human style, Anuj Singh
+// ════════════════════════════════════════════════════
+const L = '━━━━━━━━━━━━━━━━━━━━━━';
+const D = '══════════════════════════';
+const b = t => '*' + t + '*';
+
+// Sticker IDs (real Telegram stickers)
+const STK = {
+  bull:   'CAACAgIAAxkBAAEKuGFlPgABRn_kW5N2MoVWTa-AAQAB2AAC3gADr0eqElTWKU5RvbpqHgQ',
+  bear:   'CAACAgIAAxkBAAEKuGNlPgABRoqLl5yCX4e-h_9LyIUBEgACHQADr0eqEtWF4qNiKJiDHgQ',
+  trophy: 'CAACAgIAAxkBAAEKuGVlPgABRjuCHH5ueOGGlIDDx4e_NwAC-QADr0eqEiIJxY7KVN1lHgQ',
+  fire:   'CAACAgIAAxkBAAEKuGdlPgABRmD7UrGpAAE2wJvNGp2YFIACGAAD769xCv6RDA5DXBaeHgQ',
+};
+
 const MSGS = {
 
-  signal:[
-    ()=>{
-      const stocks=['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI'];
-      const s = stocks[~~(Math.random()*stocks.length)];
-      const p = (Math.random()*3000+500).toFixed(2);
-      const t1 = (+p*1.038).toFixed(2);
-      const t2 = (+p*1.075).toFixed(2);
-      const sl = (+p*0.974).toFixed(2);
-      const rsi = ~~(Math.random()*18+26);
-      const vol = ~~(Math.random()*40+120);
-      const conf = ~~(Math.random()*10+82);
+  signal: [
+    () => {
+      const st = ['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI','NTPC','SBIN'];
+      const s   = st[Math.floor(Math.random()*st.length)];
+      const p   = (Math.random()*3000+500).toFixed(2);
+      const t1  = (+p*1.038).toFixed(2);
+      const t2  = (+p*1.075).toFixed(2);
+      const sl  = (+p*0.974).toFixed(2);
+      const rsi = Math.floor(Math.random()*18+26);
       return {
+        sticker: STK.bull,
         text:
-`⚡⚡⚡ ${bold('LIVE CALL')} ⚡⚡⚡
+`⚡⚡⚡ ${b('LIVE BUY CALL')} ⚡⚡⚡
 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-${dline}
-🟢 ${bold('BUY')} — ${bold(s+'.NSE')}
-${dline}
+${D}
+🟢 ${b('BUY')} — ${b(s+'.NSE')}
+${D}
 
-💰 Entry:    ₹${p}
-🎯 Target 1: ₹${t1} *(+3.8%)*
-🎯 Target 2: ₹${t2} *(+7.5%)*
+💰 Entry Zone: ₹${p}
+🎯 Target 1:  ₹${t1} *(+3.8%)*
+🎯 Target 2:  ₹${t2} *(+7.5%)*
 🛑 Stop Loss: ₹${sl} *(-2.6%)*
+📊 Risk:Reward = 1:2.9 ✅
 
-📊 *Strength Meter:*
+📋 *Technical Setup:*
+• RSI ${rsi} — Strong oversold zone
+• Volume surge above average
+• Bullish crossover confirmed
+• Key support holding strong
 
-📋 *Setup:*
-• Oversold bounce + volume surge
-• Bullish crossover on chart
-• Strong support holding
-
-⏱ Hold: 3-7 days
-👤 By: ${getAnalyst()}
-${line}
-⚠️ Ye FREE preview — Premium mein DAILY 12-15!
-👇 ${bold('Abhi join karo:')}`,
-        sticker: 'buy',
-        buttons:[
+⏱ Holding: 3-7 days
+👤 ${b('Anuj Singh')}
+${L}
+⚠️ Ye FREE preview hai
+💎 ${b('Premium mein DAILY 12-15 calls!')}
+👇 Join karo:`,
+        buttons: [
           {text:'🥉 1 Month — ₹499', plan:'1m'},
           {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
     },
-    ()=>{
-      const stocks=['BAJFINANCE','HCLTECH','POWERGRID','HINDALCO','JSWSTEEL','WIPRO','ONGC'];
-      const s = stocks[~~(Math.random()*stocks.length)];
-      const p = (Math.random()*2500+300).toFixed(2);
+    () => {
+      const st = ['WIPRO','ONGC','BPCL','BAJFINANCE','HCLTECH','POWERGRID','HINDALCO'];
+      const s  = st[Math.floor(Math.random()*st.length)];
+      const p  = (Math.random()*2500+300).toFixed(2);
       const t1 = (+p*0.962).toFixed(2);
       const t2 = (+p*0.928).toFixed(2);
       const sl = (+p*1.026).toFixed(2);
-      const rsi = ~~(Math.random()*8+70);
-      const conf = ~~(Math.random()*10+80);
+      const rsi = Math.floor(Math.random()*8+70);
       return {
+        sticker: STK.bear,
         text:
-`🔴🔴🔴 ${bold('SELL ALERT')} 🔴🔴🔴
+`🔴🔴🔴 ${b('SELL ALERT')} 🔴🔴🔴
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-${dline}
-🔴 ${bold('SELL')} — ${bold(s+'.NSE')}
-${dline}
+${D}
+🔴 ${b('SELL')} — ${b(s+'.NSE')}
+${D}
 
-💰 Entry:    ₹${p}
-🎯 Target 1: ₹${t1} *(-3.8%)*
-🎯 Target 2: ₹${t2} *(-7.2%)*
+💰 Entry Zone: ₹${p}
+🎯 Target 1:  ₹${t1} *(-3.8%)*
+🎯 Target 2:  ₹${t2} *(-7.2%)*
 🛑 Stop Loss: ₹${sl} *(+2.6%)*
+📊 Risk:Reward = 1:2.8 ✅
 
-📊 *Weakness Meter:*
-Overall:        🔴🔴🔴🔴${conf>85?'🔴':'⚪'}
-
-📋 *Setup:*
+📋 *Technical Setup:*
+• RSI ${rsi} — Overbought zone
 • Bearish divergence on MACD
-• Double top resistance
-• Heavy selling at levels
+• Double top resistance formed
+• Heavy selling at this level
 
-⏱ Hold: 2-5 days
-👤 By: ${getAnalyst()}
-${line}
-🔒 Premium members ko pehle mila tha!
-👇 ${bold('Miss mat karo — join karo:')}`,
-        sticker: 'sell',
-        buttons:[
+⏱ Holding: 2-5 days
+👤 ${b('Anuj Singh')}
+${L}
+🔒 Premium members ko pehle mila!
+👇 ${b('Miss mat karo — join karo:')}`,
+        buttons: [
           {text:'⚡ 1 Month — ₹499', plan:'1m'},
-          {text:'🥈 3 Months — ₹999', plan:'3m'},
+          {text:'🥈 3 Months — ₹699', plan:'3m'},
           {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
     },
-    ()=>{
-      const s1=['RELIANCE','TCS','INFY'][~~(Math.random()*3)];
-      const s2=['HDFCBANK','ICICIBANK','SBIN'][~~(Math.random()*3)];
-      const p1=(Math.random()*2000+800).toFixed(2);
-      const p2=(Math.random()*1500+400).toFixed(2);
-      const t1a=(+p1*1.042).toFixed(2);
-      const t1b=(+p2*1.035).toFixed(2);
-      const sl1=(+p1*0.976).toFixed(2);
-      const sl2=(+p2*0.978).toFixed(2);
-      const c1=~~(Math.random()*10+80), c2=~~(Math.random()*10+78);
+    () => {
+      const stocks1 = ['RELIANCE','TCS','INFY'];
+      const stocks2 = ['HDFCBANK','ICICIBANK','SBIN'];
+      const s1 = stocks1[Math.floor(Math.random()*stocks1.length)];
+      const s2 = stocks2[Math.floor(Math.random()*stocks2.length)];
+      const p1 = (Math.random()*2000+800).toFixed(2);
+      const p2 = (Math.random()*1500+400).toFixed(2);
+      const t1a = (+p1*1.042).toFixed(2);
+      const t1b = (+p2*1.035).toFixed(2);
+      const sl1 = (+p1*0.976).toFixed(2);
+      const sl2 = (+p2*0.978).toFixed(2);
       return {
+        sticker: STK.bull,
         text:
-`💥💥💥 ${bold('DUAL CALL')} 💥💥💥
+`💥💥💥 ${b('DUAL CALL — 2 STOCKS!')} 💥💥💥
 ⚡🔥⚡🔥⚡🔥⚡🔥⚡🔥
-${dline}
-📌 ${bold('CALL 1 — '+s1+'.NSE')} 🟢
-💰 ₹${p1} → 🎯 ₹${t1a} | 🛑 ₹${sl1}
+${D}
+📌 ${b('CALL 1 — '+s1+'.NSE')} 🟢
+💰 Entry: ₹${p1}
+🎯 Target: ₹${t1a} *(+4.2%)*
+🛑 SL: ₹${sl1} | R:R = 1:3.1
 
-📌 ${bold('CALL 2 — '+s2+'.NSE')} 🟢
-💰 ₹${p2} → 🎯 ₹${t1b} | 🛑 ₹${sl2}
+📌 ${b('CALL 2 — '+s2+'.NSE')} 🟢
+💰 Entry: ₹${p2}
+🎯 Target: ₹${t1b} *(+3.5%)*
+🛑 SL: ₹${sl2} | R:R = 1:2.7
+${L}
+📋 FII buying active + strong breadth
+Both stocks at key support levels
 
-${line}
-📋 FII buying + strong breadth today
-Both at key support — perfect setup!
-
-👤 Morning brief: ${getAnalyst()}
-${line}
-🆓 Sirf 2 FREE — Premium mein 12-15 DAILY!
-👇 ${bold('Join karo:')}`,
-        sticker: 'buy',
-        buttons:[
+👤 ${b('Anuj Singh')}
+${L}
+🆓 Sirf 2 FREE — Premium mein 12-15!
+👇 ${b('Join karo:')}`,
+        buttons: [
           {text:'🥉 Start ₹499/month', plan:'1m'},
           {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
@@ -585,247 +816,213 @@ ${line}
     },
   ],
 
-  promo:[
-    ()=>({
+  promo: [
+    () => ({
+      sticker: STK.fire,
       text:
-`💎💎💎 ${bold('PREMIUM RESULTS')} 💎💎💎
+`📊📊📊 ${b('AAJ KA SCORECARD')} 📊📊📊
 🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
-${dline}
-📊 ${bold('Aaj Premium Members Ka Score:')}
-${dline}
+${D}
+👤 ${b('Anuj Singh')} — Aaj Ka Result:
+${D}
 
-✅ Call 1 → +3.2% — Target HIT
-✅ Call 2 → +5.1% — Target HIT  
-✅ Call 3 → +4.7% — Target HIT
+✅ Call 1 → +3.2% — Target HIT 🎯
+✅ Call 2 → +5.1% — Target HIT 🎯
+✅ Call 3 → +4.7% — Target HIT 🎯
 🔄 Call 4 → Still running *(+2.1%)*
-❌ Call 5 → -1.8% — SL hit
+❌ Call 5 → -1.8% — SL triggered
 
-${bold('Win Rate Today: 80% ✅')}
-💰 ₹1 lakh pe estimated: *+₹11,300*
-💸 Subscription cost: *sirf ₹499/month*
+${b('Win Rate: 3/4 = 75% ✅')}
 
-👤 By: ${getAnalyst()}
-${line}
-💎 ${bold('Ye sab sirf Premium mein!')}
+💰 ₹1 lakh pe estimated: ${b('+₹11,300')}
+💸 Subscription: ${b('sirf ₹499/month')}
+${L}
+💎 ${b('Ye sab sirf Premium mein milta hai!')}
 👇 Kab join karoge?`,
-      sticker: 'fire',
-      buttons:[
+      buttons: [
         {text:'🥉 1 Month — ₹499', plan:'1m'},
-        {text:'🥈 3 Months — ₹999', plan:'3m'},
+        {text:'🥈 3 Months — ₹699', plan:'3m'},
         {text:'🥇 6 Months — ₹1,999 ⭐', plan:'6m'},
         {text:'👑 1 Year — ₹2,999', plan:'1y'},
       ]
     }),
-    ()=>{
-      const pct=(Math.random()*8+78).toFixed(0);
-      const calls=(Math.random()*30+180).toFixed(0);
+    () => ({
+      sticker: STK.fire,
+      text:
+`⚔️⚔️⚔️ ${b('FREE vs PREMIUM')} ⚔️⚔️⚔️
+💎💎💎💎💎💎💎💎💎💎
+${D}
+Feature         FREE    PREMIUM
+${L}
+Calls/day        2-3   ${b('12-15')} ✅
+Stop Loss         ❌     ✅
+Two Targets       ❌     ✅
+Morning Brief     ❌     ✅
+Evening Report    ❌     ✅
+Swing Trades      ❌     ✅
+Sector Analysis   ❌     ✅
+DM Support        ❌     ✅
+${L}
+💰 ${b('Cost breakdown:')}
+Monthly:  ₹499 = ${b('₹16/day')}
+6 Months: ₹1999 = ${b('₹11/day')}
+1 Year:   ₹2999 = ${b('₹8/day')} 👑
+
+Ek chai = ₹20 | Premium = ₹16/day ☕
+${b('Chai se bhi sasta!')}
+
+👤 ${b('Anuj Singh')}
+${L}
+💎 ${b('Kaunsa plan loge?')} 👇`,
+      buttons: [
+        {text:'☕ ₹499/mo — Chai se sasta!', plan:'1m'},
+        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 1 Year ₹2,999 — ₹8/day', plan:'1y'},
+      ]
+    }),
+    () => {
+      const pct  = Math.floor(Math.random()*8+78);
+      const calls = Math.floor(Math.random()*30+180);
       return {
+        sticker: STK.fire,
         text:
-`📈📈📈 ${bold('30 DAY REPORT')} 📈📈📈
+`📈📈📈 ${b('30 DIN KA REPORT')} 📈📈📈
 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-${dline}
-📊 ${bold('Track Record — Last Month:')}
-${dline}
+${D}
+👤 ${b('Anuj Singh')} — Last Month
+${D}
 
-Total calls:    ${bold(calls)}
-Avg return:     *+4.2% per call*
-Best call:      *+18.3% (SUNPHARMA)*
-Max SL hit:     *-2.8%*
+Total calls:    ${b(calls+'')}
+Win rate:       ${b(pct+'%')} ✅
+Avg return:     ${b('+4.2% per call')}
+Best call:      ${b('+18.3% (SUNPHARMA)')}
+Biggest loss:   -2.8%
 
-${bold('Agar ₹50,000 se trade karte:')}
-Potential gain: *₹${(50000*parseInt(pct)/100*0.042).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}+*
-Subscription:   *sirf ₹499* 🤯
+🟢🟢🟢🟢 Wins
+🔴 Loss (${100-pct}%)
+${L}
+${b('Agar ₹50,000 se trade karte:')}
+Potential gain: ${b('₹'+Math.round(50000*pct/100*0.042).toLocaleString('en-IN')+'+')}
+Subscription:   ${b('sirf ₹499')} 🤯
 
-Win/Loss: 🟢🟢🟢🟢 vs 🔴 (${pct}% win rate)
-
-👤 ${getAnalyst()}
-${line}
-💎 ${bold('Join karo — pehle hafte mein recover!')}
+ROI = ${b(Math.round(Math.round(50000*pct/100*0.042)/499)+'x subscription!')}
+${L}
+💎 ${b('Join karo — pehle hafte mein recover!')}
 👇`,
-        sticker: 'fire',
-        buttons:[
+        buttons: [
           {text:'📈 Join Now — ₹499/month', plan:'1m'},
           {text:'🔥 6 Months — ₹1,999', plan:'6m'},
           {text:'👑 1 Year — Max Profit', plan:'1y'},
         ]
       };
     },
-    ()=>({
-      text:
-`⚔️ ${bold('FREE vs PREMIUM')} ⚔️
-${dline}
-
-Feature        FREE    PREMIUM
-${line}
-Calls/day      2-3     ${bold('12-15')} ✅
-Stop Loss       ❌      ✅
-Two Targets     ❌      ✅
-Strength Meter  ❌      ✅
-Morning Brief   ❌      ✅
-Evening Summary ❌      ✅
-Swing Trades    ❌      ✅
-Sector Calls    ❌      ✅
-DM Support      ❌      ✅
-${line}
-
-💰 ${bold('Cost breakdown:')}
-Monthly:  ₹499 = ${bold('₹16/day')}
-6 Months: ₹1999 = ${bold('₹11/day')}
-1 Year:   ₹2999 = ${bold('₹8/day')} 👑
-
-Ek chai = ₹20 | Premium = ₹16/day ☕
-${bold('Chai se bhi sasta!')}
-
-👤 ${getAnalyst()}
-${line}
-💎 ${bold('Kaunsa plan loge?')}
-👇`,
-      sticker: 'fire',
-      buttons:[
-        {text:'☕ ₹499/mo — Chai se sasta!', plan:'1m'},
-        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year ₹2,999 — ₹8/day', plan:'1y'},
-      ]
-    }),
-    ()=>({
-      text:
-`🌅 ${bold('PRE-MARKET BRIEF')}
-⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
-${dline}
-📋 ${bold('Aaj Market Kaise Rahega?')}
-${dline}
-
-🔵 Global cues:   Mixed signals
-🟢 SGX Nifty:     Positive (+0.3%)
-🟡 FII:           Net buyers
-🟢 DII:           Strong support
-
-${bold('Sectors to Watch:')}
-
-${bold('Premium members ko milega:')}
-✅ 9:15 AM — Exact entry calls
-✅ Live updates during market
-✅ 3:30 PM — Closing summary
-
-👤 ${getAnalyst()}
-${line}
-💎 ${bold('Kal se signals chahiye? Aaj join karo!')}
-👇`,
-      sticker: 'buy',
-      buttons:[
-        {text:'⚡ Start Tomorrow — ₹499', plan:'1m'},
-        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year ₹2,999', plan:'1y'},
-      ]
-    }),
   ],
 
-  result:[
-    ()=>{
-      const stocks=['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC','TCS','INFY'];
-      const s = stocks[~~(Math.random()*stocks.length)];
-      const pct = (Math.random()*5+3).toFixed(1);
-      const days = ~~(Math.random()*4)+2;
-      const profit = Math.round(50000 * pct/100);
+  result: [
+    () => {
+      const st = ['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC','TCS','INFY'];
+      const s  = st[Math.floor(Math.random()*st.length)];
+      const pct  = (Math.random()*5+3).toFixed(1);
+      const days = Math.floor(Math.random()*4)+2;
+      const profit = Math.round(50000 * pct / 100);
       return {
+        sticker: STK.trophy,
         text:
-`🎯🎯🎯 ${bold('TARGET HIT!')} 🎯🎯🎯
+`🎯🎯🎯 ${b('TARGET HIT!')} 🎯🎯🎯
 🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
-${dline}
-✅ ${bold(s+'.NSE — CALL RESULT')}
-${dline}
+${D}
+✅ ${b(s+'.NSE — CALL RESULT')}
+${D}
 
-📅 ${days} din mein ${bold('+'+pct+'%')} return!
+📅 ${days} din mein ${b('+'+pct+'%')} return!
 
-Entry → Target journey:
-░░░░░░░░░░ Entry
+📈 Journey:
+🔵 Entry → 📈 Mid → ✅ ${b('TARGET HIT!')}
 
 💰 On ₹50,000 capital:
-Profit: ${bold('+₹'+profit.toLocaleString('en-IN'))}
+Profit = ${b('+₹'+profit.toLocaleString('en-IN'))} 🤑
 
-🔒 ${bold('Ye call FREE channel pe nahi tha')}
+🔒 ${b('Ye call FREE channel pe nahi tha')}
 Sirf Premium members ko mila tha!
 
-👤 ${getAnalyst()} ka call tha ye
-${line}
-🤔 Aap kitne aur miss karoge?
-👇 ${bold('Join karo abhi:')}`,
-        sticker: 'target',
-        buttons:[
+👤 ${b('Anuj Singh')} ka call tha ye
+${L}
+🤔 Aap kitne aur calls miss karoge?
+👇 ${b('Abhi join karo:')}`,
+        buttons: [
           {text:'⚡ Join ₹499/month', plan:'1m'},
           {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
         ]
       };
     },
-    ()=>{
-      const w1=(Math.random()*4+2).toFixed(1);
-      const w2=(Math.random()*6+4).toFixed(1);
-      const w3=(Math.random()*3+2).toFixed(1);
-      const total=(+w1+ +w2+ +w3-2.1);
-      const profit=Math.round(total*1000);
+    () => {
+      const w1 = (Math.random()*4+2).toFixed(1);
+      const w2 = (Math.random()*6+4).toFixed(1);
+      const w3 = (Math.random()*3+2).toFixed(1);
+      const profit = Math.round((+w1+ +w2+ +w3-2.1)*1000);
       return {
+        sticker: STK.trophy,
         text:
-`🏆🏆🏆 ${bold('WEEKLY SCORECARD')} 🏆🏆🏆
+`🏆🏆🏆 ${b('WEEKLY SCORECARD')} 🏆🏆🏆
 📊📊📊📊📊📊📊📊📊📊
-${dline}
-👤 ${getAnalyst()} — This Week
-${dline}
+${D}
+👤 ${b('Anuj Singh')} — This Week
+${D}
 
-RELIANCE  → ${bold('+'+w1+'%')} ✅ Target HIT
-HDFCBANK  → ${bold('+'+w2+'%')} ✅ Both targets!
-INFY      → ${bold('+'+w3+'%')} ✅ Partial profit
-TCS       → 🔄 Still holding
-WIPRO     → ❌ -2.1% SL hit
+RELIANCE → ${b('+'+w1+'%')} ✅ Target HIT
+HDFCBANK → ${b('+'+w2+'%')} ✅ Both targets!
+INFY     → ${b('+'+w3+'%')} ✅ Partial profit
+TCS      → 🔄 Still holding
+WIPRO    → ❌ -2.1% SL hit
 
-${bold('Weekly Win Rate:')}
-${'🟢'.repeat(3)}${'🔴'.repeat(1)} = 75% ✅
+${b('Win Rate: 75% ✅')}
+🟢🟢🟢 Wins vs 🔴 1 Loss
 
-💰 ₹1 lakh pe: ${bold('+₹'+profit.toLocaleString('en-IN'))}
-💸 Monthly subscription: ${bold('sirf ₹499')}
-
-${bold('ROI = '+(profit/499*100).toFixed(0)+'x subscription cost!')} 🤯
-${line}
-💎 ${bold('Next week ke calls chahiye?')}
+💰 ₹1 lakh pe: ${b('+₹'+profit.toLocaleString('en-IN'))}
+💸 Monthly sub: ${b('sirf ₹499')}
+${L}
+💎 ${b('Next week ke calls chahiye?')}
 👇`,
-        sticker: 'target',
-        buttons:[
+        buttons: [
           {text:'📊 Join ₹499/month', plan:'1m'},
           {text:'🥇 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
         ]
       };
     },
-    ()=>{
-      const name=['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'][~~(Math.random()*8)];
-      const city=['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad','Chennai','Kolkata'][~~(Math.random()*8)];
-      const months=~~(Math.random()*8)+2;
-      const profit=~~(Math.random()*18000)+6000;
+    () => {
+      const names  = ['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'];
+      const cities = ['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad'];
+      const name   = names[Math.floor(Math.random()*names.length)];
+      const city   = cities[Math.floor(Math.random()*cities.length)];
+      const months = Math.floor(Math.random()*8)+2;
+      const profit = Math.floor(Math.random()*18000)+6000;
       return {
+        sticker: STK.trophy,
         text:
-`⭐⭐⭐⭐⭐ ${bold('SUCCESS STORY')} ⭐⭐⭐⭐⭐
+`⭐⭐⭐⭐⭐ ${b('SUCCESS STORY')} ⭐⭐⭐⭐⭐
 💬💬💬💬💬💬💬💬💬💬
-${dline}
-👤 ${bold(name+' — '+city)}
+${D}
+👤 ${b(name+' — '+city)}
 🗓 Premium member: ${months} months
-${dline}
+${D}
 
-_"Pehle khud trade karta tha, bahut_
-_loss hota tha. Yahan join kiya toh_
-_ekdum clear milta hai — entry, target,_
-_stop loss sab ready._
+_"Pehle khud trade karta tha,_
+_bahut loss hota tha._
+_Yahan join kiya — entry, target,_
+_stop loss sab ready milta hai._
 
 _Is mahine ₹${profit.toLocaleString('en-IN')} profit hua!_
-_Subscription pehle hafte mein wapas."_ 💰
+_Subscription pehle hafte wapas."_ 💰
 
-${bold('Rating: ⭐⭐⭐⭐⭐')}
+${b('Rating: ⭐⭐⭐⭐⭐')}
 
-👤 Shared with: ${getAnalyst()}
-${line}
-💎 ${bold('Aap bhi ye results chahte ho?')}
+Shared with: ${b('Anuj Singh')}
+${L}
+💎 ${b('Aap bhi ye results chahte ho?')}
 👇`,
-        sticker: 'target',
-        buttons:[
+        buttons: [
           {text:'🚀 Start ₹499/month', plan:'1m'},
           {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 Yearly ₹2,999', plan:'1y'},
@@ -834,708 +1031,165 @@ ${line}
     },
   ],
 
-  urgency:[
-    ()=>{
-      const spots = ~~(Math.random()*8)+4;
+  urgency: [
+    () => {
+      const spots = Math.floor(Math.random()*8)+4;
       return {
+        sticker: STK.fire,
         text:
-`🚨🚨🚨 ${bold('URGENT!')} 🚨🚨🚨
+`🚨🚨🚨 ${b('URGENT NOTICE!')} 🚨🚨🚨
 ⏰⏰⏰⏰⏰⏰⏰⏰⏰⏰
-${dline}
-‼️ ${bold('SIRF '+spots+' SPOTS BAAKI!')}
-${dline}
+${D}
+‼️ ${b('SIRF '+spots+' SPOTS BAAKI!')}
+${D}
 
 Quality maintain karne ke liye
-members limit hai hamare channel mein!
-
-${bold('Seats status:')}
-Remaining: ${bold(spots+' only!')}
+members limit hai channel mein!
 
 Jab limit fill ho jaaye:
 ❌ Channel locked ho jaayega
 ❌ New members nahi aa sakte
 ❌ Next batch: 30 din baad
 
-🔥 ${bold('Sirf Aaj Ke Liye:')}
-3 Month: ₹999 → ${bold('₹799')} 🔥
-6 Month: ₹1999 → ${bold('₹1,499')} 🔥
+🔥 ${b('Sirf Aaj Ke Liye Special Price:')}
+3 Month: ₹999 → ${b('₹699')} 🔥
+6 Month: ₹1999 → ${b('₹1,499')} 🔥
 
-👤 ${getAnalyst()}
-${line}
-⚡ ${bold('Abhi secure karo apni seat!')}
+👤 ${b('Anuj Singh')}
+${L}
+⚡ ${b('Abhi secure karo apni seat!')}
 👇`,
-        sticker: 'fire',
-        buttons:[
-          {text:'🔥 3 Months ₹799 — Limited!', plan:'3m'},
+        buttons: [
+          {text:'🔥 3 Months ₹699 — Limited!', plan:'3m'},
           {text:'💥 6 Months ₹1,499 — Grab!', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
         ]
       };
     },
-    ()=>({
+    () => ({
+      sticker: STK.fire,
       text:
-`💭💭💭 ${bold('SOCH RAHE HO?')} 💭💭💭
+`💭💭💭 ${b('SOCH RAHE HO?')} 💭💭💭
 🤔🤔🤔🤔🤔🤔🤔🤔🤔🤔
-${dline}
-${bold('Ye sochte sochte kya hua?')}
-${dline}
+${D}
+Ye sochte sochte kya hua?
+${D}
 
-_"Kal se join karta hoon..."_
-_"Thoda aur wait karta hoon..."_
-_"Sasta plan aane do..."_
+_"Kal se join karta hoon..."_ ❌
+_"Thoda aur wait karta hoon..."_ ❌
+_"Sasta aane do..."_ ❌
 
-${bold('Result?')}
+${b('Result of waiting:')}
 ❌ 47 calls miss ho gayi
-❌ ₹23,000+ potential gone
+❌ ₹23,000+ potential profit gaya
 ❌ 3 mahine waste ho gaye
 
-${bold('Sochne ka cost:')}
-
-${bold('Join karne ka cost: ₹16/day')}
-
-Jo log abhi join karte hain:
+${b('Jo log abhi join karte hain:')}
 ✅ Kal ke calls paate hain
-✅ Is week profit lete hain
+✅ Is week ka profit lete hain
 ✅ Subscription pehle hafte recover
 
-👤 ${getAnalyst()}
-${line}
-💎 ${bold('Decision time — abhi ya kabhi nahi!')}
+👤 ${b('Anuj Singh')}
+${L}
+💎 ${b('Decision time — abhi ya kabhi nahi!')}
 👇`,
-      sticker: 'fire',
-      buttons:[
-        {text:'✅ Haan Join Karta Hoon — ₹499', plan:'1m'},
-        {text:'🔥 Smart Choice 6M ₹1,999', plan:'6m'},
-        {text:'👑 Best ROI 1Y ₹2,999', plan:'1y'},
+      buttons: [
+        {text:'✅ Join Karta Hoon — ₹499', plan:'1m'},
+        {text:'🔥 Smart — 6M ₹1,999', plan:'6m'},
+        {text:'👑 Best ROI — 1Y ₹2,999', plan:'1y'},
       ]
     }),
   ]
 };
 
-// ── Schedule Config ────────────────────────────────────────────
-// ── Schedule Config ────────────────────────────────────────────
-// ── Schedule Config ────────────────────────────────────────────
-const SCHEDULE=[
-  {id:0,type:'signal', label:'Trading Signal',  icon:'🟢',cls:'ts',active:true},
-  {id:1,type:'promo',  label:'Premium Promo',   icon:'💎',cls:'tp',active:true},
-  {id:2,type:'result', label:'Result/Proof',    icon:'🎯',cls:'tr_',active:true},
-  {id:3,type:'urgency',label:'Urgency Offer',   icon:'🚨',cls:'tu',active:true},
-];
+// ════════════════════════════════════════════════════
+// UI HELPERS
+// ════════════════════════════════════════════════════
+function showPreview(data) {
+  const el = document.getElementById('msgPreview');
+  el.textContent = data.text;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
 
-// ── State ──────────────────────────────────────────────────────
-let running=false,ivSec=60,cd=0,sent=0,errs=0;
-let sessStart=null,cdTimer=null,sessTimer=null;
-let chartData=Array(8).fill(0);
-let usedIdx={signal:[],promo:[],result:[],urgency:[]};
+  const bp = document.getElementById('previewBtns');
+  bp.innerHTML = data.buttons.map(b =>
+    '<div class="preview-btn" onclick="window.open(\''+RZP[b.plan]+'\',\'_blank\')">'
+    + b.text + ' ↗</div>'
+  ).join('');
 
-function getFresh(type){ return getFreshMsg(type); }
-function __unused_getFresh(type){
-  const pool=MSGS[type];
-  if(!pool) return null;
-  if(usedIdx[type].length>=pool.length) usedIdx[type]=[];
-  let idx;
-  do{idx=~~(Math.random()*pool.length);}
-  while(usedIdx[type].includes(idx));
-  usedIdx[type].push(idx);
-  return pool[idx]();
+  document.getElementById('msgTime').textContent =
+    new Date().toLocaleTimeString('en-IN');
 }
 
-function getType(){
-  const active=SCHEDULE.filter(s=>s.active);
-  if(!active.length) return null;
-  const weights={signal:4,promo:3,result:2,urgency:1};
-  const pool=[];
-  active.forEach(s=>{for(let i=0;i<(weights[s.type]||1);i++)pool.push(s.type);});
-  return pool[~~(Math.random()*pool.length)];
+function updateCD() {
+  const m = String(Math.floor(countdown/60)).padStart(2,'0');
+  const s = String(countdown%60).padStart(2,'0');
+  const val = m+':'+s;
+  document.getElementById('cdVal').textContent  = val;
+  document.getElementById('kNext').textContent  = val;
 }
 
-// ── Build Table ────────────────────────────────────────────────
-function buildTable(){
-  document.getElementById('schedBody').innerHTML=SCHEDULE.map(s=>`
-    <tr>
-      <td><span class="tb ${s.cls}">${s.icon} ${s.type.toUpperCase()}</span></td>
-      <td style="color:var(--text)">${s.label}</td>
-      <td style="font-size:11px;color:var(--muted)">Payment buttons ✓</td>
-      <td>
-        <label class="tog">
-          <input type="checkbox" ${s.active?'checked':''} onchange="SCHEDULE[${s.id}].active=this.checked;log('${s.label}: '+(this.checked?'ON':'OFF'),this.checked?'s':'w')"/>
-          <div class="tog-track"></div>
-          <div class="tog-thumb"></div>
-        </label>
-      </td>
-    </tr>`).join('');
+function updateSession() {
+  if (!sessStart) return;
+  const e = Math.floor((Date.now()-sessStart)/1000);
+  const m = String(Math.floor(e/60)).padStart(2,'0');
+  const s = String(e%60).padStart(2,'0');
+  document.getElementById('kSession').textContent = m+':'+s;
 }
 
-// ── Interval ───────────────────────────────────────────────────
-function setIv(s,el){
-  ivSec=s;
-  document.querySelectorAll('.iv').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  if(running){stopBot();startBot();}
-  log(`Interval: ${s}s`,'i');
+function buildChart() {
+  const mx = Math.max(...chartData, 1);
+  document.getElementById('chartBars').innerHTML =
+    chartData.map((v,i) =>
+      '<div class="mbar" style="height:'+((v/mx)*46+3)+'px;opacity:'+(0.3+i*0.09)+'"></div>'
+    ).join('');
 }
 
-// ── Config ─────────────────────────────────────────────────────
-function saveConfig(){
-  const t=document.getElementById('cfgToken').value.trim();
-  const c=document.getElementById('cfgChannel').value.trim();
-  if(!t||!c){toast('⚠️ Bot Token aur Channel ID daalo!');return;}
-  log('✅ Config saved — Direct Razorpay links active!','s');
-  toast('✅ Configuration saved!');
-  document.getElementById('msgPreview').textContent='Bot ready! START dabao ⚡\n\n💎 Buttons direct Razorpay pe jaayenge!';
+function syncStats() {
+  document.getElementById('sSent').textContent  = sent;
+  document.getElementById('sErr').textContent   = errors;
+  document.getElementById('sSess').textContent  = document.getElementById('kSession').textContent;
+  document.getElementById('sNext').textContent  = document.getElementById('kNext').textContent;
+  buildChart();
+  // Sync log
+  document.getElementById('statsLog').innerHTML =
+    document.getElementById('logBox').innerHTML;
+  document.getElementById('statsLog').scrollTop = 9999;
 }
 
-// ── Bot Controls ───────────────────────────────────────────────
-function startBot(){
-  const tok=document.getElementById('cfgToken').value.trim();
-  const ch=document.getElementById('cfgChannel').value.trim();
-  if(!tok||!ch){toast('⚠️ Pehle Bot Token aur Channel ID daalo!');return;}
-
-  running=true; sessStart=Date.now(); cd=ivSec;
-
-  document.getElementById('btnStart').disabled=true;
-  document.getElementById('btnStop').disabled=false;
-
-  const pill=document.getElementById('statusPill');
-  pill.className='status-pill running';
-  document.getElementById('statusTxt').textContent='RUNNING';
-  document.getElementById('nxtEmoji').textContent='⚡';
-
-  log('🚀 Bot started!','s');
-  toast('✅ Bot started!');
-
-  sendMsg(); // first message immediately
-
-  cdTimer=setInterval(()=>{
-    cd--;updateCd();
-    if(cd<=0){sendMsg();cd=ivSec;}
-  },1000);
-
-  sessTimer=setInterval(updateSess,1000);
+function addLog(msg, type) {
+  const box = document.getElementById('logBox');
+  const t   = new Date().toLocaleTimeString('en-IN', {hour12:false});
+  const d   = document.createElement('div');
+  d.className = 'log-entry';
+  d.innerHTML = '<span class="log-time">'+t+'</span>'
+    + '<span class="log-msg '+type+'">'+msg+'</span>';
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
 }
 
-function stopBot(){
-  running=false;
-  clearInterval(cdTimer);clearInterval(sessTimer);
-  document.getElementById('btnStart').disabled=false;
-  document.getElementById('btnStop').disabled=true;
-  const pill=document.getElementById('statusPill');
-  pill.className='status-pill idle';
-  document.getElementById('statusTxt').textContent='IDLE';
-  document.getElementById('nxtEmoji').textContent='⏸';
-  document.getElementById('nxtCd').textContent='--:--';
-  document.getElementById('kNext').textContent='--:--';
-  document.getElementById('nxtType').textContent='Bot stopped';
-  log('⏹ Bot stopped','w');
-  toast('⏹ Bot stopped');
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast' + (isErr ? ' err' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function sendNow(){
-  const tok=document.getElementById('cfgToken').value.trim();
-  const ch=document.getElementById('cfgChannel').value.trim();
-  if(!tok||!ch){toast('⚠️ Config fill karke SAVE karo!');return;}
-  sendMsg();
-  if(running) cd=ivSec;
-}
-
-// ── CORE SEND with Inline Buttons ─────────────────────────────
-async function sendMsg(){
-  const type=getType();
-  if(!type) return;
-  const data=getFresh(type);
-  if(!data) return;
-
-  const tok=document.getElementById('cfgToken').value.trim();
-  const ch=document.getElementById('cfgChannel').value.trim();
-  const sch=SCHEDULE.find(s=>s.type===type);
-  document.getElementById('nxtType').textContent=`Sending: ${sch?.icon} ${sch?.label}`;
-
-  // Show typing
-  showTyping();
-  setTimeout(()=>{
-    hideTyping();
-    updatePreview(data,type);
-  },1200);
-
-  // Build inline keyboard — DIRECT Razorpay payment links!
-  const inline_keyboard=data.buttons.map(b=>[{
-    text: b.text,
-    url: RZP_LINKS[b.plan]
-  }]);
-
-  // Send animated sticker first (for visual effect!)
-  const stickerMap = {
-    buy:    'CAACAgIAAxkBAAIBBWasAAHp5xKjQPRKVrJuRaZrEFLBAAIcAAMw1J0Rq1KvtaHQpMk0AA',
-    sell:   'CAACAgIAAxkBAAIBBmasAAHqkrqnR4Qv4WTdMHLqGLJAAAIdAAMw1J0Rk2HRKpW4AAGG0AA',
-    target: 'CAACAgIAAxkBAAIBB2asAAHrhHi4yNjqy6ZqSKqaOGCBAAIeAAMw1J0RKmzOFmHnE-A0AA',
-    fire:   'CAACAgIAAxkBAAIBCGasAAHsiQ9KrjhLZ8XJfLOtLQtAAAIfAAMw1J0RfJkdS1hJHps0AA',
-  };
-  const stickerId = stickerMap[data.sticker] || stickerMap['fire'];
-  try{
-    await fetch('https://api.telegram.org/bot'+tok+'/sendSticker',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:ch, sticker: stickerId})
-    });
-  } catch(e){ /* sticker optional */ }
-
-  try{
-    const res=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        chat_id:ch,
-        text:data.text,
-        parse_mode:'Markdown',
-        disable_web_page_preview:true,
-        reply_markup:{inline_keyboard}
-      })
-    });
-    const d=await res.json();
-    if(d.ok){
-      sent++;
-      document.getElementById('kSent').textContent=sent;
-      chartData.push(1);chartData.shift();
-      buildChart();
-      log(`✅ ${sch?.icon} ${sch?.label} sent with ${data.buttons.length} payment buttons`,'s');
-      toast(`✅ Sent: ${sch?.label}`);
-    } else {
-      errs++;
-      document.getElementById('kErr').textContent=errs;
-      log(`❌ Error: ${d.description}`,'e');
-      toast(`❌ ${d.description}`);
-    }
-  } catch(e){
-    errs++;
-    document.getElementById('kErr').textContent=errs;
-    log(`❌ Network error`,'e');
-  }
-}
-
-// ── UI HELPERS ─────────────────────────────────────────────────
-function showTyping(){document.getElementById('typingInd').classList.add('show');}
-function hideTyping(){document.getElementById('typingInd').classList.remove('show');}
-
-function updatePreview(data,type){
-  const el=document.getElementById('msgPreview');
-  el.textContent=data.text;
-  el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
-  document.getElementById('msgTime').textContent=new Date().toLocaleTimeString('en-IN');
-
-  // Show button previews
-  const bp=document.getElementById('btnPreview');
-  bp.innerHTML=data.buttons.map(b=>`
-    <div class="tg-btn-preview" style="cursor:pointer" onclick="window.open('${RZP_LINKS[b.plan]}','_blank')">
-      ${b.text} ↗
-    </div>`).join('');
-}
-
-function updateCd(){
-  const m=String(~~(cd/60)).padStart(2,'0');
-  const s=String(cd%60).padStart(2,'0');
-  document.getElementById('nxtCd').textContent=`${m}:${s}`;
-  document.getElementById('kNext').textContent=`${m}:${s}`;
-}
-
-function updateSess(){
-  if(!sessStart) return;
-  const e=~~((Date.now()-sessStart)/1000);
-  const m=String(~~(e/60)).padStart(2,'0');
-  const s=String(e%60).padStart(2,'0');
-  document.getElementById('kSession').textContent=`${m}:${s}`;
-}
-
-function buildChart(){
-  const mx=Math.max(...chartData,1);
-  document.getElementById('miniChart').innerHTML=
-    chartData.map((v,i)=>`<div class="mb" style="height:${(v/mx)*42+3}px;opacity:${0.35+i*0.082}"></div>`).join('');
-}
-
-function log(msg,type='i'){
-  const box=document.getElementById('logBox');
-  const t=new Date().toLocaleTimeString('en-IN',{hour12:false});
-  const d=document.createElement('div');
-  d.className='le';
-  d.innerHTML=`<span class="lt">${t}</span><span class="lm ${type}">${msg}</span>`;
-  box.appendChild(d);box.scrollTop=box.scrollHeight;
-}
-
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
-
-
-// ═══ MOBILE APP LOGIC ═══════════════════════════════════
-
-function isMobile(){ return window.innerWidth <= 768; }
-
-function initMobile(){
-  if(!isMobile()) return;
-  document.getElementById('mobilePage').style.display='block';
-  buildMobileChart();
-}
-
-function switchPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('pg-'+name).classList.add('active');
-  document.getElementById('bn-'+name).classList.add('active');
-  if(name==='stats') updateStatsPage();
-}
-
-function setIvM(s,el){
-  setIv(s, el);
-  document.querySelectorAll('.iv-mobile').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-}
-
-function saveMobileConfig(){
-  const t=(document.getElementById('mCfgToken').value||'').trim();
-  const c=(document.getElementById('mCfgChannel').value||'').trim();
-  if(!t){toast('⚠️ Bot Token daalo!');document.getElementById('mCfgToken').focus();return;}
-  if(!c){toast('⚠️ Channel ID daalo!');document.getElementById('mCfgChannel').focus();return;}
-  // Sync to desktop inputs
-  document.getElementById('cfgToken').value=t;
-  document.getElementById('cfgChannel').value=c;
-  log('✅ Config saved! Token: ...'+t.slice(-6),'s');
-  // Show saved indicator
-  const ind=document.getElementById('savedIndicator');
-  if(ind){ind.style.display='block';setTimeout(()=>ind.style.display='none',4000);}
-  toast('✅ Config saved! START karo ab! 🚀');
-  syncMobileLog();
-  setTimeout(()=>switchPage('home'),1500);
-}
-
-function startBotM(){
-  // Sync mobile config to desktop
-  const mt=document.getElementById('mCfgToken').value.trim();
-  const mc=document.getElementById('mCfgChannel').value.trim();
-  if(mt) document.getElementById('cfgToken').value=mt;
-  if(mc) document.getElementById('cfgChannel').value=mc;
-  startBot();
-  syncMobileUI();
-}
-
-function syncMobileUI(){
-  setTimeout(()=>{
-    const isRunning = running;
-    // Status
-    const pill=document.getElementById('mStatusPill');
-    const txt=document.getElementById('mStatusTxt');
-    if(pill && txt){
-      pill.className='status-pill '+(isRunning?'running':'idle');
-      txt.textContent=isRunning?'RUNNING':'IDLE';
-    }
-    // Buttons
-    const s=document.getElementById('mBtnStart');
-    const sp=document.getElementById('mBtnStop');
-    if(s && sp){
-      s.style.display=isRunning?'none':'block';
-      sp.style.display=isRunning?'block':'none';
-    }
-    syncMobileLog();
-  }, 200);
-}
-
-function syncMobileLog(){
-  const src=document.getElementById('logBox');
-  const dst=document.getElementById('mLogBox');
-  const dst2=document.getElementById('sLogBox');
-  if(src && dst) dst.innerHTML=src.innerHTML;
-  if(src && dst2) dst2.innerHTML=src.innerHTML;
-  if(dst) dst.scrollTop=dst.scrollHeight;
-  if(dst2) dst2.scrollTop=dst2.scrollHeight;
-}
-
-function buildMobileChart(){
-  const el=document.getElementById('sMiniChart');
-  if(el) el.innerHTML=chartData.map((v,i)=>`<div class="mb" style="height:${(v/Math.max(...chartData,1))*54+4}px;opacity:${0.3+i*0.09}"></div>`).join('');
-}
-
-function updateStatsPage(){
-  const gs=id=>document.getElementById(id);
-  if(gs('sKSent')) gs('sKSent').textContent=sent;
-  if(gs('sKErr')) gs('sKErr').textContent=errs;
-  if(gs('sKSess')) gs('sKSess').textContent=gs('kSession')?.textContent||'00:00';
-  if(gs('sKNext')) gs('sKNext').textContent=gs('kNext')?.textContent||'--:--';
-  buildMobileChart();
-  syncMobileLog();
-}
-
-// Sync countdown to mobile
-const origUpdateCd = updateCd;
-window.updateCd = function(){
-  origUpdateCd();
-  const el=document.getElementById('mNxtCd');
-  const et=document.getElementById('mNxtType');
-  const sk=document.getElementById('sKNext');
-  const m=String(~~(cd/60)).padStart(2,'0');
-  const s2=String(cd%60).padStart(2,'0');
-  if(el) el.textContent=`${m}:${s2}`;
-  if(sk) sk.textContent=`${m}:${s2}`;
-  // Update sent counts
-  document.getElementById('mKSent').textContent=sent;
-  document.getElementById('mKErr').textContent=errs;
-  document.getElementById('sKSent').textContent=sent;
-};
-
-// Sync preview to mobile
-const origUpdatePreview = updatePreview;
-window.updatePreview = function(data, type){
-  origUpdatePreview(data, type);
-  // Mobile preview
-  const mel=document.getElementById('mMsgPreview');
-  const mbp=document.getElementById('mBtnPreview');
-  const mt=document.getElementById('mMsgTime');
-  if(mel){
-    mel.textContent=data.text;
-    mel.classList.remove('pop');void mel.offsetWidth;mel.classList.add('pop');
-  }
-  if(mbp) mbp.innerHTML=data.buttons.map(b=>`
-    <div class="tg-btn-preview" onclick="window.open('${RZP_LINKS[b.plan]}','_blank')">${b.text} ↗</div>`).join('');
-  if(mt) mt.textContent=new Date().toLocaleTimeString('en-IN');
-  syncMobileLog();
-  syncMobileUI();
-  buildMobileChart();
-  // Switch to preview tab briefly
-  if(isMobile()) switchPage('preview');
-};
-
-window.addEventListener('resize', initMobile);
-window.addEventListener('load', initMobile);
-
-// ── INIT ───────────────────────────────────────────────────────
-buildTable();buildChart();
-setTimeout(()=>{
-  const d=getFresh('promo');
-  if(d) updatePreview(d,'promo');
-},800);
+// ════════════════════════════════════════════════════
+// INIT — Load saved config
+// ════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  try {
+    const t = localStorage.getItem('ppi_token');
+    const c = localStorage.getItem('ppi_channel');
+    if (t) { document.getElementById('inputToken').value   = t; BOT_TOKEN  = t; }
+    if (c) { document.getElementById('inputChannel').value = c; CHANNEL_ID = c; }
+    if (t && c) addLog('✅ Config loaded from memory!', 's');
+  } catch(e) {}
+  buildChart();
+});
 </script>
-
-<!-- ═══ MOBILE APP UI ═══ -->
-<div id="mobilePage" style="display:none;">
-
-  <!-- Page: Home -->
-  <div class="page active" id="pg-home">
-    <div style="padding: 16px 0 8px;">
-      <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--gold);margin-bottom:2px;">⚡ PROFIT PULSE</div>
-      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">AUTO MARKETING BOT</div>
-    </div>
-
-    <!-- Status Card -->
-    <div class="mobile-status-card">
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">STATUS</div>
-        <div class="status-pill idle" id="mStatusPill" style="padding:6px 12px;font-size:11px;">
-          <div class="sd"></div>
-          <span id="mStatusTxt">IDLE</span>
-        </div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-family:'Orbitron',monospace;font-size:28px;color:var(--gold);font-weight:700;" id="mNxtCd">--:--</div>
-        <div style="font-size:10px;color:var(--muted);" id="mNxtType">Configure first</div>
-      </div>
-    </div>
-
-    <!-- KPI Mobile -->
-    <div class="kpi-row-mobile">
-      <div class="kpi g" style="padding:14px;"><div class="kv" style="font-size:28px;" id="mKSent">0</div><div class="kl">Sent</div></div>
-      <div class="kpi r" style="padding:14px;"><div class="kv" style="font-size:28px;" id="mKErr">0</div><div class="kl">Errors</div></div>
-    </div>
-
-    <!-- Interval -->
-    <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;">SEND INTERVAL</div>
-    <div class="iv-row-mobile">
-      <div class="iv-mobile" onclick="setIvM(30,this)">30s</div>
-      <div class="iv-mobile on" onclick="setIvM(60,this)">1 min</div>
-      <div class="iv-mobile" onclick="setIvM(300,this)">5 min</div>
-      <div class="iv-mobile" onclick="setIvM(900,this)">15 min</div>
-    </div>
-
-    <!-- Big Buttons -->
-    <button class="big-start-btn start" id="mBtnStart" onclick="startBotM()">▶ START BOT</button>
-    <button class="big-start-btn stop" id="mBtnStop" onclick="stopBot();syncMobileUI();" style="display:none;">⏹ STOP BOT</button>
-    <button class="send-now-btn" onclick="sendNow();syncMobileUI();">⚡ SEND NOW</button>
-
-    <!-- Mini Log -->
-    <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;">RECENT ACTIVITY</div>
-    <div class="log-box" id="mLogBox">
-      <div class="le"><span class="lt">--:--:--</span><span class="lm i">Bot ready. Configure & Start!</span></div>
-    </div>
-  </div>
-
-  <!-- Page: Config -->
-  <div class="page" id="pg-config">
-    <div style="padding:16px 0 16px;">
-      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">⚙️ CONFIGURATION</div>
-    </div>
-
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;">
-      
-      <!-- BOT TOKEN -->
-      <div style="margin-bottom:20px;">
-        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:10px;font-weight:600;">🤖 BOT TOKEN</label>
-        <div style="position:relative;">
-          <input 
-            type="text"
-            id="mCfgToken"
-            inputmode="text"
-            enterkeyhint="next"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-            placeholder="Token yahan daalo"
-            style="
-              display:block;
-              width:100%;
-              padding:16px 14px;
-              border-radius:12px;
-              background:#000;
-              border:2px solid var(--gold);
-              color:#00ff88;
-              font-size:14px;
-              font-family:monospace;
-              outline:none;
-              box-sizing:border-box;
-              -webkit-appearance:none;
-              appearance:none;
-              -webkit-user-select:text;
-              user-select:text;
-            "
-          />
-        </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px;">👆 Field tap karo → BotFather wala token paste karo</div>
-      </div>
-
-      <!-- CHANNEL ID -->
-      <div style="margin-bottom:20px;">
-        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:10px;font-weight:600;">📢 FREE CHANNEL ID</label>
-        <div style="position:relative;">
-          <input 
-            type="text"
-            id="mCfgChannel"
-            inputmode="numeric"
-            enterkeyhint="done"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-            placeholder="-1001234567890"
-            style="
-              display:block;
-              width:100%;
-              padding:16px 14px;
-              border-radius:12px;
-              background:#000;
-              border:2px solid var(--gold);
-              color:#00ff88;
-              font-size:14px;
-              font-family:monospace;
-              outline:none;
-              box-sizing:border-box;
-              -webkit-appearance:none;
-              appearance:none;
-              -webkit-user-select:text;
-              user-select:text;
-            "
-          />
-        </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px;">👆 Field tap karo → @userinfobot wala ID paste karo</div>
-      </div>
-
-      <button 
-        onclick="saveMobileConfig()" 
-        style="
-          width:100%;
-          padding:18px;
-          border-radius:14px;
-          border:none;
-          background:linear-gradient(135deg,#c49a10,#ffdc6e);
-          color:#000;
-          font-size:16px;
-          font-weight:900;
-          letter-spacing:1px;
-          cursor:pointer;
-          -webkit-appearance:none;
-          box-shadow:0 6px 24px rgba(247,201,72,0.4);
-        ">
-        💾 SAVE &amp; ACTIVATE
-      </button>
-
-      <div id="savedIndicator" style="display:none;margin-top:14px;text-align:center;
-        background:rgba(0,255,136,0.1);border:1px solid var(--green);border-radius:10px;
-        padding:12px;color:var(--green);font-size:13px;font-weight:600;">
-        ✅ Saved! HOME pe jao → START dabao 🚀
-      </div>
-    </div>
-
-    <!-- Payment Links Info -->
-    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:18px;margin-top:16px;">
-      <div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:12px;">✅ PAYMENT LINKS ACTIVE</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.8;">
-        <div>🥉 1 Month — ₹499 ✓</div>
-        <div>🥈 3 Months — ₹699 ✓</div>
-        <div>🥇 6 Months — ₹1,999 ✓</div>
-        <div>👑 1 Year — ₹2,999 ✓</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Page: Preview -->
-  <div class="page" id="pg-preview">
-    <div style="padding:16px 0 16px;">
-      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">📱 LAST MESSAGE</div>
-    </div>
-    <div style="background:#0a0f1e;border:1px solid var(--border);border-radius:16px;padding:16px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#06080f;">PP</div>
-        <div><div style="font-size:13px;font-weight:600;">Profit Pulse India 🇮🇳</div><div style="font-size:10px;color:var(--green);">● Channel</div></div>
-      </div>
-      <div class="typing-ind" id="mTypingInd"><span></span><span></span><span></span></div>
-      <div class="msg-bubble" id="mMsgPreview">Koi message nahi bheja abhi...
-
-HOME pe jaao aur START dabao! ⚡</div>
-      <div class="tg-btns" id="mBtnPreview">
-        <div class="tg-btn-preview">💎 Join Premium →</div>
-      </div>
-      <div class="msg-time" id="mMsgTime">--:--</div>
-    </div>
-  </div>
-
-  <!-- Page: Stats -->
-  <div class="page" id="pg-stats">
-    <div style="padding:16px 0 16px;">
-      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">📊 STATISTICS</div>
-    </div>
-    <div class="kpi-row-mobile" style="grid-template-columns:1fr 1fr;">
-      <div class="kpi g" style="padding:18px;"><div class="kv" id="sKSent">0</div><div class="kl">Total Sent</div></div>
-      <div class="kpi r" style="padding:18px;"><div class="kv" id="sKErr">0</div><div class="kl">Errors</div></div>
-    </div>
-    <div class="kpi-row-mobile" style="grid-template-columns:1fr 1fr;margin-top:0;">
-      <div class="kpi gr" style="padding:18px;"><div class="kv" id="sKSess">00:00</div><div class="kl">Session</div></div>
-      <div class="kpi b" style="padding:18px;"><div class="kv" id="sKNext">--:--</div><div class="kl">Next In</div></div>
-    </div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:4px;">
-      <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;">MESSAGES SENT</div>
-      <div class="mini-bars" id="sMiniChart" style="height:60px;"></div>
-    </div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:10px;">
-      <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;">FULL LOG</div>
-      <div class="log-box" style="height:220px;" id="sLogBox"></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav" id="bottomNav">
-  <div class="bn-item active" id="bn-home" onclick="switchPage('home')"><span>🏠</span>HOME</div>
-  <div class="bn-item" id="bn-config" onclick="switchPage('config')"><span>⚙️</span>CONFIG</div>
-  <div class="bn-item" id="bn-preview" onclick="switchPage('preview')"><span>📱</span>PREVIEW</div>
-  <div class="bn-item" id="bn-stats" onclick="switchPage('stats')"><span>📊</span>STATS</div>
-</nav>
 </body>
 </html>
