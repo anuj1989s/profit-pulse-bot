@@ -1,0 +1,23 @@
+{
+  "name": "Profit Pulse Bot",
+  "short_name": "PPI Bot",
+  "description": "Profit Pulse India Auto Marketing Bot",
+  "start_url": "./bot-dashboard.html",
+  "display": "standalone",
+  "background_color": "#06080f",
+  "theme_color": "#f7c948",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

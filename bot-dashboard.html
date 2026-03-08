@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="PPI Bot"/>
+<meta name="theme-color" content="#06080f"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<title>Profit Pulse — Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#f7c948;--gold2:#ffdc6e;--gold3:#c49a10;
+  --green:#00ff88;--red:#ff4466;--blue:#38bdf8;
+  --bg:#06080f;--bg2:#0d1120;--bg3:#111827;
+  --border:#1a2540;--text:#e8edf5;--muted:#4a5568;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+
+.bg-grid{position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(247,201,72,0.03) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(247,201,72,0.03) 1px,transparent 1px);
+  background-size:50px 50px;animation:gridScroll 20s linear infinite;}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:50px 50px}}
+.bg-glow{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(247,201,72,0.05) 0%,transparent 70%);}
+
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:22px 20px;}
+
+/* HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+.logo-txt{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--gold);letter-spacing:2px;}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+.status-pill{display:flex;align-items:center;gap:8px;
+  border-radius:20px;padding:8px 16px;font-size:12px;font-family:'Orbitron',monospace;
+  font-weight:700;letter-spacing:1px;border:1px solid;}
+.status-pill.idle{color:var(--muted);border-color:var(--border);background:var(--bg2);}
+.status-pill.running{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.07);}
+.status-pill.running .sd{background:var(--green);animation:sdPulse 1.2s infinite;}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--muted);}
+@keyframes sdPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+/* CONFIG */
+.cfg-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  padding:20px 24px;margin-bottom:22px;}
+.cfg-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);
+  letter-spacing:2px;margin-bottom:16px;font-weight:700;}
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;}
+.cg label{font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px;display:block;}
+.cg input{width:100%;padding:10px 13px;border-radius:8px;
+  background:#07090f;border:1px solid var(--border);color:var(--text);
+  font-size:11px;font-family:'Share Tech Mono',monospace;outline:none;transition:0.2s;}
+.cg input:focus{border-color:var(--gold);}
+.cfg-save{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold3),var(--gold2));
+  color:#06080f;font-weight:700;font-size:11px;font-family:'Orbitron',monospace;
+  letter-spacing:1px;white-space:nowrap;transition:all 0.2s;}
+.cfg-save:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(247,201,72,0.35);}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi.g::before{background:var(--gold);}
+.kpi.gr::before{background:var(--green);}
+.kpi.b::before{background:var(--blue);}
+.kpi.r::before{background:var(--red);}
+.kv{font-family:'Orbitron',monospace;font-size:24px;font-weight:700;margin-bottom:4px;}
+.kpi.g .kv{color:var(--gold);}
+.kpi.gr .kv{color:var(--green);}
+.kpi.b .kv{color:var(--blue);}
+.kpi.r .kv{color:var(--red);}
+.kl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+
+/* MAIN GRID */
+.main{display:grid;grid-template-columns:1fr 360px;gap:18px;}
+
+/* PANEL */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.pt{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--gold);
+  letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* SCHEDULE */
+.sched-tbl{width:100%;border-collapse:collapse;}
+.sched-tbl th{font-size:9px;color:var(--muted);text-align:left;padding:7px 10px;
+  border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;}
+.sched-tbl td{padding:9px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
+.sched-tbl tr:hover td{background:rgba(255,255,255,0.02);}
+.tb{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:0.5px;font-family:'Orbitron',monospace;}
+.ts{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2);}
+.tp{background:rgba(247,201,72,0.1);color:var(--gold);border:1px solid rgba(247,201,72,0.2);}
+.tr_{background:rgba(56,189,248,0.1);color:var(--blue);border:1px solid rgba(56,189,248,0.2);}
+.tu{background:rgba(255,68,102,0.1);color:var(--red);border:1px solid rgba(255,68,102,0.2);}
+
+.tog{position:relative;width:34px;height:19px;cursor:pointer;display:inline-block;}
+.tog input{opacity:0;width:0;height:0;position:absolute;}
+.tog-track{position:absolute;inset:0;background:#1a2540;border-radius:10px;transition:0.3s;}
+.tog-thumb{position:absolute;top:3px;left:3px;width:13px;height:13px;
+  background:var(--muted);border-radius:50%;transition:0.3s;}
+.tog input:checked+.tog-track{background:rgba(0,255,136,0.15);border:1px solid var(--green);}
+.tog input:checked~.tog-thumb{transform:translateX(15px);background:var(--green);}
+
+/* RIGHT SIDE */
+.iv-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;}
+.iv{padding:7px 0;border-radius:7px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--muted);font-size:10px;cursor:pointer;
+  font-family:'Orbitron',monospace;text-align:center;transition:0.2s;}
+.iv.on{border-color:var(--gold);background:rgba(247,201,72,0.08);color:var(--gold);}
+
+.nxt-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:13px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.nxt-lbl{font-size:10px;color:var(--muted);}
+.nxt-val{font-family:'Orbitron',monospace;font-size:20px;color:var(--gold);font-weight:700;}
+.nxt-type{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.ctrl{padding:11px 6px;border-radius:9px;border:none;cursor:pointer;
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1px;
+  transition:all 0.2s;text-align:center;}
+.c-start{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);color:var(--green);}
+.c-start:hover{background:rgba(0,255,136,0.15);}
+.c-stop{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.3);color:var(--red);}
+.c-stop:hover{background:rgba(255,68,102,0.15);}
+.c-now{background:rgba(247,201,72,0.08);border:1px solid rgba(247,201,72,0.3);color:var(--gold);}
+.c-now:hover{background:rgba(247,201,72,0.15);}
+.ctrl:disabled{opacity:0.35;cursor:not-allowed;}
+
+/* PREVIEW */
+.phone-hdr{display:flex;align-items:center;gap:10px;padding-bottom:12px;
+  border-bottom:1px solid var(--border);margin-bottom:12px;}
+.ph-av{width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold3),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#06080f;}
+.ph-name{font-size:13px;font-weight:600;}
+.ph-status{font-size:10px;color:var(--green);}
+
+.typing-ind{display:none;align-items:center;gap:4px;padding:7px 12px;
+  background:#1a2540;border-radius:16px;width:fit-content;margin-bottom:10px;}
+.typing-ind.show{display:flex;}
+.typing-ind span{width:5px;height:5px;border-radius:50%;background:var(--muted);}
+.typing-ind span:nth-child(1){animation:td 1s 0s infinite;}
+.typing-ind span:nth-child(2){animation:td 1s 0.2s infinite;}
+.typing-ind span:nth-child(3){animation:td 1s 0.4s infinite;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
+
+.msg-bubble{background:#162416;border:1px solid rgba(0,255,136,0.12);
+  border-radius:12px 12px 12px 4px;padding:13px 15px;
+  font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.75;
+  color:#cce8cc;white-space:pre-wrap;word-break:break-word;
+  max-height:320px;overflow-y:auto;min-height:100px;position:relative;}
+.msg-bubble.pop{animation:msgPop 0.4s ease;}
+@keyframes msgPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Inline buttons preview */
+.tg-btns{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.tg-btn-preview{background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25);
+  border-radius:8px;padding:8px 12px;font-size:11px;color:var(--blue);text-align:center;
+  font-family:'Share Tech Mono',monospace;}
+
+.msg-time{font-size:10px;color:var(--muted);text-align:right;margin-top:8px;}
+
+/* LOG */
+.log-box{background:#07090f;border:1px solid var(--border);border-radius:10px;
+  padding:12px;height:140px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:11px;}
+.le{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:10px;}
+.lt{color:var(--muted);white-space:nowrap;font-size:10px;}
+.lm.s{color:var(--green);}.lm.e{color:var(--red);}.lm.i{color:var(--blue);}.lm.w{color:var(--gold);}
+
+.mini-bars{display:flex;align-items:flex-end;gap:4px;height:46px;margin-top:10px;}
+.mb{flex:1;border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,var(--gold2),var(--gold3));min-height:3px;transition:height 0.5s;}
+
+.toast{position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--bg2);border:1px solid var(--green);border-radius:10px;
+  padding:12px 18px;font-size:13px;color:var(--green);
+  transform:translateY(70px);opacity:0;transition:all 0.3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+
+/* ── MOBILE OPTIMIZATIONS ─────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+body { overscroll-behavior: none; }
+
+.wrap { padding: 14px 12px; }
+
+/* Bottom nav for mobile */
+.bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(6,8,15,0.97); backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  grid-template-columns: repeat(4, 1fr);
+}
+.bn-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 9px; color: var(--muted); cursor: pointer;
+  font-family: 'Orbitron', monospace; letter-spacing: 0.5px;
+  padding: 4px 0; transition: color 0.2s;
+}
+.bn-item.active { color: var(--gold); }
+.bn-item span { font-size: 20px; }
+
+/* Page sections */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Mobile card style */
+.mobile-status-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; margin-bottom: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.big-start-btn {
+  width: 100%; padding: 18px; border-radius: 16px; border: none;
+  font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 900;
+  letter-spacing: 2px; cursor: pointer; transition: all 0.2s;
+  margin-bottom: 12px; position: relative; overflow: hidden;
+}
+.big-start-btn.start {
+  background: linear-gradient(135deg, #00aa55, var(--green));
+  color: #06080f;
+  box-shadow: 0 8px 32px rgba(0,255,136,0.3);
+}
+.big-start-btn.stop {
+  background: linear-gradient(135deg, #cc0033, var(--red));
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(255,68,102,0.3);
+}
+.big-start-btn:active { transform: scale(0.97); }
+
+.send-now-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  border: 1px solid rgba(247,201,72,0.4);
+  background: rgba(247,201,72,0.08); color: var(--gold);
+  font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700;
+  letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+  margin-bottom: 12px;
+}
+.send-now-btn:active { transform: scale(0.97); }
+
+/* Mobile interval selector */
+.iv-row-mobile { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+.iv-mobile {
+  padding: 10px 4px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--muted); font-size: 11px;
+  cursor: pointer; font-family: 'Orbitron', monospace; text-align: center;
+  transition: 0.2s;
+}
+.iv-mobile.on { border-color: var(--gold); background: rgba(247,201,72,0.1); color: var(--gold); }
+
+/* Mobile KPI */
+.kpi-row-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+/* Mobile log */
+.log-box { height: 200px; font-size: 11px; }
+
+/* Preview mobile */
+.msg-bubble { font-size: 12px; max-height: 250px; }
+
+@media (max-width: 768px) {
+  .bottom-nav { display: grid; }
+  .hdr { display: none; }
+  .cfg-box { display: none; }
+  .kpi-row { display: none; }
+  .main { display: none; }
+  .wrap { padding-bottom: 80px; }
+}
+
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .cfg-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div>
+      <div class="logo-txt">⚡ PROFIT PULSE BOT</div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <div class="logo-sub">AUTO MARKETING + PAYMENT SYSTEM</div>
+      </div>
+    </div>
+    <div class="status-pill idle" id="statusPill">
+      <div class="sd"></div>
+      <span id="statusTxt">IDLE</span>
+    </div>
+  </div>
+
+  <!-- ⚙️ CONFIG -->
+  <div class="cfg-box">
+    <div class="cfg-title">⚙️ CONFIGURATION</div>
+    <div class="cfg-grid">
+      <div class="cg">
+        <label>BOT TOKEN</label>
+        <input id="cfgToken" placeholder="123456789:ABCdef..."/>
+      </div>
+      <div class="cg">
+        <label>FREE CHANNEL ID</label>
+        <input id="cfgChannel" placeholder="-1001234567890"/>
+      </div>
+      <button class="cfg-save" onclick="saveConfig()">💾 SAVE</button>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi g"><div class="kv" id="kSent">0</div><div class="kl">Messages Sent</div></div>
+    <div class="kpi gr"><div class="kv" id="kSession">00:00</div><div class="kl">Session Time</div></div>
+    <div class="kpi b"><div class="kv" id="kNext">--:--</div><div class="kl">Next Message</div></div>
+    <div class="kpi r"><div class="kv" id="kErr">0</div><div class="kl">Errors</div></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- SCHEDULE -->
+      <div class="panel">
+        <div class="pt">📅 MESSAGE SCHEDULE</div>
+        <table class="sched-tbl">
+          <thead><tr>
+            <th>Type</th><th>Theme</th><th>Contains</th><th>Active</th>
+          </tr></thead>
+          <tbody id="schedBody"></tbody>
+        </table>
+      </div>
+
+      <!-- LOG -->
+      <div class="panel">
+        <div class="pt">📋 ACTIVITY LOG</div>
+        <div class="log-box" id="logBox">
+          <div class="le"><span class="lt">--:--:--</span><span class="lm i">System ready. Config fill karke START karo.</span></div>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">MESSAGES SENT (LAST 8)</div>
+          <div class="mini-bars" id="miniChart"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div style="display:flex;flex-direction:column;gap:14px;">
+
+      <!-- CONTROLS -->
+      <div class="panel">
+        <div class="pt">⚡ CONTROLS</div>
+
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:7px">SEND INTERVAL</div>
+        <div class="iv-row">
+          <div class="iv" onclick="setIv(30,this)">30s</div>
+          <div class="iv on" onclick="setIv(60,this)">1 min</div>
+          <div class="iv" onclick="setIv(300,this)">5 min</div>
+          <div class="iv" onclick="setIv(900,this)">15 min</div>
+        </div>
+
+        <div class="nxt-box">
+          <div>
+            <div class="nxt-lbl">NEXT MESSAGE IN</div>
+            <div class="nxt-val" id="nxtCd">--:--</div>
+            <div class="nxt-type" id="nxtType">Configure & Start</div>
+          </div>
+          <div style="font-size:26px" id="nxtEmoji">⏸</div>
+        </div>
+
+        <div class="ctrl-row">
+          <button class="ctrl c-start" id="btnStart" onclick="startBot()">▶ START</button>
+          <button class="ctrl c-stop" id="btnStop" onclick="stopBot()" disabled>⏹ STOP</button>
+          <button class="ctrl c-now" onclick="sendNow()">⚡ NOW</button>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="panel">
+        <div class="pt">📱 TELEGRAM PREVIEW</div>
+        <div style="background:#0a0f1e;border:1px solid var(--border);border-radius:12px;padding:14px;">
+          <div class="phone-hdr">
+            <div class="ph-av">PP</div>
+            <div>
+              <div class="ph-name">Profit Pulse India 🇮🇳</div>
+              <div class="ph-status">● Channel</div>
+            </div>
+          </div>
+          <div class="typing-ind" id="typingInd">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="msg-bubble" id="msgPreview">Bot ready hai...
+
+START dabao aur dekho magic! ⚡
+
+💎 JOIN: your-site.netlify.app</div>
+          <div class="tg-btns" id="btnPreview">
+            <div class="tg-btn-preview">💎 Join Premium — ₹499/month →</div>
+          </div>
+          <div class="msg-time" id="msgTime">waiting...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+// ⚙️ PAYMENT PAGE URL — Netlify URL yahan
+// ════════════════════════════════════════════
+// ✅ DIRECT RAZORPAY PAYMENT LINKS — Koi website nahi, seedha payment!
+const RZP_LINKS = {
+  '1m': 'https://rzp.io/rzp/sbs2Bc5m',   // ₹499  - 1 Month
+  '3m': 'https://rzp.io/rzp/L5w4PKzi',   // ₹699  - 3 Months
+  '6m': 'https://rzp.io/rzp/CxeWLGu',    // ₹1999 - 6 Months
+  '1y': 'https://rzp.io/rzp/ToSxb5OJ',   // ₹2999 - 1 Year
+};
+
+// ── MESSAGES with Payment Buttons ────────────────────────────────
+// Har message ke saath ?plan=XX link attach hota hai automatically
+const MSGS = {
+
+  signal:[
+    ()=>{
+      const st=['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI','NTPC','SBIN'];
+      const s=st[~~(Math.random()*st.length)];
+      const p=(Math.random()*4000+400).toFixed(2);
+      const t1=(+p*1.035).toFixed(2),t2=(+p*1.07).toFixed(2),sl=(+p*0.975).toFixed(2);
+      const rsi=(Math.random()*28+28).toFixed(1),cf=(Math.random()*14+82).toFixed(0);
+      return {
+        text:`🟢 STRONG BUY — ${s}.NSE
+━━━━━━━━━━━━━━━━━━━━
+💰 Entry: ₹${p}
+🎯 Target 1: ₹${t1} (+3.5%)
+🎯 Target 2: ₹${t2} (+7%)
+🛑 Stop Loss: ₹${sl} (-2.5%)
+📊 R:R Ratio: 2.8x | Confidence: ${cf}%
+
+📈 Why:
+• RSI ${rsi} — Oversold zone
+• EMA9 × EMA21 bullish cross
+• Price below lower Bollinger Band
+
+⚠️ Ye FREE signal hai — aur bhi chahiye?
+━━━━━━━━━━━━━━━━━━━━
+💎 PREMIUM mein milega DAILY 12+ signals
+👇 Plan choose karo:`,
+        buttons:[
+          {text:'🥉 ₹499/mo — 1 Month', plan:'1m'},
+          {text:'🥇 ₹1,999 — 6 Months (Popular)', plan:'6m'},
+          {text:'👑 ₹2,999 — 1 Year (Best Value)', plan:'1y'},
+        ]
+      };
+    },
+    ()=>{
+      const st=['WIPRO','ONGC','BPCL','COALINDIA','JSWSTEEL','HINDALCO','DRREDDY','CIPLA'];
+      const s=st[~~(Math.random()*st.length)];
+      const p=(Math.random()*2000+200).toFixed(2);
+      const t1=(+p*0.965).toFixed(2),t2=(+p*0.93).toFixed(2),sl=(+p*1.025).toFixed(2);
+      const rsi=(Math.random()*8+68).toFixed(1);
+      return {
+        text:`🔴 SELL SIGNAL — ${s}.NSE
+━━━━━━━━━━━━━━━━━━━━
+💰 Entry: ₹${p}
+🎯 Target 1: ₹${t1} (-3.5%)
+🎯 Target 2: ₹${t2} (-7%)
+🛑 Stop Loss: ₹${sl} (+2.5%)
+
+📉 Why:
+• RSI ${rsi} — Overbought
+• MACD bearish divergence
+• Resistance zone touch
+
+🔒 Ye PREVIEW hai. Premium mein:
+✅ 12-15 signals DAILY + Full analysis
+━━━━━━━━━━━━━━━━━━━━
+💎 Abhi join karo:`,
+        buttons:[
+          {text:'🥉 1 Month — ₹499', plan:'1m'},
+          {text:'🥈 3 Months — ₹999 (Save ₹498)', plan:'3m'},
+          {text:'👑 1 Year — ₹2,999 (Best Deal)', plan:'1y'},
+        ]
+      };
+    }
+  ],
+
+  promo:[
+    ()=>({
+      text:`💎 PROFIT PULSE INDIA — PREMIUM
+
+Roz subah uthke ye milta hai members ko:
+✅ 9:00 AM — Market Outlook
+✅ 10–15 Buy/Sell Signals with:
+   • Entry Price
+   • Target 1 & Target 2
+   • Stop Loss
+   • AI Confidence Score
+✅ 3:30 PM — Closing Summary
+
+🆓 FREE channel mein sirf 2-3 signals
+💎 PREMIUM = 12-15 signals DAILY
+
+Sirf ₹499/month — ₹16 per day!
+Ek chai bhi itni nahi hoti ☕
+━━━━━━━━━━━━━━━━━━━━
+👇 Apna plan choose karo:`,
+      buttons:[
+        {text:'🥉 1 Month — ₹499', plan:'1m'},
+        {text:'🥈 3 Months — ₹999', plan:'3m'},
+        {text:'🥇 6 Months — ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 1 Year — ₹2,999', plan:'1y'},
+      ]
+    }),
+    ()=>({
+      text:`📊 FREE vs 💎 PREMIUM
+
+Feature          |  Free  | Premium
+─────────────────|────────|────────
+Signals/day      |   2-3  |  12-15
+Stop Loss        |   ❌   |   ✅
+Target 1 & 2     |   ❌   |   ✅
+AI Confidence    |   ❌   |   ✅
+Morning Outlook  |   ❌   |   ✅
+Evening Summary  |   ❌   |   ✅
+R:R Ratio        |   ❌   |   ✅
+Priority Support |   ❌   |   ✅
+
+💎 PREMIUM = sirf ₹8/day (yearly plan)
+━━━━━━━━━━━━━━━━━━━━
+👇 Kaunsa plan loge?`,
+      buttons:[
+        {text:'💎 Start ₹499/month', plan:'1m'},
+        {text:'🔥 ₹1,999 — 6 Months (Most Popular)', plan:'6m'},
+        {text:'👑 ₹2,999 — Full Year', plan:'1y'},
+      ]
+    }),
+    ()=>({
+      text:`🤔 Abhi tak join nahi kiya?
+
+Ye calculation dekho:
+
+Agar 1 signal se sirf ₹1,000 profit...
+= 1 mahine mein 20 trading days
+= Potential ₹20,000 profit
+
+Premium cost? Sirf ₹499! 
+
+Baki ₹19,501 = AAPKA FAAYDA 💰
+
+Real member review:
+⭐⭐⭐⭐⭐
+"Pehle week mein subscription recover
+ho gaya. Aur ab consistent profit!"
+— Rahul S., Delhi (4 months member)
+━━━━━━━━━━━━━━━━━━━━
+👇 Aaj join karo:`,
+      buttons:[
+        {text:'🚀 Join Now — ₹499/month', plan:'1m'},
+        {text:'🔥 Best Value — ₹1,999/6mo', plan:'6m'},
+        {text:'👑 Ultimate — ₹2,999/year', plan:'1y'},
+      ]
+    })
+  ],
+
+  result:[
+    ()=>{
+      const st=['RELIANCE','HDFCBANK','TCS','BHARTIARTL','SUNPHARMA'];
+      const s=st[~~(Math.random()*st.length)];
+      const pct=(Math.random()*4+2.5).toFixed(1);
+      const days=~~(Math.random()*4)+2;
+      const profit=~~(+pct*1000);
+      return {
+        text:`🎯 TARGET HIT! ✅
+
+📌 ${s} — BUY Signal Result
+(PREMIUM members ko ${days} din pehle diya)
+
+Entry se: +${pct}% in just ${days} days!
+₹1 lakh → ₹${profit.toLocaleString('en-IN')} PROFIT 💰
+
+Ye signal FREE channel pe nahi tha.
+Sirf PREMIUM members ko mila tha 🔒
+
+Kitne aur aise signals miss karoge? 🤔
+━━━━━━━━━━━━━━━━━━━━
+💎 Abhi join karo:`,
+        buttons:[
+          {text:'⚡ Join Premium — ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months — ₹1,999 (Save ₹995)', plan:'6m'},
+          {text:'👑 1 Year — ₹2,999 (Max Savings)', plan:'1y'},
+        ]
+      };
+    }
+  ],
+
+  urgency:[
+    ()=>{
+      const spots=~~(Math.random()*12)+5;
+      return {
+        text:`🚨 SIRF ${spots} SPOTS BAAKI! 🚨
+
+Quality maintain karne ke liye
+members limit karte hain hum.
+
+Abhi ${spots} seats available hain ONLY!
+━━━━━━━━━━━━━━━━━━━━
+🔥 LIMITED OFFER — Aaj Sirf:
+• 3 Month: ₹799 (was ₹999) 🔥
+• 6 Month: ₹1,499 (was ₹1,999) 🔥
+
+Kal se normal price wapas!
+━━━━━━━━━━━━━━━━━━━━
+⚡ ABHI JOIN KARO:`,
+        buttons:[
+          {text:'🔥 3 Months — ₹799 (Offer Price)', plan:'3m'},
+          {text:'💥 6 Months — ₹1,499 (Offer Price)', plan:'6m'},
+          {text:'👑 1 Year — ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+    ()=>({
+      text:`⏰ MARKET SIRF 15 MINUTES MEIN BAND!
+
+Aaj PREMIUM members ne kiya:
+✅ BHARTIARTL +5.2%
+✅ SUNPHARMA +4.8%
+✅ NTPC +3.1%
+
+Tum kahan the? 😮
+
+Kal ke signals miss mat karo!
+━━━━━━━━━━━━━━━━━━━━
+💎 Abhi join karo — kal 9 AM se signals milenge:`,
+      buttons:[
+        {text:'⚡ ₹499 — Start Tomorrow', plan:'1m'},
+        {text:'🔥 ₹1,999 — 6 Months Best Deal', plan:'6m'},
+        {text:'👑 ₹2,999 — Full Year', plan:'1y'},
+      ]
+    })
+  ]
+};
+
+// ── Schedule Config ────────────────────────────────────────────
+const SCHEDULE=[
+  {id:0,type:'signal', label:'Trading Signal',  icon:'🟢',cls:'ts',active:true},
+  {id:1,type:'promo',  label:'Premium Promo',   icon:'💎',cls:'tp',active:true},
+  {id:2,type:'result', label:'Result/Proof',    icon:'🎯',cls:'tr_',active:true},
+  {id:3,type:'urgency',label:'Urgency Offer',   icon:'🚨',cls:'tu',active:true},
+];
+
+// ── State ──────────────────────────────────────────────────────
+let running=false,ivSec=60,cd=0,sent=0,errs=0;
+let sessStart=null,cdTimer=null,sessTimer=null;
+let chartData=Array(8).fill(0);
+let usedIdx={signal:[],promo:[],result:[],urgency:[]};
+
+function getFresh(type){
+  const pool=MSGS[type];
+  if(!pool) return null;
+  if(usedIdx[type].length>=pool.length) usedIdx[type]=[];
+  let idx;
+  do{idx=~~(Math.random()*pool.length);}
+  while(usedIdx[type].includes(idx));
+  usedIdx[type].push(idx);
+  return pool[idx]();
+}
+
+function getType(){
+  const active=SCHEDULE.filter(s=>s.active);
+  if(!active.length) return null;
+  const weights={signal:4,promo:3,result:2,urgency:1};
+  const pool=[];
+  active.forEach(s=>{for(let i=0;i<(weights[s.type]||1);i++)pool.push(s.type);});
+  return pool[~~(Math.random()*pool.length)];
+}
+
+// ── Build Table ────────────────────────────────────────────────
+function buildTable(){
+  document.getElementById('schedBody').innerHTML=SCHEDULE.map(s=>`
+    <tr>
+      <td><span class="tb ${s.cls}">${s.icon} ${s.type.toUpperCase()}</span></td>
+      <td style="color:var(--text)">${s.label}</td>
+      <td style="font-size:11px;color:var(--muted)">Payment buttons ✓</td>
+      <td>
+        <label class="tog">
+          <input type="checkbox" ${s.active?'checked':''} onchange="SCHEDULE[${s.id}].active=this.checked;log('${s.label}: '+(this.checked?'ON':'OFF'),this.checked?'s':'w')"/>
+          <div class="tog-track"></div>
+          <div class="tog-thumb"></div>
+        </label>
+      </td>
+    </tr>`).join('');
+}
+
+// ── Interval ───────────────────────────────────────────────────
+function setIv(s,el){
+  ivSec=s;
+  document.querySelectorAll('.iv').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  if(running){stopBot();startBot();}
+  log(`Interval: ${s}s`,'i');
+}
+
+// ── Config ─────────────────────────────────────────────────────
+function saveConfig(){
+  const t=document.getElementById('cfgToken').value.trim();
+  const c=document.getElementById('cfgChannel').value.trim();
+  if(!t||!c){toast('⚠️ Bot Token aur Channel ID daalo!');return;}
+  log('✅ Config saved — Direct Razorpay links active!','s');
+  toast('✅ Configuration saved!');
+  document.getElementById('msgPreview').textContent='Bot ready! START dabao ⚡\n\n💎 Buttons direct Razorpay pe jaayenge!';
+}
+
+// ── Bot Controls ───────────────────────────────────────────────
+function startBot(){
+  const tok=document.getElementById('cfgToken').value.trim();
+  const ch=document.getElementById('cfgChannel').value.trim();
+  if(!tok||!ch){toast('⚠️ Pehle Bot Token aur Channel ID daalo!');return;}
+
+  running=true; sessStart=Date.now(); cd=ivSec;
+
+  document.getElementById('btnStart').disabled=true;
+  document.getElementById('btnStop').disabled=false;
+
+  const pill=document.getElementById('statusPill');
+  pill.className='status-pill running';
+  document.getElementById('statusTxt').textContent='RUNNING';
+  document.getElementById('nxtEmoji').textContent='⚡';
+
+  log('🚀 Bot started!','s');
+  toast('✅ Bot started!');
+
+  sendMsg(); // first message immediately
+
+  cdTimer=setInterval(()=>{
+    cd--;updateCd();
+    if(cd<=0){sendMsg();cd=ivSec;}
+  },1000);
+
+  sessTimer=setInterval(updateSess,1000);
+}
+
+function stopBot(){
+  running=false;
+  clearInterval(cdTimer);clearInterval(sessTimer);
+  document.getElementById('btnStart').disabled=false;
+  document.getElementById('btnStop').disabled=true;
+  const pill=document.getElementById('statusPill');
+  pill.className='status-pill idle';
+  document.getElementById('statusTxt').textContent='IDLE';
+  document.getElementById('nxtEmoji').textContent='⏸';
+  document.getElementById('nxtCd').textContent='--:--';
+  document.getElementById('kNext').textContent='--:--';
+  document.getElementById('nxtType').textContent='Bot stopped';
+  log('⏹ Bot stopped','w');
+  toast('⏹ Bot stopped');
+}
+
+function sendNow(){
+  const tok=document.getElementById('cfgToken').value.trim();
+  const ch=document.getElementById('cfgChannel').value.trim();
+  if(!tok||!ch){toast('⚠️ Config fill karke SAVE karo!');return;}
+  sendMsg();
+  if(running) cd=ivSec;
+}
+
+// ── CORE SEND with Inline Buttons ─────────────────────────────
+async function sendMsg(){
+  const type=getType();
+  if(!type) return;
+  const data=getFresh(type);
+  if(!data) return;
+
+  const tok=document.getElementById('cfgToken').value.trim();
+  const ch=document.getElementById('cfgChannel').value.trim();
+  const sch=SCHEDULE.find(s=>s.type===type);
+  document.getElementById('nxtType').textContent=`Sending: ${sch?.icon} ${sch?.label}`;
+
+  // Show typing
+  showTyping();
+  setTimeout(()=>{
+    hideTyping();
+    updatePreview(data,type);
+  },1200);
+
+  // Build inline keyboard — DIRECT Razorpay payment links!
+  const inline_keyboard=data.buttons.map(b=>[{
+    text: b.text,
+    url: RZP_LINKS[b.plan]   // ← Seedha Razorpay payment page
+  }]);
+
+  try{
+    const res=await fetch(`https://api.telegram.org/bot${tok}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        chat_id:ch,
+        text:data.text,
+        parse_mode:'Markdown',
+        disable_web_page_preview:true,
+        reply_markup:{inline_keyboard}
+      })
+    });
+    const d=await res.json();
+    if(d.ok){
+      sent++;
+      document.getElementById('kSent').textContent=sent;
+      chartData.push(1);chartData.shift();
+      buildChart();
+      log(`✅ ${sch?.icon} ${sch?.label} sent with ${data.buttons.length} payment buttons`,'s');
+      toast(`✅ Sent: ${sch?.label}`);
+    } else {
+      errs++;
+      document.getElementById('kErr').textContent=errs;
+      log(`❌ Error: ${d.description}`,'e');
+      toast(`❌ ${d.description}`);
+    }
+  } catch(e){
+    errs++;
+    document.getElementById('kErr').textContent=errs;
+    log(`❌ Network error`,'e');
+  }
+}
+
+// ── UI HELPERS ─────────────────────────────────────────────────
+function showTyping(){document.getElementById('typingInd').classList.add('show');}
+function hideTyping(){document.getElementById('typingInd').classList.remove('show');}
+
+function updatePreview(data,type){
+  const el=document.getElementById('msgPreview');
+  el.textContent=data.text;
+  el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
+  document.getElementById('msgTime').textContent=new Date().toLocaleTimeString('en-IN');
+
+  // Show button previews
+  const bp=document.getElementById('btnPreview');
+  bp.innerHTML=data.buttons.map(b=>`
+    <div class="tg-btn-preview" style="cursor:pointer" onclick="window.open('${RZP_LINKS[b.plan]}','_blank')">
+      ${b.text} ↗
+    </div>`).join('');
+}
+
+function updateCd(){
+  const m=String(~~(cd/60)).padStart(2,'0');
+  const s=String(cd%60).padStart(2,'0');
+  document.getElementById('nxtCd').textContent=`${m}:${s}`;
+  document.getElementById('kNext').textContent=`${m}:${s}`;
+}
+
+function updateSess(){
+  if(!sessStart) return;
+  const e=~~((Date.now()-sessStart)/1000);
+  const m=String(~~(e/60)).padStart(2,'0');
+  const s=String(e%60).padStart(2,'0');
+  document.getElementById('kSession').textContent=`${m}:${s}`;
+}
+
+function buildChart(){
+  const mx=Math.max(...chartData,1);
+  document.getElementById('miniChart').innerHTML=
+    chartData.map((v,i)=>`<div class="mb" style="height:${(v/mx)*42+3}px;opacity:${0.35+i*0.082}"></div>`).join('');
+}
+
+function log(msg,type='i'){
+  const box=document.getElementById('logBox');
+  const t=new Date().toLocaleTimeString('en-IN',{hour12:false});
+  const d=document.createElement('div');
+  d.className='le';
+  d.innerHTML=`<span class="lt">${t}</span><span class="lm ${type}">${msg}</span>`;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+
+// ═══ MOBILE APP LOGIC ═══════════════════════════════════
+
+function isMobile(){ return window.innerWidth <= 768; }
+
+function initMobile(){
+  if(!isMobile()) return;
+  document.getElementById('mobilePage').style.display='block';
+  buildMobileChart();
+}
+
+function switchPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  document.getElementById('bn-'+name).classList.add('active');
+  if(name==='stats') updateStatsPage();
+}
+
+function setIvM(s,el){
+  setIv(s, el);
+  document.querySelectorAll('.iv-mobile').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function saveMobileConfig(){
+  const t=document.getElementById('mCfgToken').value.trim();
+  const c=document.getElementById('mCfgChannel').value.trim();
+  // Sync to desktop inputs
+  document.getElementById('cfgToken').value=t;
+  document.getElementById('cfgChannel').value=c;
+  if(!t||!c){toast('⚠️ Bot Token aur Channel ID daalo!');return;}
+  log('✅ Config saved!','s');
+  toast('✅ Saved! Home pe jao aur START karo 🚀');
+  syncMobileLog();
+  switchPage('home');
+}
+
+function startBotM(){
+  // Sync mobile config to desktop
+  const mt=document.getElementById('mCfgToken').value.trim();
+  const mc=document.getElementById('mCfgChannel').value.trim();
+  if(mt) document.getElementById('cfgToken').value=mt;
+  if(mc) document.getElementById('cfgChannel').value=mc;
+  startBot();
+  syncMobileUI();
+}
+
+function syncMobileUI(){
+  setTimeout(()=>{
+    const isRunning = running;
+    // Status
+    const pill=document.getElementById('mStatusPill');
+    const txt=document.getElementById('mStatusTxt');
+    if(pill && txt){
+      pill.className='status-pill '+(isRunning?'running':'idle');
+      txt.textContent=isRunning?'RUNNING':'IDLE';
+    }
+    // Buttons
+    const s=document.getElementById('mBtnStart');
+    const sp=document.getElementById('mBtnStop');
+    if(s && sp){
+      s.style.display=isRunning?'none':'block';
+      sp.style.display=isRunning?'block':'none';
+    }
+    syncMobileLog();
+  }, 200);
+}
+
+function syncMobileLog(){
+  const src=document.getElementById('logBox');
+  const dst=document.getElementById('mLogBox');
+  const dst2=document.getElementById('sLogBox');
+  if(src && dst) dst.innerHTML=src.innerHTML;
+  if(src && dst2) dst2.innerHTML=src.innerHTML;
+  if(dst) dst.scrollTop=dst.scrollHeight;
+  if(dst2) dst2.scrollTop=dst2.scrollHeight;
+}
+
+function buildMobileChart(){
+  const el=document.getElementById('sMiniChart');
+  if(el) el.innerHTML=chartData.map((v,i)=>`<div class="mb" style="height:${(v/Math.max(...chartData,1))*54+4}px;opacity:${0.3+i*0.09}"></div>`).join('');
+}
+
+function updateStatsPage(){
+  const gs=id=>document.getElementById(id);
+  if(gs('sKSent')) gs('sKSent').textContent=sent;
+  if(gs('sKErr')) gs('sKErr').textContent=errs;
+  if(gs('sKSess')) gs('sKSess').textContent=gs('kSession')?.textContent||'00:00';
+  if(gs('sKNext')) gs('sKNext').textContent=gs('kNext')?.textContent||'--:--';
+  buildMobileChart();
+  syncMobileLog();
+}
+
+// Sync countdown to mobile
+const origUpdateCd = updateCd;
+window.updateCd = function(){
+  origUpdateCd();
+  const el=document.getElementById('mNxtCd');
+  const et=document.getElementById('mNxtType');
+  const sk=document.getElementById('sKNext');
+  const m=String(~~(cd/60)).padStart(2,'0');
+  const s2=String(cd%60).padStart(2,'0');
+  if(el) el.textContent=`${m}:${s2}`;
+  if(sk) sk.textContent=`${m}:${s2}`;
+  // Update sent counts
+  document.getElementById('mKSent').textContent=sent;
+  document.getElementById('mKErr').textContent=errs;
+  document.getElementById('sKSent').textContent=sent;
+};
+
+// Sync preview to mobile
+const origUpdatePreview = updatePreview;
+window.updatePreview = function(data, type){
+  origUpdatePreview(data, type);
+  // Mobile preview
+  const mel=document.getElementById('mMsgPreview');
+  const mbp=document.getElementById('mBtnPreview');
+  const mt=document.getElementById('mMsgTime');
+  if(mel){
+    mel.textContent=data.text;
+    mel.classList.remove('pop');void mel.offsetWidth;mel.classList.add('pop');
+  }
+  if(mbp) mbp.innerHTML=data.buttons.map(b=>`
+    <div class="tg-btn-preview" onclick="window.open('${RZP_LINKS[b.plan]}','_blank')">${b.text} ↗</div>`).join('');
+  if(mt) mt.textContent=new Date().toLocaleTimeString('en-IN');
+  syncMobileLog();
+  syncMobileUI();
+  buildMobileChart();
+  // Switch to preview tab briefly
+  if(isMobile()) switchPage('preview');
+};
+
+window.addEventListener('resize', initMobile);
+window.addEventListener('load', initMobile);
+
+// ── INIT ───────────────────────────────────────────────────────
+buildTable();buildChart();
+setTimeout(()=>{
+  const d=getFresh('promo');
+  if(d) updatePreview(d,'promo');
+},800);
+</script>
+
+<!-- ═══ MOBILE APP UI ═══ -->
+<div id="mobilePage" style="display:none;">
+
+  <!-- Page: Home -->
+  <div class="page active" id="pg-home">
+    <div style="padding: 16px 0 8px;">
+      <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--gold);margin-bottom:2px;">⚡ PROFIT PULSE</div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">AUTO MARKETING BOT</div>
+    </div>
+
+    <!-- Status Card -->
+    <div class="mobile-status-card">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">STATUS</div>
+        <div class="status-pill idle" id="mStatusPill" style="padding:6px 12px;font-size:11px;">
+          <div class="sd"></div>
+          <span id="mStatusTxt">IDLE</span>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'Orbitron',monospace;font-size:28px;color:var(--gold);font-weight:700;" id="mNxtCd">--:--</div>
+        <div style="font-size:10px;color:var(--muted);" id="mNxtType">Configure first</div>
+      </div>
+    </div>
+
+    <!-- KPI Mobile -->
+    <div class="kpi-row-mobile">
+      <div class="kpi g" style="padding:14px;"><div class="kv" style="font-size:28px;" id="mKSent">0</div><div class="kl">Sent</div></div>
+      <div class="kpi r" style="padding:14px;"><div class="kv" style="font-size:28px;" id="mKErr">0</div><div class="kl">Errors</div></div>
+    </div>
+
+    <!-- Interval -->
+    <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;">SEND INTERVAL</div>
+    <div class="iv-row-mobile">
+      <div class="iv-mobile" onclick="setIvM(30,this)">30s</div>
+      <div class="iv-mobile on" onclick="setIvM(60,this)">1 min</div>
+      <div class="iv-mobile" onclick="setIvM(300,this)">5 min</div>
+      <div class="iv-mobile" onclick="setIvM(900,this)">15 min</div>
+    </div>
+
+    <!-- Big Buttons -->
+    <button class="big-start-btn start" id="mBtnStart" onclick="startBotM()">▶ START BOT</button>
+    <button class="big-start-btn stop" id="mBtnStop" onclick="stopBot();syncMobileUI();" style="display:none;">⏹ STOP BOT</button>
+    <button class="send-now-btn" onclick="sendNow();syncMobileUI();">⚡ SEND NOW</button>
+
+    <!-- Mini Log -->
+    <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;">RECENT ACTIVITY</div>
+    <div class="log-box" id="mLogBox">
+      <div class="le"><span class="lt">--:--:--</span><span class="lm i">Bot ready. Configure & Start!</span></div>
+    </div>
+  </div>
+
+  <!-- Page: Config -->
+  <div class="page" id="pg-config">
+    <div style="padding:16px 0 16px;">
+      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">⚙️ CONFIGURATION</div>
+    </div>
+
+    <div class="cfg-box" style="display:block !important;">
+      <div style="margin-bottom:14px;">
+        <label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px;">BOT TOKEN</label>
+        <input id="mCfgToken" class="fi-input" style="width:100%;padding:13px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:var(--text);font-size:12px;font-family:'Share Tech Mono',monospace;outline:none;" placeholder="123456789:ABCdef..."/>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px;">FREE CHANNEL ID</label>
+        <input id="mCfgChannel" class="fi-input" style="width:100%;padding:13px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:var(--text);font-size:12px;font-family:'Share Tech Mono',monospace;outline:none;" placeholder="-1001234567890"/>
+      </div>
+      <button onclick="saveMobileConfig()" style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold3),var(--gold2));color:#06080f;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;">💾 SAVE CONFIG</button>
+    </div>
+
+    <!-- Payment Links Info -->
+    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:18px;margin-top:16px;">
+      <div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:12px;">✅ PAYMENT LINKS ACTIVE</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.8;">
+        <div>🥉 1 Month — ₹499 ✓</div>
+        <div>🥈 3 Months — ₹699 ✓</div>
+        <div>🥇 6 Months — ₹1,999 ✓</div>
+        <div>👑 1 Year — ₹2,999 ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page: Preview -->
+  <div class="page" id="pg-preview">
+    <div style="padding:16px 0 16px;">
+      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">📱 LAST MESSAGE</div>
+    </div>
+    <div style="background:#0a0f1e;border:1px solid var(--border);border-radius:16px;padding:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#06080f;">PP</div>
+        <div><div style="font-size:13px;font-weight:600;">Profit Pulse India 🇮🇳</div><div style="font-size:10px;color:var(--green);">● Channel</div></div>
+      </div>
+      <div class="typing-ind" id="mTypingInd"><span></span><span></span><span></span></div>
+      <div class="msg-bubble" id="mMsgPreview">Koi message nahi bheja abhi...
+
+HOME pe jaao aur START dabao! ⚡</div>
+      <div class="tg-btns" id="mBtnPreview">
+        <div class="tg-btn-preview">💎 Join Premium →</div>
+      </div>
+      <div class="msg-time" id="mMsgTime">--:--</div>
+    </div>
+  </div>
+
+  <!-- Page: Stats -->
+  <div class="page" id="pg-stats">
+    <div style="padding:16px 0 16px;">
+      <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">📊 STATISTICS</div>
+    </div>
+    <div class="kpi-row-mobile" style="grid-template-columns:1fr 1fr;">
+      <div class="kpi g" style="padding:18px;"><div class="kv" id="sKSent">0</div><div class="kl">Total Sent</div></div>
+      <div class="kpi r" style="padding:18px;"><div class="kv" id="sKErr">0</div><div class="kl">Errors</div></div>
+    </div>
+    <div class="kpi-row-mobile" style="grid-template-columns:1fr 1fr;margin-top:0;">
+      <div class="kpi gr" style="padding:18px;"><div class="kv" id="sKSess">00:00</div><div class="kl">Session</div></div>
+      <div class="kpi b" style="padding:18px;"><div class="kv" id="sKNext">--:--</div><div class="kl">Next In</div></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:4px;">
+      <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;">MESSAGES SENT</div>
+      <div class="mini-bars" id="sMiniChart" style="height:60px;"></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:10px;">
+      <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;">FULL LOG</div>
+      <div class="log-box" style="height:220px;" id="sLogBox"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bn-item active" id="bn-home" onclick="switchPage('home')"><span>🏠</span>HOME</div>
+  <div class="bn-item" id="bn-config" onclick="switchPage('config')"><span>⚙️</span>CONFIG</div>
+  <div class="bn-item" id="bn-preview" onclick="switchPage('preview')"><span>📱</span>PREVIEW</div>
+  <div class="bn-item" id="bn-stats" onclick="switchPage('stats')"><span>📊</span>STATS</div>
+</nav>
+</body>
+</html>
