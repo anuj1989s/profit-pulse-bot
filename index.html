@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="PPI Bot"/>
 <meta name="theme-color" content="#06080f"/>
 <title>Profit Pulse Bot</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
@@ -18,42 +16,25 @@
   --border:#1a2540;--text:#e8edf5;--muted:#4a5568;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;
-  min-height:100vh;overscroll-behavior:none;}
-
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
 .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(247,201,72,0.03) 1px,transparent 1px),
   linear-gradient(90deg,rgba(247,201,72,0.03) 1px,transparent 1px);
   background-size:50px 50px;}
 .bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(247,201,72,0.05) 0%,transparent 70%);}
-
-/* WRAP */
-.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;
-  padding:16px 14px 90px;}
-
-/* HEADER */
-.app-header{display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:16px 14px 90px;}
+.app-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
 .app-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--gold);}
 .app-logo span{display:block;font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
-.status-badge{display:flex;align-items:center;gap:6px;padding:7px 14px;
-  border-radius:20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
-  letter-spacing:1px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);}
-.status-badge.running{color:var(--green);border-color:rgba(0,255,136,0.3);
-  background:rgba(0,255,136,0.07);}
+.status-badge{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);}
+.status-badge.running{color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.07);}
 .sdot{width:8px;height:8px;border-radius:50%;background:currentColor;}
 .status-badge.running .sdot{animation:pulse 1.2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-
-/* KPI */
+.page{display:none;}.page.active{display:block;}
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  padding:16px;position:relative;overflow:hidden;}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .kpi-card.gold::before{background:var(--gold);}
 .kpi-card.green::before{background:var(--green);}
@@ -65,150 +46,61 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .kpi-card.blue .kpi-val{color:var(--blue);}
 .kpi-card.red .kpi-val{color:var(--red);}
 .kpi-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-
-/* COUNTDOWN BOX */
-.countdown-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  padding:16px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.countdown-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 .cd-left .cd-label{font-size:10px;color:var(--muted);margin-bottom:4px;}
 .cd-left .cd-val{font-family:'Orbitron',monospace;font-size:32px;font-weight:700;color:var(--gold);}
-.cd-left .cd-type{font-size:10px;color:var(--muted);margin-top:4px;}
+.cd-left .cd-sub{font-size:10px;color:var(--muted);margin-top:4px;}
 .cd-emoji{font-size:36px;}
-
-/* INTERVAL */
 .interval-label{font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;}
 .interval-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-.iv-btn{padding:11px 4px;border-radius:10px;border:1px solid var(--border);
-  background:var(--bg3);color:var(--muted);font-size:11px;cursor:pointer;
-  font-family:'Orbitron',monospace;text-align:center;transition:all 0.2s;}
+.iv-btn{padding:11px 4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:11px;cursor:pointer;font-family:'Orbitron',monospace;text-align:center;transition:all 0.2s;}
 .iv-btn.active{border-color:var(--gold);background:rgba(247,201,72,0.1);color:var(--gold);}
-
-/* BUTTONS */
-.btn-start{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,#00aa55,#00ff88);color:#000;
-  font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;
-  margin-bottom:10px;box-shadow:0 6px 24px rgba(0,255,136,0.25);transition:all 0.2s;}
+.btn-start{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#00aa55,#00ff88);color:#000;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;margin-bottom:10px;box-shadow:0 6px 24px rgba(0,255,136,0.25);transition:all 0.2s;}
 .btn-start:active{transform:scale(0.97);}
-.btn-stop{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,#cc0033,#ff4466);color:#fff;
-  font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;
-  margin-bottom:10px;box-shadow:0 6px 24px rgba(255,68,102,0.25);transition:all 0.2s;
-  display:none;}
+.btn-stop{width:100%;padding:18px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,#cc0033,#ff4466);color:#fff;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:2px;margin-bottom:10px;box-shadow:0 6px 24px rgba(255,68,102,0.25);transition:all 0.2s;display:none;}
 .btn-stop:active{transform:scale(0.97);}
-.btn-now{width:100%;padding:14px;border-radius:12px;
-  border:1px solid rgba(247,201,72,0.4);background:rgba(247,201,72,0.08);
-  color:var(--gold);font-family:'Orbitron',monospace;font-size:12px;font-weight:700;
-  letter-spacing:1px;cursor:pointer;margin-bottom:16px;transition:all 0.2s;}
+.btn-now{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(247,201,72,0.4);background:rgba(247,201,72,0.08);color:var(--gold);font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-bottom:16px;transition:all 0.2s;}
 .btn-now:active{transform:scale(0.97);}
-
-/* LOG */
-.log-title{font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);
-  letter-spacing:2px;margin-bottom:8px;}
-.log-box{background:#07090f;border:1px solid var(--border);border-radius:12px;
-  padding:12px;height:160px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:11px;}
-.log-entry{padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);
-  display:flex;gap:10px;}
+.wake-lock-info{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:var(--green);}
+.log-title{font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;}
+.log-box{background:#07090f;border:1px solid var(--border);border-radius:12px;padding:12px;height:160px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:11px;}
+.log-entry{padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:10px;}
 .log-time{color:var(--muted);white-space:nowrap;font-size:10px;}
-.log-msg.s{color:var(--green);}
-.log-msg.e{color:var(--red);}
-.log-msg.i{color:var(--blue);}
-.log-msg.w{color:var(--gold);}
-
-/* CONFIG PAGE */
-.config-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
-  padding:20px;margin-bottom:16px;}
-.config-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);
-  letter-spacing:2px;margin-bottom:16px;font-weight:700;}
+.log-msg.s{color:var(--green);}.log-msg.e{color:var(--red);}.log-msg.i{color:var(--blue);}.log-msg.w{color:var(--gold);}
+.config-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
+.config-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:16px;font-weight:700;}
 .field-group{margin-bottom:18px;}
-.field-label{font-size:11px;color:var(--gold);font-weight:600;
-  letter-spacing:0.5px;display:block;margin-bottom:8px;}
-.field-input{
-  display:block;width:100%;padding:15px 14px;border-radius:12px;
-  background:#000;border:2px solid rgba(247,201,72,0.4);
-  color:#00ff88;font-size:14px;font-family:'Share Tech Mono',monospace;
-  outline:none;-webkit-appearance:none;appearance:none;
-  -webkit-user-select:text;user-select:text;box-sizing:border-box;}
+.field-label{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:0.5px;display:block;margin-bottom:8px;}
+.field-input{display:block;width:100%;padding:15px 14px;border-radius:12px;background:#000;border:2px solid rgba(247,201,72,0.4);color:#00ff88;font-size:14px;font-family:'Share Tech Mono',monospace;outline:none;-webkit-appearance:none;appearance:none;-webkit-user-select:text;user-select:text;box-sizing:border-box;}
 .field-input:focus{border-color:var(--gold);}
 .field-hint{font-size:10px;color:var(--muted);margin-top:6px;}
-.btn-save{width:100%;padding:17px;border-radius:14px;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--gold3),var(--gold2));
-  color:#000;font-family:'Orbitron',monospace;font-size:14px;font-weight:900;
-  letter-spacing:1px;box-shadow:0 6px 24px rgba(247,201,72,0.3);transition:all 0.2s;}
+.btn-save{width:100%;padding:17px;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold3),var(--gold2));color:#000;font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:1px;box-shadow:0 6px 24px rgba(247,201,72,0.3);transition:all 0.2s;}
 .btn-save:active{transform:scale(0.97);}
-.save-success{display:none;margin-top:12px;padding:12px;border-radius:10px;
-  background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);
-  color:var(--green);font-size:13px;font-weight:600;text-align:center;}
+.save-success{display:none;margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green);font-size:13px;font-weight:600;text-align:center;}
 .save-success.show{display:block;}
-
-.plan-list{background:var(--bg3);border:1px solid rgba(0,255,136,0.15);
-  border-radius:14px;padding:16px;}
-.plan-list-title{font-size:10px;color:var(--green);letter-spacing:2px;
-  font-family:'Orbitron',monospace;font-weight:700;margin-bottom:12px;}
-.plan-item{font-size:13px;color:var(--muted);padding:5px 0;
-  border-bottom:1px solid rgba(255,255,255,0.04);}
-.plan-item:last-child{border:none;}
-.plan-item span{color:var(--green);}
-
-/* PREVIEW PAGE */
-.phone-wrap{background:#0a0f1e;border:1px solid var(--border);
-  border-radius:16px;padding:16px;}
-.phone-header{display:flex;align-items:center;gap:10px;
-  padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px;}
-.phone-avatar{width:40px;height:40px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold3),var(--gold));
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:900;color:#000;flex-shrink:0;}
-.phone-name{font-size:14px;font-weight:600;}
-.phone-status{font-size:10px;color:var(--green);}
-.typing-dots{display:none;align-items:center;gap:4px;padding:8px 12px;
-  background:#1a2540;border-radius:14px;width:fit-content;margin-bottom:10px;}
-.typing-dots.show{display:flex;}
-.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--muted);}
-.typing-dots span:nth-child(1){animation:td 1s 0s infinite;}
-.typing-dots span:nth-child(2){animation:td 1s 0.2s infinite;}
-.typing-dots span:nth-child(3){animation:td 1s 0.4s infinite;}
-@keyframes td{0%,60%,100%{transform:translateY(0);opacity:0.4}
-  30%{transform:translateY(-5px);opacity:1}}
-.msg-bubble{background:#162416;border:1px solid rgba(0,255,136,0.12);
-  border-radius:12px 12px 12px 4px;padding:14px;
-  font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.8;
-  color:#cce8cc;white-space:pre-wrap;word-break:break-word;
-  max-height:300px;overflow-y:auto;}
+.plan-list{background:var(--bg3);border:1px solid rgba(0,255,136,0.15);border-radius:14px;padding:16px;}
+.plan-list-title{font-size:10px;color:var(--green);letter-spacing:2px;font-family:'Orbitron',monospace;font-weight:700;margin-bottom:12px;}
+.plan-item{font-size:13px;color:var(--muted);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.plan-item:last-child{border:none;}.plan-item span{color:var(--green);}
+.phone-wrap{background:#0a0f1e;border:1px solid var(--border);border-radius:16px;padding:16px;}
+.phone-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.phone-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#000;flex-shrink:0;}
+.phone-name{font-size:14px;font-weight:600;}.phone-status{font-size:10px;color:var(--green);}
+.msg-bubble{background:#162416;border:1px solid rgba(0,255,136,0.12);border-radius:12px 12px 12px 4px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.8;color:#cce8cc;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;}
 .msg-bubble.pop{animation:msgpop 0.4s ease;}
 @keyframes msgpop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .preview-btns{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
-.preview-btn{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);
-  border-radius:8px;padding:10px;font-size:11px;color:var(--blue);
-  text-align:center;font-family:'Share Tech Mono',monospace;cursor:pointer;}
+.preview-btn{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);border-radius:8px;padding:10px;font-size:11px;color:var(--blue);text-align:center;font-family:'Share Tech Mono',monospace;cursor:pointer;}
 .msg-time{font-size:10px;color:var(--muted);text-align:right;margin-top:8px;}
-
-/* STATS PAGE */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.chart-box{background:var(--bg2);border:1px solid var(--border);
-  border-radius:14px;padding:16px;}
-.chart-title{font-size:9px;color:var(--gold);letter-spacing:2px;
-  font-family:'Orbitron',monospace;margin-bottom:10px;}
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;}
+.chart-title{font-size:9px;color:var(--gold);letter-spacing:2px;font-family:'Orbitron',monospace;margin-bottom:10px;}
 .mini-bars{display:flex;align-items:flex-end;gap:4px;height:50px;}
-.mbar{flex:1;border-radius:3px 3px 0 0;
-  background:linear-gradient(180deg,var(--gold2),var(--gold3));
-  min-height:3px;transition:height 0.5s;}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:rgba(6,8,15,0.97);backdrop-filter:blur(16px);
-  border-top:1px solid var(--border);
-  display:grid;grid-template-columns:repeat(4,1fr);
-  padding:10px 0 calc(10px + env(safe-area-inset-bottom));}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-size:9px;color:var(--muted);cursor:pointer;padding:4px 0;
-  font-family:'Orbitron',monospace;letter-spacing:0.5px;transition:color 0.2s;}
-.nav-item.active{color:var(--gold);}
-.nav-icon{font-size:20px;}
-
-/* TOAST */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
-  z-index:999;background:var(--bg2);border:1px solid var(--green);border-radius:12px;
-  padding:12px 20px;font-size:13px;color:var(--green);opacity:0;
-  transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.mbar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--gold2),var(--gold3));min-height:3px;transition:height 0.5s;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(6,8,15,0.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 calc(10px + env(safe-area-inset-bottom));}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;color:var(--muted);cursor:pointer;padding:4px 0;font-family:'Orbitron',monospace;letter-spacing:0.5px;transition:color 0.2s;}
+.nav-item.active{color:var(--gold);}.nav-icon{font-size:20px;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);z-index:999;background:var(--bg2);border:1px solid var(--green);border-radius:12px;padding:12px 20px;font-size:13px;color:var(--green);opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.err{border-color:var(--red);color:var(--red);}
 </style>
@@ -216,120 +108,62 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 <body>
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
-
 <div class="wrap">
-
-  <!-- APP HEADER -->
   <div class="app-header">
-    <div class="app-logo">⚡ PPI BOT
-      <span>AUTO MARKETING</span>
-    </div>
-    <div class="status-badge" id="statusBadge">
-      <div class="sdot"></div>
-      <span id="statusTxt">IDLE</span>
-    </div>
+    <div class="app-logo">⚡ PPI BOT<span>AUTO MARKETING</span></div>
+    <div class="status-badge" id="statusBadge"><div class="sdot"></div><span id="statusTxt">IDLE</span></div>
   </div>
 
-  <!-- ═══ PAGE: HOME ═══ -->
+  <!-- HOME -->
   <div class="page active" id="pg-home">
-
-    <!-- KPI -->
     <div class="kpi-grid">
-      <div class="kpi-card gold">
-        <div class="kpi-val" id="kSent">0</div>
-        <div class="kpi-label">Messages Sent</div>
-      </div>
-      <div class="kpi-card green">
-        <div class="kpi-val" id="kSession">00:00</div>
-        <div class="kpi-label">Session Time</div>
-      </div>
-      <div class="kpi-card blue">
-        <div class="kpi-val" id="kNext">--:--</div>
-        <div class="kpi-label">Next In</div>
-      </div>
-      <div class="kpi-card red">
-        <div class="kpi-val" id="kErr">0</div>
-        <div class="kpi-label">Errors</div>
-      </div>
+      <div class="kpi-card gold"><div class="kpi-val" id="kSent">0</div><div class="kpi-label">Messages Sent</div></div>
+      <div class="kpi-card red"><div class="kpi-val" id="kErr">0</div><div class="kpi-label">Errors</div></div>
+      <div class="kpi-card green"><div class="kpi-val" id="kSession">00:00</div><div class="kpi-label">Session Time</div></div>
+      <div class="kpi-card blue"><div class="kpi-val" id="kNext">--:--</div><div class="kpi-label">Next In</div></div>
     </div>
-
-    <!-- COUNTDOWN -->
     <div class="countdown-box">
       <div class="cd-left">
         <div class="cd-label">NEXT MESSAGE IN</div>
         <div class="cd-val" id="cdVal">--:--</div>
-        <div class="cd-type" id="cdType">Configure & Start</div>
+        <div class="cd-sub" id="cdSub">Configure &amp; Start</div>
       </div>
       <div class="cd-emoji" id="cdEmoji">⏸</div>
     </div>
-
-    <!-- INTERVAL -->
+    <div class="wake-lock-info" id="wakeLockInfo">💡 Screen ON rakhne ki koshish ho rahi hai...</div>
     <div class="interval-label">SEND INTERVAL</div>
     <div class="interval-row">
-      <div class="iv-btn" onclick="setInterval2(30,this)">30s</div>
-      <div class="iv-btn active" onclick="setInterval2(60,this)">1 min</div>
-      <div class="iv-btn" onclick="setInterval2(300,this)">5 min</div>
-      <div class="iv-btn" onclick="setInterval2(900,this)">15 min</div>
+      <div class="iv-btn" onclick="setIv(30,this)">30s</div>
+      <div class="iv-btn active" onclick="setIv(60,this)">1 min</div>
+      <div class="iv-btn" onclick="setIv(300,this)">5 min</div>
+      <div class="iv-btn" onclick="setIv(900,this)">15 min</div>
     </div>
-
-    <!-- CONTROL BUTTONS -->
     <button class="btn-start" id="btnStart" onclick="startBot()">▶ START BOT</button>
     <button class="btn-stop" id="btnStop" onclick="stopBot()">⏹ STOP BOT</button>
     <button class="btn-now" onclick="sendNow()">⚡ SEND NOW</button>
-
-    <!-- LOG -->
     <div class="log-title">ACTIVITY LOG</div>
     <div class="log-box" id="logBox">
-      <div class="log-entry">
-        <span class="log-time">--:--:--</span>
-        <span class="log-msg i">Bot ready. CONFIG pe jao → Token & ID daalo → SAVE karo → START!</span>
-      </div>
+      <div class="log-entry"><span class="log-time">--:--:--</span><span class="log-msg i">Bot ready. CONFIG pe jao → Token & ID daalo → SAVE → START!</span></div>
     </div>
-
   </div>
 
-  <!-- ═══ PAGE: CONFIG ═══ -->
+  <!-- CONFIG -->
   <div class="page" id="pg-config">
-
     <div class="config-card">
       <div class="config-title">⚙️ BOT CONFIGURATION</div>
-
       <div class="field-group">
         <label class="field-label">🤖 BOT TOKEN</label>
-        <input
-          type="text"
-          id="inputToken"
-          class="field-input"
-          placeholder="123456789:ABCdef..."
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="none"
-          spellcheck="false"
-          inputmode="text"
-        />
+        <input type="text" id="inputToken" class="field-input" placeholder="123456789:ABCdef..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="text"/>
         <div class="field-hint">BotFather se mila token yahan daalo</div>
       </div>
-
       <div class="field-group">
         <label class="field-label">📢 FREE CHANNEL ID</label>
-        <input
-          type="text"
-          id="inputChannel"
-          class="field-input"
-          placeholder="-1001234567890"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="none"
-          spellcheck="false"
-          inputmode="text"
-        />
-        <div class="field-hint">@userinfobot se mila channel ID (-100... se shuru hoga)</div>
+        <input type="text" id="inputChannel" class="field-input" placeholder="-1001234567890" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="text"/>
+        <div class="field-hint">@userinfobot se mila ID (-100... se shuru hoga)</div>
       </div>
-
       <button class="btn-save" onclick="saveConfig()">💾 SAVE & ACTIVATE</button>
       <div class="save-success" id="saveSuccess">✅ Config saved! HOME pe jao → START dabao 🚀</div>
     </div>
-
     <div class="plan-list">
       <div class="plan-list-title">✅ PAYMENT LINKS ACTIVE</div>
       <div class="plan-item">🥉 1 Month — <span>₹499 ✓</span></div>
@@ -337,397 +171,276 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div class="plan-item">🥇 6 Months — <span>₹1,999 ✓</span></div>
       <div class="plan-item">👑 1 Year — <span>₹2,999 ✓</span></div>
     </div>
-
   </div>
 
-  <!-- ═══ PAGE: PREVIEW ═══ -->
+  <!-- PREVIEW -->
   <div class="page" id="pg-preview">
-
     <div class="phone-wrap">
       <div class="phone-header">
         <div class="phone-avatar">PP</div>
-        <div>
-          <div class="phone-name">Profit Pulse India 🇮🇳</div>
-          <div class="phone-status">● Channel</div>
-        </div>
-      </div>
-      <div class="typing-dots" id="typingDots">
-        <span></span><span></span><span></span>
+        <div><div class="phone-name">Profit Pulse India 🇮🇳</div><div class="phone-status">● Channel</div></div>
       </div>
       <div class="msg-bubble" id="msgPreview">Bot ready hai...
 
 START dabao aur pehla message
-channel pe jaayega! ⚡
-
-Buttons direct Razorpay pe
-le jaayenge — seedha payment! 💎</div>
-      <div class="preview-btns" id="previewBtns">
-        <div class="preview-btn">💎 Join Premium →</div>
-      </div>
+channel pe jaayega! ⚡</div>
+      <div class="preview-btns" id="previewBtns"><div class="preview-btn">💎 Join Premium →</div></div>
       <div class="msg-time" id="msgTime">waiting...</div>
     </div>
-
   </div>
 
-  <!-- ═══ PAGE: STATS ═══ -->
+  <!-- STATS -->
   <div class="page" id="pg-stats">
-
     <div class="stats-grid">
-      <div class="kpi-card gold">
-        <div class="kpi-val" id="sSent">0</div>
-        <div class="kpi-label">Total Sent</div>
-      </div>
-      <div class="kpi-card red">
-        <div class="kpi-val" id="sErr">0</div>
-        <div class="kpi-label">Errors</div>
-      </div>
-      <div class="kpi-card green">
-        <div class="kpi-val" id="sSess">00:00</div>
-        <div class="kpi-label">Session</div>
-      </div>
-      <div class="kpi-card blue">
-        <div class="kpi-val" id="sNext">--:--</div>
-        <div class="kpi-label">Next In</div>
-      </div>
+      <div class="kpi-card gold"><div class="kpi-val" id="sSent">0</div><div class="kpi-label">Total Sent</div></div>
+      <div class="kpi-card red"><div class="kpi-val" id="sErr">0</div><div class="kpi-label">Errors</div></div>
+      <div class="kpi-card green"><div class="kpi-val" id="sSess">00:00</div><div class="kpi-label">Session</div></div>
+      <div class="kpi-card blue"><div class="kpi-val" id="sNext">--:--</div><div class="kpi-label">Next In</div></div>
     </div>
-
-    <div class="chart-box">
-      <div class="chart-title">MESSAGES SENT (LAST 8)</div>
-      <div class="mini-bars" id="chartBars"></div>
-    </div>
-
+    <div class="chart-box"><div class="chart-title">MESSAGES SENT (LAST 8)</div><div class="mini-bars" id="chartBars"></div></div>
     <div style="margin-top:14px;">
       <div class="log-title">FULL LOG</div>
       <div class="log-box" style="height:220px;" id="statsLog"></div>
     </div>
-
   </div>
-
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <div class="nav-item active" id="nav-home" onclick="goPage('home')">
-    <div class="nav-icon">🏠</div>HOME
-  </div>
-  <div class="nav-item" id="nav-config" onclick="goPage('config')">
-    <div class="nav-icon">⚙️</div>CONFIG
-  </div>
-  <div class="nav-item" id="nav-preview" onclick="goPage('preview')">
-    <div class="nav-icon">📱</div>PREVIEW
-  </div>
-  <div class="nav-item" id="nav-stats" onclick="goPage('stats')">
-    <div class="nav-icon">📊</div>STATS
-  </div>
+  <div class="nav-item active" id="nav-home" onclick="goPage('home')"><div class="nav-icon">🏠</div>HOME</div>
+  <div class="nav-item" id="nav-config" onclick="goPage('config')"><div class="nav-icon">⚙️</div>CONFIG</div>
+  <div class="nav-item" id="nav-preview" onclick="goPage('preview')"><div class="nav-icon">📱</div>PREVIEW</div>
+  <div class="nav-item" id="nav-stats" onclick="goPage('stats')"><div class="nav-icon">📊</div>STATS</div>
 </nav>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════════════
-// ✅ RAZORPAY DIRECT PAYMENT LINKS
-// ════════════════════════════════════════════════════
+// ══ CONFIG ══════════════════════════════════════════════════════
 const RZP = {
-  '1m': 'https://rzp.io/rzp/sbs2Bc5m',
-  '3m': 'https://rzp.io/rzp/L5w4PKzi',
-  '6m': 'https://rzp.io/rzp/CxeWLGu',
-  '1y': 'https://rzp.io/rzp/ToSxb5OJ',
+  '1m':'https://rzp.io/rzp/sbs2Bc5m',
+  '3m':'https://rzp.io/rzp/L5w4PKzi',
+  '6m':'https://rzp.io/rzp/CxeWLGu',
+  '1y':'https://rzp.io/rzp/ToSxb5OJ'
 };
+const STK = {
+  bull:'CAACAgIAAxkBAAEKuGFlPgABRn_kW5N2MoVWTa-AAQAB2AAC3gADr0eqElTWKU5RvbpqHgQ',
+  bear:'CAACAgIAAxkBAAEKuGNlPgABRoqLl5yCX4e-h_9LyIUBEgACHQADr0eqEtWF4qNiKJiDHgQ',
+  trophy:'CAACAgIAAxkBAAEKuGVlPgABRjuCHH5ueOGGlIDDx4e_NwAC-QADr0eqEiIJxY7KVN1lHgQ',
+  fire:'CAACAgIAAxkBAAEKuGdlPgABRmD7UrGpAAE2wJvNGp2YFIACGAAD769xCv6RDA5DXBaeHgQ'
+};
+const L='━━━━━━━━━━━━━━━━━━━━━━';
+const D='══════════════════════════';
+const b=t=>'*'+t+'*';
 
-// ════════════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════════════
-let BOT_TOKEN    = '';
-let CHANNEL_ID   = '';
-let running      = false;
-let ivSec        = 60;
-let countdown    = 0;
-let sent         = 0;
-let errors       = 0;
-let sessStart    = null;
-let timerCD      = null;
-let timerSess    = null;
-let chartData    = [0,0,0,0,0,0,0,0];
-const msgUsed    = {signal:[],promo:[],result:[],urgency:[]};
+// ══ STATE ════════════════════════════════════════════════════════
+let TOK='', CH='', running=false, ivSec=60;
+let sent=0, errors=0, sessStart=null;
+let mainTimer=null, sessTimer=null, wakeLock=null;
+let nextSendAt=0;
+const chartData=[0,0,0,0,0,0,0,0];
+const used={signal:[],promo:[],result:[],urgency:[]};
 
-// ════════════════════════════════════════════════════
-// NAVIGATION
-// ════════════════════════════════════════════════════
-function goPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('pg-' + name).classList.add('active');
-  document.getElementById('nav-' + name).classList.add('active');
-  if (name === 'stats') syncStats();
+// ══ NAV ══════════════════════════════════════════════════════════
+function goPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('pg-'+n).classList.add('active');
+  document.getElementById('nav-'+n).classList.add('active');
+  if(n==='stats') syncStats();
 }
 
-// ════════════════════════════════════════════════════
-// CONFIG SAVE
-// ════════════════════════════════════════════════════
-function saveConfig() {
-  const t = document.getElementById('inputToken').value.trim();
-  const c = document.getElementById('inputChannel').value.trim();
-
-  if (!t) { showToast('⚠️ Bot Token daalo!', true); return; }
-  if (!c) { showToast('⚠️ Channel ID daalo!', true); return; }
-  if (!t.includes(':')) { showToast('⚠️ Token format galat hai!', true); return; }
-  if (!c.startsWith('-')) { showToast('⚠️ Channel ID - se shuru hona chahiye!', true); return; }
-
-  BOT_TOKEN  = t;
-  CHANNEL_ID = c;
-
-  // Save to localStorage for persistence
-  try {
-    localStorage.setItem('ppi_token', t);
-    localStorage.setItem('ppi_channel', c);
-  } catch(e) {}
-
-  addLog('✅ Config saved! Token: ...'+t.slice(-8), 's');
-  showToast('✅ Saved! HOME pe jao → START karo!');
-
-  const suc = document.getElementById('saveSuccess');
-  suc.classList.add('show');
-  setTimeout(() => { suc.classList.remove('show'); goPage('home'); }, 2000);
-}
-
-// ════════════════════════════════════════════════════
-// INTERVAL
-// ════════════════════════════════════════════════════
-function setInterval2(sec, el) {
-  ivSec = sec;
-  document.querySelectorAll('.iv-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  if (running) { countdown = sec; }
-  addLog('Interval set: ' + sec + 's', 'i');
-}
-
-// ════════════════════════════════════════════════════
-// BOT START / STOP
-// ════════════════════════════════════════════════════
-function startBot() {
-  if (!BOT_TOKEN || !CHANNEL_ID) {
-    showToast('⚠️ Pehle CONFIG pe jao → Token & ID daalo!', true);
-    goPage('config');
-    return;
+// ══ WAKE LOCK (keeps screen + JS alive) ═════════════════════════
+async function acquireWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock=await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release',()=>{
+        addLog('⚠️ Wake Lock released — reacquiring...','w');
+        if(running) acquireWakeLock();
+      });
+      document.getElementById('wakeLockInfo').textContent='✅ Screen Lock ON — bot background mein chalega!';
+      addLog('🔒 Wake Lock acquired — screen active rahega','s');
+    } else {
+      document.getElementById('wakeLockInfo').textContent='⚠️ Wake Lock supported nahi — screen ON rakhna!';
+    }
+  } catch(e){
+    document.getElementById('wakeLockInfo').textContent='⚠️ Wake Lock failed — screen ON rakhna!';
   }
+}
 
-  running   = true;
-  sessStart = Date.now();
-  countdown = ivSec;
+// Re-acquire wake lock when page becomes visible again
+document.addEventListener('visibilitychange',async()=>{
+  if(!running) return;
+  if(document.visibilityState==='visible'){
+    // Re-acquire wake lock if released
+    if(!wakeLock || wakeLock.released){
+      await acquireWakeLock();
+    }
+    // Check if we missed any sends while tab was away
+    const now=Date.now();
+    if(now>=nextSendAt){
+      addLog('👁 Tab wapas active — missed send recover kar raha hai...','i');
+      nextSendAt=now+ivSec*1000;
+      doSend();
+    }
+  }
+});
 
-  // UI update
-  document.getElementById('btnStart').style.display = 'none';
-  document.getElementById('btnStop').style.display  = 'block';
-  const badge = document.getElementById('statusBadge');
-  badge.className = 'status-badge running';
-  document.getElementById('statusTxt').textContent = 'RUNNING';
-  document.getElementById('cdEmoji').textContent = '⚡';
+// ══ CONFIG ═══════════════════════════════════════════════════════
+function saveConfig(){
+  const t=document.getElementById('inputToken').value.trim();
+  const c=document.getElementById('inputChannel').value.trim();
+  if(!t){showToast('⚠️ Bot Token daalo!',true);return;}
+  if(!c){showToast('⚠️ Channel ID daalo!',true);return;}
+  if(!t.includes(':')){showToast('⚠️ Token format galat!',true);return;}
+  if(!c.startsWith('-')){showToast('⚠️ Channel ID - se shuru hona chahiye!',true);return;}
+  TOK=t; CH=c;
+  try{localStorage.setItem('ppi_t',t);localStorage.setItem('ppi_c',c);}catch(e){}
+  addLog('✅ Config saved!','s');
+  showToast('✅ Saved! HOME pe jao → START karo!');
+  document.getElementById('saveSuccess').classList.add('show');
+  setTimeout(()=>{document.getElementById('saveSuccess').classList.remove('show');goPage('home');},2000);
+}
 
-  addLog('🚀 Bot started!', 's');
+function setIv(sec,el){
+  ivSec=sec;
+  document.querySelectorAll('.iv-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  addLog('Interval: '+sec+'s','i');
+}
+
+// ══ BOT CONTROL ══════════════════════════════════════════════════
+async function startBot(){
+  if(!TOK||!CH){showToast('⚠️ Pehle CONFIG → Token & ID daalo!',true);goPage('config');return;}
+  running=true; sessStart=Date.now();
+  document.getElementById('btnStart').style.display='none';
+  document.getElementById('btnStop').style.display='block';
+  document.getElementById('statusBadge').className='status-badge running';
+  document.getElementById('statusTxt').textContent='RUNNING';
+  document.getElementById('cdEmoji').textContent='⚡';
+  addLog('🚀 Bot started!','s');
   showToast('✅ Bot started!');
 
+  // Acquire wake lock to keep JS running
+  await acquireWakeLock();
+
   // Send first message immediately
-  sendMessage();
+  nextSendAt=Date.now()+ivSec*1000;
+  doSend();
 
-  // Use timestamp-based approach — works even when tab is hidden
-  let lastSendTime = Date.now();
-  countdown = ivSec;
-
-  timerCD = setInterval(() => {
-    if (!running) return;
-
-    const now = Date.now();
-    const elapsed = Math.floor((now - lastSendTime) / 1000);
-    countdown = ivSec - elapsed;
-
-    if (countdown <= 0) {
-      lastSendTime = now;
-      countdown = ivSec;
-      sendMessage();
-    }
-
-    updateCD();
-  }, 1000);
-
-  // Session timer
-  timerSess = setInterval(updateSession, 1000);
-
-  // Handle page visibility — wake up when tab comes back
-  document.addEventListener('visibilitychange', () => {
-    if (!running) return;
-    if (!document.hidden) {
-      // Tab visible again — check if we missed any sends
-      const now = Date.now();
-      const elapsed = Math.floor((now - lastSendTime) / 1000);
-      if (elapsed >= ivSec) {
-        lastSendTime = now;
-        countdown = ivSec;
-        sendMessage();
-      } else {
-        countdown = ivSec - elapsed;
-      }
-      addLog('👁 Tab active — bot check kiya ✅', 'i');
-    }
-  });
+  // Main timer — checks every second using real timestamps
+  mainTimer=setInterval(tick,1000);
+  sessTimer=setInterval(updateSess,1000);
 }
 
-function stopBot() {
-  running = false;
-  clearInterval(timerCD);
-  clearInterval(timerSess);
-
-  document.getElementById('btnStart').style.display = 'block';
-  document.getElementById('btnStop').style.display  = 'none';
-  const badge = document.getElementById('statusBadge');
-  badge.className = 'status-badge';
-  document.getElementById('statusTxt').textContent = 'IDLE';
-  document.getElementById('cdEmoji').textContent = '⏸';
-  document.getElementById('cdVal').textContent = '--:--';
-  document.getElementById('kNext').textContent  = '--:--';
-  document.getElementById('cdType').textContent = 'Bot stopped';
-
-  addLog('⏹ Bot stopped', 'w');
+function stopBot(){
+  running=false;
+  clearInterval(mainTimer); clearInterval(sessTimer);
+  mainTimer=null; sessTimer=null;
+  // Release wake lock
+  if(wakeLock&&!wakeLock.released){wakeLock.release();wakeLock=null;}
+  document.getElementById('btnStart').style.display='block';
+  document.getElementById('btnStop').style.display='none';
+  document.getElementById('statusBadge').className='status-badge';
+  document.getElementById('statusTxt').textContent='IDLE';
+  document.getElementById('cdEmoji').textContent='⏸';
+  document.getElementById('cdVal').textContent='--:--';
+  document.getElementById('kNext').textContent='--:--';
+  document.getElementById('wakeLockInfo').textContent='💡 Bot stopped.';
+  addLog('⏹ Bot stopped','w');
   showToast('⏹ Bot stopped');
 }
 
-function sendNow() {
-  if (!BOT_TOKEN || !CHANNEL_ID) {
-    showToast('⚠️ Pehle CONFIG set karo!', true);
-    goPage('config');
-    return;
-  }
-  sendMessage();
-  if (running) countdown = ivSec;
+function sendNow(){
+  if(!TOK||!CH){showToast('⚠️ Pehle CONFIG set karo!',true);goPage('config');return;}
+  nextSendAt=Date.now()+ivSec*1000;
+  doSend();
 }
 
-// ════════════════════════════════════════════════════
-// CORE SEND MESSAGE
-// ════════════════════════════════════════════════════
-async function sendMessage() {
-  const type = getNextType();
-  const data = getFreshMsg(type);
-  if (!data) return;
+// ══ TICK — timestamp based, immune to throttling ═════════════════
+function tick(){
+  if(!running) return;
+  const now=Date.now();
+  const left=Math.max(0,Math.ceil((nextSendAt-now)/1000));
+  const m=String(Math.floor(left/60)).padStart(2,'0');
+  const s=String(left%60).padStart(2,'0');
+  document.getElementById('cdVal').textContent=m+':'+s;
+  document.getElementById('kNext').textContent=m+':'+s;
+  if(now>=nextSendAt){
+    nextSendAt=now+ivSec*1000;
+    doSend();
+  }
+}
 
-  // Show typing in preview
-  document.getElementById('typingDots').classList.add('show');
-  document.getElementById('cdType').textContent = 'Sending: ' + type;
+function updateSess(){
+  if(!sessStart) return;
+  const e=Math.floor((Date.now()-sessStart)/1000);
+  const m=String(Math.floor(e/60)).padStart(2,'0');
+  const s=String(e%60).padStart(2,'0');
+  document.getElementById('kSession').textContent=m+':'+s;
+}
 
-  // Show typing indicator in preview tab
-  setTimeout(() => {
-    document.getElementById('typingDots').classList.remove('show');
-    showPreview(data);
-  }, 1200);
-
-  // Build inline keyboard with direct Razorpay links
-  const keyboard = data.buttons.map(b => [{
-    text: b.text,
-    url:  RZP[b.plan]
-  }]);
-
-  // 1. Send animated sticker first
-  try {
-    await fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendSticker', {
-      method:  'POST',
-      headers: {'Content-Type': 'application/json'},
-      body:    JSON.stringify({
-        chat_id: CHANNEL_ID,
-        sticker: data.sticker
-      })
+// ══ SEND ══════════════════════════════════════════════════════════
+async function doSend(){
+  const type=getType();
+  const data=getFresh(type);
+  if(!data) return;
+  showPreview(data);
+  const kb=data.buttons.map(b=>[{text:b.text,url:RZP[b.plan]}]);
+  // Sticker first
+  try{
+    await fetch('https://api.telegram.org/bot'+TOK+'/sendSticker',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:CH,sticker:data.sticker})
     });
-  } catch(e) { /* sticker is optional */ }
-
-  // 2. Send main message with payment buttons
-  try {
-    const res  = await fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
-      method:  'POST',
-      headers: {'Content-Type': 'application/json'},
-      body:    JSON.stringify({
-        chat_id:                  CHANNEL_ID,
-        text:                     data.text,
-        parse_mode:               'Markdown',
-        disable_web_page_preview: true,
-        reply_markup:             {inline_keyboard: keyboard}
-      })
+  }catch(e){}
+  // Main message
+  try{
+    const res=await fetch('https://api.telegram.org/bot'+TOK+'/sendMessage',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:CH,text:data.text,parse_mode:'Markdown',
+        disable_web_page_preview:true,reply_markup:{inline_keyboard:kb}})
     });
-    const json = await res.json();
-
-    if (json.ok) {
-      sent++;
-      document.getElementById('kSent').textContent = sent;
-      chartData.push(1); chartData.shift();
-      buildChart();
-      addLog('✅ Sent: ' + type + ' — ' + data.buttons.length + ' payment buttons', 's');
+    const json=await res.json();
+    if(json.ok){
+      sent++; document.getElementById('kSent').textContent=sent;
+      chartData.push(1);chartData.shift();buildChart();
+      addLog('✅ Sent: '+type+' ('+data.buttons.length+' buttons)','s');
       showToast('✅ Message sent!');
-      // Switch to preview page to show sent message
       goPage('preview');
     } else {
-      errors++;
-      document.getElementById('kErr').textContent = errors;
-      addLog('❌ Error: ' + json.description, 'e');
-      showToast('❌ ' + json.description, true);
+      errors++;document.getElementById('kErr').textContent=errors;
+      addLog('❌ Telegram: '+json.description,'e');
+      showToast('❌ '+json.description,true);
     }
-  } catch(e) {
-    errors++;
-    document.getElementById('kErr').textContent = errors;
-    addLog('❌ Network error: ' + e.message, 'e');
-    showToast('❌ Network error!', true);
+  }catch(e){
+    errors++;document.getElementById('kErr').textContent=errors;
+    addLog('❌ Network: '+e.message,'e');
+    showToast('❌ Network error!',true);
   }
 }
 
-// ════════════════════════════════════════════════════
-// MESSAGE ROTATION — No repeats until all used
-// ════════════════════════════════════════════════════
-const TYPE_WEIGHTS = {signal:4, promo:3, result:2, urgency:1};
-
-function getNextType() {
-  const types = ['signal','promo','result','urgency'];
-  const pool  = [];
-  types.forEach(t => {
-    for (let i = 0; i < TYPE_WEIGHTS[t]; i++) pool.push(t);
-  });
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function getFreshMsg(type) {
-  const pool = MSGS[type];
-  if (!pool || !pool.length) return null;
-  if (msgUsed[type].length >= pool.length) msgUsed[type] = [];
+// ══ MESSAGE SYSTEM ════════════════════════════════════════════════
+const typeW=['signal','signal','signal','signal','promo','promo','promo','result','result','urgency'];
+function getType(){return typeW[Math.floor(Math.random()*typeW.length)];}
+function getFresh(type){
+  const pool=MSGS[type];
+  if(!pool) return null;
+  if(used[type].length>=pool.length) used[type]=[];
   let idx;
-  do { idx = Math.floor(Math.random() * pool.length); }
-  while (msgUsed[type].includes(idx));
-  msgUsed[type].push(idx);
+  do{idx=Math.floor(Math.random()*pool.length);}while(used[type].includes(idx));
+  used[type].push(idx);
   return pool[idx]();
 }
 
-// ════════════════════════════════════════════════════
-// MESSAGES — No AI word, Human style, Anuj Singh
-// ════════════════════════════════════════════════════
-const L = '━━━━━━━━━━━━━━━━━━━━━━';
-const D = '══════════════════════════';
-const b = t => '*' + t + '*';
-
-// Sticker IDs (real Telegram stickers)
-const STK = {
-  bull:   'CAACAgIAAxkBAAEKuGFlPgABRn_kW5N2MoVWTa-AAQAB2AAC3gADr0eqElTWKU5RvbpqHgQ',
-  bear:   'CAACAgIAAxkBAAEKuGNlPgABRoqLl5yCX4e-h_9LyIUBEgACHQADr0eqEtWF4qNiKJiDHgQ',
-  trophy: 'CAACAgIAAxkBAAEKuGVlPgABRjuCHH5ueOGGlIDDx4e_NwAC-QADr0eqEiIJxY7KVN1lHgQ',
-  fire:   'CAACAgIAAxkBAAEKuGdlPgABRmD7UrGpAAE2wJvNGp2YFIACGAAD769xCv6RDA5DXBaeHgQ',
-};
-
-const MSGS = {
-
-  signal: [
-    () => {
-      const st = ['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI','NTPC','SBIN'];
-      const s   = st[Math.floor(Math.random()*st.length)];
-      const p   = (Math.random()*3000+500).toFixed(2);
-      const t1  = (+p*1.038).toFixed(2);
-      const t2  = (+p*1.075).toFixed(2);
-      const sl  = (+p*0.974).toFixed(2);
-      const profit = Math.round(100000 * 0.038).toLocaleString('en-IN');
-      return {
-        sticker: STK.bull,
-        text:
+const MSGS={
+  signal:[
+    ()=>{
+      const st=['RELIANCE','TCS','HDFCBANK','INFY','ICICIBANK','BHARTIARTL','SUNPHARMA','TITAN','KOTAKBANK','MARUTI','NTPC','SBIN'];
+      const s=st[Math.floor(Math.random()*st.length)];
+      const p=(Math.random()*3000+500).toFixed(2);
+      const t1=(+p*1.038).toFixed(2),t2=(+p*1.075).toFixed(2),sl=(+p*0.974).toFixed(2);
+      const profit=Math.round(100000*0.038).toLocaleString('en-IN');
+      return{sticker:STK.bull,text:
 `⚡⚡⚡ ${b('LIVE BUY CALL')} ⚡⚡⚡
 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 ${D}
@@ -752,28 +465,16 @@ ki Premium mein kya milta hai!
 
 💸 ₹1 lakh pe agar ye target hit kiya:
 *Profit = ₹${profit}* — subscription se 8x zyada!
-
-🤔 Soch lo — ₹499 mein subscription
-ya ₹${profit} ka opportunity miss?
 ${L}
-👇 ${b('Abhi join karo — kal se mat chodo:')}`,
-        buttons: [
-          {text:'🔥 Join Now — ₹499/month', plan:'1m'},
-          {text:'💎 6 Months — ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 Best Value — ₹2,999/year', plan:'1y'},
-        ]
-      };
+👇 ${b('Abhi join karo:')}`,
+      buttons:[{text:'🔥 Join Now — ₹499/month',plan:'1m'},{text:'💎 6 Months — ₹1,999 ⭐',plan:'6m'},{text:'👑 Best Value — ₹2,999/year',plan:'1y'}]};
     },
-    () => {
-      const st = ['WIPRO','ONGC','BPCL','BAJFINANCE','HCLTECH','POWERGRID','HINDALCO'];
-      const s  = st[Math.floor(Math.random()*st.length)];
-      const p  = (Math.random()*2500+300).toFixed(2);
-      const t1 = (+p*0.962).toFixed(2);
-      const sl = (+p*1.026).toFixed(2);
-      const loss = Math.round(50000 * 0.038).toLocaleString('en-IN');
-      return {
-        sticker: STK.bear,
-        text:
+    ()=>{
+      const st=['WIPRO','ONGC','BAJFINANCE','HCLTECH','POWERGRID','HINDALCO'];
+      const s=st[Math.floor(Math.random()*st.length)];
+      const p=(Math.random()*2500+300).toFixed(2);
+      const t1=(+p*0.962).toFixed(2),sl=(+p*1.026).toFixed(2);
+      return{sticker:STK.bear,text:
 `🔴🔴🔴 ${b('SELL ALERT')} 🔴🔴🔴
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 ${D}
@@ -789,42 +490,26 @@ ${L}
 ⚠️ ${b('Ye call dekh ke kya socha?')}
 
 Jo log FREE channel mein hain
-unhe ye call milta hai — lekin
-*entry, exact target aur SL nahi.*
+unhe sirf call milta hai —
+entry, exact target aur SL nahi!
 
-Premium members ko milta hai:
-✅ Exact entry price
-✅ 2 targets with % targets
-✅ Stop loss — capital protect hoti hai
-✅ Real-time update
+Bina SL ke trade = gambling ❌
+SL ke saath trade = professional ✅
 
-❌ Bina SL ke trade = gambling
-✅ SL ke saath trade = professional
-
-₹50,000 pe bina SL ke loss ho sakta: *₹${loss}+*
-Premium subscription: *sirf ₹499*
+${b('Premium mein sab kuch ready milta hai.')}
 ${L}
-👇 ${b('Smart trader bano — abhi join karo:')}`,
-        buttons: [
-          {text:'✅ Join Premium — ₹499/mo', plan:'1m'},
-          {text:'💰 3 Months — ₹699', plan:'3m'},
-          {text:'👑 1 Year — ₹2,999', plan:'1y'},
-        ]
-      };
+👇 ${b('Smart trader bano — join karo:')}`,
+      buttons:[{text:'✅ Join Premium — ₹499/mo',plan:'1m'},{text:'💰 3 Months — ₹699',plan:'3m'},{text:'👑 1 Year — ₹2,999',plan:'1y'}]};
     },
-    () => {
-      const hour = new Date().getHours();
-      const isAM = hour < 12;
-      const timeStr = isAM ? 'Aaj Subah' : 'Aaj Sham';
-      const st = ['RELIANCE','INFY','TCS','HDFCBANK','ICICIBANK'];
-      const s = st[Math.floor(Math.random()*st.length)];
-      const p = (Math.random()*2000+800).toFixed(2);
-      const t1 = (+p*1.04).toFixed(2);
-      const sl = (+p*0.976).toFixed(2);
-      return {
-        sticker: STK.bull,
-        text:
-`🌅🌅🌅 ${b(timeStr+' Ka Call')} 🌅🌅🌅
+    ()=>{
+      const st=['RELIANCE','INFY','TCS','HDFCBANK'];
+      const s=st[Math.floor(Math.random()*st.length)];
+      const p=(Math.random()*2000+800).toFixed(2);
+      const t1=(+p*1.04).toFixed(2),sl=(+p*0.976).toFixed(2);
+      const h=new Date().getHours();
+      const ts=h<12?'Subah':'Sham';
+      return{sticker:STK.bull,text:
+`🌅🌅🌅 ${b(ts+' Ka Special Call')} 🌅🌅🌅
 ⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
 ${D}
 🟢 ${b('BUY — '+s+'.NSE')}
@@ -839,7 +524,7 @@ ${L}
 💬 ${b('Ek baat seedhi:')}
 
 Main roz subah market open hone se
-pehle apne ${b('Premium members')} ko
+pehle Premium members ko
 ready calls bhejta hoon.
 
 Wo log market open hote hi
@@ -848,25 +533,15 @@ entry le lete hain — bina confusion ke.
 ${b('Tum kya karte ho subah?')}
 ❌ Charts dekhte ho — samajh nahi aata
 ❌ News padhte ho — late ho jaate ho
-❌ Wait karte ho — opportunity nikal jaati hai
 
-👉 Premium mein: subah 9 AM pe
-sab ready milta hai — bas execute karo!
+👉 Premium mein: 9 AM pe sab ready!
 ${L}
 👇 ${b('Kal subah ready rehna hai? Join karo:')}`,
-        buttons: [
-          {text:'⚡ Start Tomorrow — ₹499', plan:'1m'},
-          {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year — ₹2,999', plan:'1y'},
-        ]
-      };
+      buttons:[{text:'⚡ Start Tomorrow — ₹499',plan:'1m'},{text:'🔥 6 Months — ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year — ₹2,999',plan:'1y'}]};
     },
   ],
-
-  promo: [
-    () => ({
-      sticker: STK.fire,
-      text:
+  promo:[
+    ()=>({sticker:STK.fire,text:
 `😤😤😤 ${b('STOCK MARKET SE THAK GAYE?')} 😤😤😤
 💔💔💔💔💔💔💔💔💔💔
 ${D}
@@ -877,7 +552,6 @@ ${D}
 😞 YouTube dekhte ho — confuse ho jaate ho
 😞 Tips group join kiye — sab scam nikle
 😞 Ek achha call chahiye — milta nahi
-😞 Market mein paisa hai — par kaise?
 
 ${b('Ye sab main jaanta hoon.')}
 Maine bhi yahi sab face kiya tha.
@@ -888,21 +562,12 @@ roz apni research share karta hoon.
 
 ✅ No confusing charts
 ✅ Seedha — BUY karo, ye price pe
-✅ Target ye hai, SL ye hai
-✅ Done. Simple.
+✅ Target ye hai, SL ye hai — Done!
 ${L}
 💎 ${b('Ek baar try karo — 1 mahina sirf ₹499')}
 👇 Join karo aaj:`,
-      buttons: [
-        {text:'😤 Haan Try Karta Hoon — ₹499', plan:'1m'},
-        {text:'💎 3 Months — ₹699', plan:'3m'},
-        {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year — ₹2,999', plan:'1y'},
-      ]
-    }),
-    () => ({
-      sticker: STK.fire,
-      text:
+    buttons:[{text:'😤 Haan Try Karta Hoon — ₹499',plan:'1m'},{text:'💎 3 Months — ₹699',plan:'3m'},{text:'🔥 6 Months — ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year — ₹2,999',plan:'1y'}]}),
+    ()=>({sticker:STK.fire,text:
 `💸💸💸 ${b('KITNA PAISA MISS HO RAHA HAI?')} 💸💸💸
 😱😱😱😱😱😱😱😱😱😱
 ${D}
@@ -914,73 +579,49 @@ Premium members ne is mahine:
 ✅ SUNPHARMA: +6.8% in 5 days
 ✅ BHARTIARTL: +3.1% in 2 days
 ✅ TCS: +5.3% in 4 days
-✅ NTPC: +4.7% in 3 days
 
-${b('Sirf in 5 calls pe ₹50,000 se:')}
-Potential profit = ${b('₹12,050+')}
+${b('Sirf in 4 calls pe ₹50,000 se:')}
+Potential profit = ${b('₹9,700+')}
 
 ${b('Tum kahan the ye time?')} 🤔
+FREE channel pe incomplete calls?
 
-FREE channel pe 2-3 incomplete
-calls dekh rahe the?
-
-₹12,050 potential profit MISS hua
-Subscription cost: sirf ₹499
+₹9,700 potential MISS hua
+Subscription: sirf ₹499
 
 ${b('Ye mahina bhi miss karoge?')}
 ${L}
 👇 ${b('Nahi — abhi join karo:')}`,
-      buttons: [
-        {text:'💸 Nahi Miss Karunga — ₹499', plan:'1m'},
-        {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year ₹2,999', plan:'1y'},
-      ]
-    }),
-    () => ({
-      sticker: STK.fire,
-      text:
+    buttons:[{text:'💸 Nahi Miss Karunga — ₹499',plan:'1m'},{text:'🔥 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]}),
+    ()=>({sticker:STK.fire,text:
 `🤝🤝🤝 ${b('MERI GUARANTEE')} 🤝🤝🤝
 💯💯💯💯💯💯💯💯💯💯
 ${D}
-${b('Main Anuj Singh — seedhi baat karta hoon:')}
+${b('Main Anuj Singh — seedhi baat:')}
 ${D}
 
-Main tumse jhooth nahi bolunga.
+❌ Har call profit nahi dega — sach
+❌ Risk zero nahi hai — sach
+❌ Raat bhar crorepati nahi banaonga — sach
 
-❌ Ye nahi bolonga ki har call profit dega
-❌ Ye nahi bolonga ki risk zero hai
-❌ Ye nahi bolonga ki crorepati ho jaoge
-
-${b('Ye bolonga:')}
-
+${b('Ye bolunga:')}
 ✅ Har call mein Stop Loss hoga
 ✅ Capital protect karna sabse pehle
 ✅ Realistic targets — hawa mein nahi
-✅ Agar call galat hua — honestly bolonga
-✅ Roz active rahunga — miss nahi karunga
+✅ Agar galat hua — honestly bolunga
 
 ${b('Real trading aise hi hoti hai.')}
 
 Jo channels guaranteed profit bolte hain
-wo sab FAKE hain — meri baat maano.
-
-Mujhe chahiye ki tum ${b('smart trader')} bano
-paisa kamao — aur mujhpe trust karo.
+wo sab FAKE hain — trust karo mujhpe.
 ${L}
 👇 ${b('Ek honest trader ke saath join karo:')}`,
-      buttons: [
-        {text:'🤝 Trust Hai — Join ₹499/mo', plan:'1m'},
-        {text:'💎 6 Months — ₹1,999', plan:'6m'},
-        {text:'👑 1 Year — ₹2,999', plan:'1y'},
-      ]
-    }),
-    () => ({
-      sticker: STK.fire,
-      text:
+    buttons:[{text:'🤝 Trust Hai — Join ₹499/mo',plan:'1m'},{text:'💎 6 Months — ₹1,999',plan:'6m'},{text:'👑 1 Year — ₹2,999',plan:'1y'}]}),
+    ()=>({sticker:STK.fire,text:
 `⏰⏰⏰ ${b('EK DIN KI ZINDAGI')} ⏰⏰⏰
 📅📅📅📅📅📅📅📅📅📅
 ${D}
-${b('Premium member ka ek din kaisa hota hai:')}
+${b('Premium member ka ek din:')}
 ${D}
 
 🌅 *8:45 AM* — Market brief milti hai
@@ -990,92 +631,66 @@ _"Aaj banking strong, IT cautious"_
 _"RELIANCE BUY ₹2847, T1: ₹2956, SL: ₹2780"_
 
 📈 *11:30 AM* — Update aata hai
-_"RELIANCE target 1 touch kar raha hai"_
+_"RELIANCE target touch kar raha hai"_
 
 ✅ *2:15 PM* — Result
-_"RELIANCE +3.8% — Target 1 HIT! 🎯"_
+_"RELIANCE +3.8% — Target HIT! 🎯"_
 
 🌆 *3:30 PM* — Evening summary
-_"Aaj 3/4 calls profitable, kal ka plan..."_
 
-${b('Itna simple hai ye system.')}
-
-Tum kya karte ho ye time?
-Office mein ho, busy ho — calls miss?
-
-Premium mein sab ready milta hai.
-${b('Bas execute karo.')}
+${b('Itna simple — bas execute karo.')}
 ${L}
 👇 ${b('Kal se ye system start karo:')}`,
-      buttons: [
-        {text:'📅 Start Tomorrow — ₹499', plan:'1m'},
-        {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 Best — 1 Year ₹2,999', plan:'1y'},
-      ]
-    }),
+    buttons:[{text:'📅 Start Tomorrow — ₹499',plan:'1m'},{text:'🔥 6 Months — ₹1,999 ⭐',plan:'6m'},{text:'👑 Best — 1 Year ₹2,999',plan:'1y'}]}),
   ],
-
-  result: [
-    () => {
-      const names  = ['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'];
-      const cities = ['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad'];
-      const name   = names[Math.floor(Math.random()*names.length)];
-      const city   = cities[Math.floor(Math.random()*cities.length)];
-      const months = Math.floor(Math.random()*6)+2;
-      const profit  = Math.floor(Math.random()*20000)+8000;
-      const sub     = months * 499;
-      return {
-        sticker: STK.trophy,
-        text:
+  result:[
+    ()=>{
+      const names=['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'];
+      const cities=['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad'];
+      const name=names[Math.floor(Math.random()*names.length)];
+      const city=cities[Math.floor(Math.random()*cities.length)];
+      const months=Math.floor(Math.random()*6)+2;
+      const profit=Math.floor(Math.random()*20000)+8000;
+      const sub=months*499;
+      return{sticker:STK.trophy,text:
 `💬💬💬 ${b('MEMBER NE LIKHA')} 💬💬💬
 ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️
 ${D}
 👤 ${b(name+', '+city)} (${months} months member)
 ${D}
 
-_"${name} bhai yahan se pehle main_
-_bahut paisa duba chuka tha random_
-_tips follow karke._
+_"Yahan se pehle main bahut paisa_
+_duba chuka tha random tips se._
 
 _Profit Pulse join kiya — pehle week_
-_mein hi RELIANCE ka call aaya._
-_Entry li, target hit hua._
-_₹3,200 profit ek call mein._
+_RELIANCE ka call aaya._
+_Entry li, target hit — ₹3,200 profit!_
 
 _Is mahine total: ₹${profit.toLocaleString('en-IN')} profit._
-_${months} mahine ki subscription: ₹${sub.toLocaleString('en-IN')}_
+_${months} mahine subscription: ₹${sub.toLocaleString('en-IN')}_
 _Net mein bahut aage hoon."_
 
-${b('Ye real message hai — fake nahi.')}
-
-👤 ${b('Anuj Singh')} ki team ki taraf se:
-_"${name} bhai ka shukriya trust ke liye"_
+${b('Ye real message — fake nahi.')}
+👤 ${b('Anuj Singh')}: _"Shukriya trust ke liye"_
 ${L}
 💎 ${b('Aap bhi ye experience chahte ho?')}
 👇 Join karo:`,
-        buttons: [
-          {text:'❤️ Haan, Join Karta Hoon ₹499', plan:'1m'},
-          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year ₹2,999', plan:'1y'},
-        ]
-      };
+      buttons:[{text:'❤️ Haan, Join Karta Hoon ₹499',plan:'1m'},{text:'🔥 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]};
     },
-    () => {
-      const st = ['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC'];
-      const s  = st[Math.floor(Math.random()*st.length)];
-      const pct = (Math.random()*5+3).toFixed(1);
-      const days = Math.floor(Math.random()*4)+2;
-      const profit = Math.round(100000 * pct/100).toLocaleString('en-IN');
-      return {
-        sticker: STK.trophy,
-        text:
+    ()=>{
+      const st=['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC'];
+      const s=st[Math.floor(Math.random()*st.length)];
+      const pct=(Math.random()*5+3).toFixed(1);
+      const days=Math.floor(Math.random()*4)+2;
+      const profit=Math.round(100000*pct/100).toLocaleString('en-IN');
+      return{sticker:STK.trophy,text:
 `🎯🎯🎯 ${b('TARGET HIT — PROOF')} 🎯🎯🎯
 🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
 ${D}
-✅ ${b(s+' — '+pct+'% in '+days+' days')}
+✅ ${b(s+' — +'+pct+'% in '+days+' days')}
 ${D}
 
-Ye call sirf ${b('Premium members')} ko mila tha.
+Ye call sirf ${b('Premium members')} ko mila.
 FREE channel pe nahi tha ye.
 
 💰 ₹1 lakh pe profit: ${b('+₹'+profit)}
@@ -1084,119 +699,83 @@ FREE channel pe nahi tha ye.
 ${b('Ek call ne subscription 8x recover kiya.')}
 
 Aur ye sirf 1 call tha.
-Mahine mein aise 30-40 calls aate hain.
+Mahine mein aise 30-40 calls aate hain!
 
-${b('Tum abhi FREE channel pe kya dekh rahe ho?')}
-Incomplete calls jisme SL nahi,
-target nahi, confidence nahi.
+${b('Tum abhi FREE pe kya dekh rahe ho?')}
+Incomplete calls — SL nahi, target nahi.
 
-${b('Ye fair nahi hai tumhare saath.')}
-Isliye tumhe invite kar raha hoon.
+${b('Ye fair nahi tumhare saath.')}
+Isliye invite kar raha hoon.
 ${L}
-👇 ${b('Premium mein aao — ye calls lo:')}`,
-        buttons: [
-          {text:'🎯 Haan Chahiye — ₹499/mo', plan:'1m'},
-          {text:'💰 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year ₹2,999', plan:'1y'},
-        ]
-      };
+👇 ${b('Premium mein aao:')}`,
+      buttons:[{text:'🎯 Haan Chahiye — ₹499/mo',plan:'1m'},{text:'💰 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]};
     },
-    () => {
-      const w1 = (Math.random()*4+2).toFixed(1);
-      const w2 = (Math.random()*6+4).toFixed(1);
-      const w3 = (Math.random()*3+2).toFixed(1);
-      const total = Math.round((+w1+ +w2+ +w3)*1000).toLocaleString('en-IN');
-      return {
-        sticker: STK.trophy,
-        text:
+    ()=>{
+      const w1=(Math.random()*4+2).toFixed(1),w2=(Math.random()*6+4).toFixed(1),w3=(Math.random()*3+2).toFixed(1);
+      const total=Math.round((+w1+ +w2+ +w3)*1000).toLocaleString('en-IN');
+      return{sticker:STK.trophy,text:
 `📊📊📊 ${b('IS HAFTE KA SACH')} 📊📊📊
 🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
 ${D}
 👤 ${b('Anuj Singh')} — Weekly Report
 ${D}
 
-${b('Premium members ne liye ye calls:')}
-
 ✅ RELIANCE +${w1}% — ${b('Target HIT')}
 ✅ HDFCBANK +${w2}% — ${b('Both targets!')}
 ✅ INFY +${w3}% — ${b('Partial booked')}
 🔄 TCS — Still holding
-❌ WIPRO -2.1% — SL hit (capital safe rahi)
+❌ WIPRO -2.1% — SL hit *(capital safe rahi)*
 
-${b('3 wins, 1 running, 1 SL = Net +₹'+total+' on ₹1L')}
+${b('3 wins, 1 running, 1 SL')}
+Net: +₹${total} on ₹1 lakh 💰
 
 ${b('Ye week tum kahan the?')}
-
-FREE channel pe tha? Wahan sirf
-entry thi — target aur SL nahi.
-
 Bina SL ke WIPRO hold karte toh
--8%, -10% bhi ho sakta tha.
+-8%, -10% bhi ho sakta tha!
 
-${b('Anuj Singh ka system tumhe bachata bhi hai')}
-aur kamaata bhi hai.
+${b('Anuj Singh ka system bachata bhi hai!')}
 ${L}
 👇 ${b('Agla hafte miss mat karo:')}`,
-        buttons: [
-          {text:'📊 Join ₹499/month', plan:'1m'},
-          {text:'🥇 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year ₹2,999', plan:'1y'},
-        ]
-      };
+      buttons:[{text:'📊 Join ₹499/month',plan:'1m'},{text:'🥇 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]};
     },
   ],
-
-  urgency: [
-    () => {
-      const spots = Math.floor(Math.random()*8)+4;
-      return {
-        sticker: STK.fire,
-        text:
+  urgency:[
+    ()=>{
+      const spots=Math.floor(Math.random()*8)+4;
+      return{sticker:STK.fire,text:
 `🚨🚨🚨 ${b('LAST '+spots+' SEATS!')} 🚨🚨🚨
 ⏰⏰⏰⏰⏰⏰⏰⏰⏰⏰
 ${D}
-${b('Anuj Singh ki taraf se important notice:')}
+${b('Anuj Singh ki taraf se notice:')}
 ${D}
 
 Main personally har Premium member
 ki help karta hoon — isliye limit hai.
 
-${b('Aaj sirf '+spots+' spots available hain.')}
+${b('Aaj sirf '+spots+' spots baaki hain!')}
 
 Jab ye bhar jaayein:
 ❌ New members nahi le sakta
-❌ Quality suffer hogi nahi chahta
 ❌ Next batch = 30 din wait
 
 ${b('Tum soch rahe ho to galat waqt hai.')}
 
-Jo members hain wo enjoy kar rahe hain:
+Jo members hain enjoy kar rahe hain:
 ✅ Daily 12-15 calls
 ✅ Personal attention
 ✅ Real results
 
-${b('Tumhara spot koi aur le lega.')}
-Aur tum phir yahan se FREE
-incomplete calls dekhoge. 😔
+${b('Tumhara spot koi aur le lega!')} 😔
 ${L}
 ⚡ ${b('Last chance — abhi secure karo:')}`,
-        buttons: [
-          {text:'⚡ Abhi Join ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year ₹2,999', plan:'1y'},
-        ]
-      };
+      buttons:[{text:'⚡ Abhi Join ₹499/month',plan:'1m'},{text:'🔥 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]};
     },
-    () => ({
-      sticker: STK.fire,
-      text:
+    ()=>({sticker:STK.fire,text:
 `😰😰😰 ${b('EK SAWAL TUMSE')} 😰😰😰
 🤔🤔🤔🤔🤔🤔🤔🤔🤔🤔
 ${D}
 ${b('Anuj Singh pooch raha hai:')}
 ${D}
-
-Agar main tumse poochon —
 
 _"Pichle 3 mahino mein stock market_
 _se kitna profit hua?"_
@@ -1205,7 +784,7 @@ ${b('Honestly jawab do.')}
 
 😔 Profit hua nahi?
 😔 Loss hua?
-😔 Trade hi nahi kiya — samajh nahi aaya?
+😔 Trade hi nahi kiya?
 
 ${b('Ye tum akele nahi ho.')}
 90% retail traders yahi face karte hain.
@@ -1218,262 +797,63 @@ ${b('Solution? Profit Pulse India Premium.')}
 Main roz apni mehnat share karta hoon —
 tum sirf execute karo.
 
-Ye ₹499 tum invest kar rahe ho
-${b('apni financial life mein.')}
+Ye ₹499 = ${b('apni financial life mein investment.')}
 ${L}
 👇 ${b('Pehla kadam uthao aaj:')}`,
-      buttons: [
-        {text:'🤝 Pehla Kadam — ₹499/mo', plan:'1m'},
-        {text:'💎 6 Months ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year ₹2,999', plan:'1y'},
-      ]
-    }),
+    buttons:[{text:'🤝 Pehla Kadam — ₹499/mo',plan:'1m'},{text:'💎 6 Months ₹1,999 ⭐',plan:'6m'},{text:'👑 1 Year ₹2,999',plan:'1y'}]}),
   ]
 };
 
-// ════════════════════════════════════════════════════
-// UI HELPERS
-// ════════════════════════════════════════════════════
-function showPreview(data) {
-  const el = document.getElementById('msgPreview');
-  el.textContent = data.text;
-  el.classList.remove('pop');
-  void el.offsetWidth;
-  el.classList.add('pop');
-
-  const bp = document.getElementById('previewBtns');
-  bp.innerHTML = data.buttons.map(b =>
-    '<div class="preview-btn" onclick="window.open(\''+RZP[b.plan]+'\',\'_blank\')">'
-    + b.text + ' ↗</div>'
+// ══ UI HELPERS ════════════════════════════════════════════════════
+function showPreview(data){
+  const el=document.getElementById('msgPreview');
+  el.textContent=data.text;
+  el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
+  document.getElementById('previewBtns').innerHTML=data.buttons.map(b=>
+    '<div class="preview-btn" onclick="window.open(\''+RZP[b.plan]+'\',\'_blank\')">'+b.text+' ↗</div>'
   ).join('');
-
-  document.getElementById('msgTime').textContent =
-    new Date().toLocaleTimeString('en-IN');
+  document.getElementById('msgTime').textContent=new Date().toLocaleTimeString('en-IN');
 }
-
-function updateCD() {
-  const m = String(Math.floor(countdown/60)).padStart(2,'0');
-  const s = String(countdown%60).padStart(2,'0');
-  const val = m+':'+s;
-  document.getElementById('cdVal').textContent  = val;
-  document.getElementById('kNext').textContent  = val;
+function buildChart(){
+  const mx=Math.max(...chartData,1);
+  document.getElementById('chartBars').innerHTML=chartData.map((v,i)=>
+    '<div class="mbar" style="height:'+((v/mx)*46+3)+'px;opacity:'+(0.3+i*0.09)+'"></div>'
+  ).join('');
 }
-
-function updateSession() {
-  if (!sessStart) return;
-  const e = Math.floor((Date.now()-sessStart)/1000);
-  const m = String(Math.floor(e/60)).padStart(2,'0');
-  const s = String(e%60).padStart(2,'0');
-  document.getElementById('kSession').textContent = m+':'+s;
-}
-
-function buildChart() {
-  const mx = Math.max(...chartData, 1);
-  document.getElementById('chartBars').innerHTML =
-    chartData.map((v,i) =>
-      '<div class="mbar" style="height:'+((v/mx)*46+3)+'px;opacity:'+(0.3+i*0.09)+'"></div>'
-    ).join('');
-}
-
-function syncStats() {
-  document.getElementById('sSent').textContent  = sent;
-  document.getElementById('sErr').textContent   = errors;
-  document.getElementById('sSess').textContent  = document.getElementById('kSession').textContent;
-  document.getElementById('sNext').textContent  = document.getElementById('kNext').textContent;
+function syncStats(){
+  document.getElementById('sSent').textContent=sent;
+  document.getElementById('sErr').textContent=errors;
+  document.getElementById('sSess').textContent=document.getElementById('kSession').textContent;
+  document.getElementById('sNext').textContent=document.getElementById('kNext').textContent;
   buildChart();
-  // Sync log
-  document.getElementById('statsLog').innerHTML =
-    document.getElementById('logBox').innerHTML;
-  document.getElementById('statsLog').scrollTop = 9999;
+  document.getElementById('statsLog').innerHTML=document.getElementById('logBox').innerHTML;
+  document.getElementById('statsLog').scrollTop=9999;
+}
+function addLog(msg,type){
+  const box=document.getElementById('logBox');
+  const t=new Date().toLocaleTimeString('en-IN',{hour12:false});
+  const d=document.createElement('div');
+  d.className='log-entry';
+  d.innerHTML='<span class="log-time">'+t+'</span><span class="log-msg '+type+'">'+msg+'</span>';
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+function showToast(msg,isErr){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast'+(isErr?' err':'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-function addLog(msg, type) {
-  const box = document.getElementById('logBox');
-  const t   = new Date().toLocaleTimeString('en-IN', {hour12:false});
-  const d   = document.createElement('div');
-  d.className = 'log-entry';
-  d.innerHTML = '<span class="log-time">'+t+'</span>'
-    + '<span class="log-msg '+type+'">'+msg+'</span>';
-  box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
-}
-
-function showToast(msg, isErr) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'toast' + (isErr ? ' err' : '');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ════════════════════════════════════════════════════
-// SERVICE WORKER — Background engine
-// ════════════════════════════════════════════════════
-let swReady = false;
-let swReg   = null;
-
-async function initSW() {
-  if (!('serviceWorker' in navigator)) {
-    addLog('⚠️ Service Worker not supported — using fallback', 'w');
-    return false;
-  }
-  try {
-    swReg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
-    await navigator.serviceWorker.ready;
-    swReady = true;
-    addLog('✅ Background engine ready!', 's');
-
-    // Listen for messages from SW
-    navigator.serviceWorker.addEventListener('message', (e) => {
-      const { type, msgType, desc } = e.data;
-      if (type === 'SENT') {
-        sent++;
-        document.getElementById('kSent').textContent = sent;
-        chartData.push(1); chartData.shift();
-        buildChart();
-        addLog('✅ Sent: ' + msgType + ' — payment buttons included', 's');
-        showToast('✅ Message sent!');
-      }
-      if (type === 'ERROR') {
-        errors++;
-        document.getElementById('kErr').textContent = errors;
-        addLog('❌ Error: ' + desc, 'e');
-        showToast('❌ ' + desc, true);
-      }
-      if (type === 'LOG') {
-        addLog(e.data.msg, e.data.cls || 'i');
-      }
-    });
-    return true;
-  } catch(e) {
-    addLog('⚠️ SW failed — using direct mode: ' + e.message, 'w');
-    return false;
-  }
-}
-
-function swSend(type, data) {
-  if (!swReady || !navigator.serviceWorker.controller) return false;
-  navigator.serviceWorker.controller.postMessage({ type, data });
-  return true;
-}
-
-// ════════════════════════════════════════════════════
-// OVERRIDE startBot to use SW
-// ════════════════════════════════════════════════════
-const _origStart = startBot;
-startBot = async function() {
-  if (!BOT_TOKEN || !CHANNEL_ID) {
-    showToast('⚠️ Pehle CONFIG pe jao → Token & ID daalo!', true);
-    goPage('config');
-    return;
-  }
-
-  running   = true;
-  sessStart = Date.now();
-
-  document.getElementById('btnStart').style.display = 'none';
-  document.getElementById('btnStop').style.display  = 'block';
-  const badge = document.getElementById('statusBadge');
-  badge.className = 'status-badge running';
-  document.getElementById('statusTxt').textContent = 'RUNNING';
-  document.getElementById('cdEmoji').textContent = '⚡';
-
-  timerSess = setInterval(updateSession, 1000);
-
-  // Countdown display timer
-  let cdLeft = ivSec;
-  timerCD = setInterval(() => {
-    cdLeft--;
-    if (cdLeft <= 0) cdLeft = ivSec;
-    const m = String(Math.floor(cdLeft/60)).padStart(2,'0');
-    const s2 = String(cdLeft%60).padStart(2,'0');
-    document.getElementById('cdVal').textContent = m+':'+s2;
-    document.getElementById('kNext').textContent = m+':'+s2;
-  }, 1000);
-
-  // Try SW first
-  if (swReady) {
-    const ok = swSend('START', {
-      token: BOT_TOKEN,
-      channel: CHANNEL_ID,
-      interval: ivSec
-    });
-    if (ok) {
-      addLog('🚀 Bot started in BACKGROUND mode! Tab change karo — koi fark nahi!', 's');
-      showToast('✅ Bot started — background mode ON!');
-      return;
-    }
-  }
-
-  // Fallback: direct mode
-  addLog('🚀 Bot started — direct mode', 's');
-  showToast('✅ Bot started!');
-  sendMessage();
-  let lastSend = Date.now();
-  clearInterval(timerCD);
-  timerCD = setInterval(() => {
-    const elapsed = Math.floor((Date.now()-lastSend)/1000);
-    const left = ivSec - elapsed;
-    const cdL = Math.max(0, left);
-    const m = String(Math.floor(cdL/60)).padStart(2,'0');
-    const s2 = String(cdL%60).padStart(2,'0');
-    document.getElementById('cdVal').textContent = m+':'+s2;
-    document.getElementById('kNext').textContent = m+':'+s2;
-    if (left <= 0) { lastSend = Date.now(); sendMessage(); }
-  }, 1000);
-  document.addEventListener('visibilitychange', () => {
-    if (!running || document.hidden) return;
-    const elapsed = Math.floor((Date.now()-lastSend)/1000);
-    if (elapsed >= ivSec) { lastSend = Date.now(); sendMessage(); }
-  });
-};
-
-const _origStop = stopBot;
-stopBot = function() {
-  running = false;
-  clearInterval(timerCD);
-  clearInterval(timerSess);
-  if (swReady) swSend('STOP', {});
-  document.getElementById('btnStart').style.display = 'block';
-  document.getElementById('btnStop').style.display  = 'none';
-  const badge = document.getElementById('statusBadge');
-  badge.className = 'status-badge';
-  document.getElementById('statusTxt').textContent = 'IDLE';
-  document.getElementById('cdEmoji').textContent = '⏸';
-  document.getElementById('cdVal').textContent = '--:--';
-  document.getElementById('kNext').textContent  = '--:--';
-  document.getElementById('cdType').textContent = 'Bot stopped';
-  addLog('⏹ Bot stopped', 'w');
-  showToast('⏹ Bot stopped');
-};
-
-const _origSendNow = sendNow;
-sendNow = function() {
-  if (!BOT_TOKEN || !CHANNEL_ID) {
-    showToast('⚠️ Pehle CONFIG set karo!', true);
-    goPage('config');
-    return;
-  }
-  if (swReady) {
-    swSend('SEND_NOW', { token: BOT_TOKEN, channel: CHANNEL_ID, interval: ivSec });
-  } else {
-    sendMessage();
-  }
-};
-
-// ════════════════════════════════════════════════════
-// INIT — Load saved config + init SW
-// ════════════════════════════════════════════════════
-window.addEventListener('load', async () => {
-  try {
-    const t = localStorage.getItem('ppi_token');
-    const c = localStorage.getItem('ppi_channel');
-    if (t) { document.getElementById('inputToken').value   = t; BOT_TOKEN  = t; }
-    if (c) { document.getElementById('inputChannel').value = c; CHANNEL_ID = c; }
-    if (t && c) addLog('✅ Config loaded from memory!', 's');
-  } catch(e) {}
+// ══ INIT ══════════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  try{
+    const t=localStorage.getItem('ppi_t');
+    const c=localStorage.getItem('ppi_c');
+    if(t){document.getElementById('inputToken').value=t;TOK=t;}
+    if(c){document.getElementById('inputChannel').value=c;CH=c;}
+    if(t&&c) addLog('✅ Config loaded!','s');
+  }catch(e){}
   buildChart();
-  await initSW();
+  addLog('💡 Tip: Bot chalate waqt screen ON rakhna ya PWA use karna!','w');
 });
 </script>
 </body>
