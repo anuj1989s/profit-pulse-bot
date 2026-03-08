@@ -1307,9 +1307,164 @@ function showToast(msg, isErr) {
 }
 
 // ════════════════════════════════════════════════════
-// INIT — Load saved config
+// SERVICE WORKER — Background engine
 // ════════════════════════════════════════════════════
-window.addEventListener('load', () => {
+let swReady = false;
+let swReg   = null;
+
+async function initSW() {
+  if (!('serviceWorker' in navigator)) {
+    addLog('⚠️ Service Worker not supported — using fallback', 'w');
+    return false;
+  }
+  try {
+    swReg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+    await navigator.serviceWorker.ready;
+    swReady = true;
+    addLog('✅ Background engine ready!', 's');
+
+    // Listen for messages from SW
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      const { type, msgType, desc } = e.data;
+      if (type === 'SENT') {
+        sent++;
+        document.getElementById('kSent').textContent = sent;
+        chartData.push(1); chartData.shift();
+        buildChart();
+        addLog('✅ Sent: ' + msgType + ' — payment buttons included', 's');
+        showToast('✅ Message sent!');
+      }
+      if (type === 'ERROR') {
+        errors++;
+        document.getElementById('kErr').textContent = errors;
+        addLog('❌ Error: ' + desc, 'e');
+        showToast('❌ ' + desc, true);
+      }
+      if (type === 'LOG') {
+        addLog(e.data.msg, e.data.cls || 'i');
+      }
+    });
+    return true;
+  } catch(e) {
+    addLog('⚠️ SW failed — using direct mode: ' + e.message, 'w');
+    return false;
+  }
+}
+
+function swSend(type, data) {
+  if (!swReady || !navigator.serviceWorker.controller) return false;
+  navigator.serviceWorker.controller.postMessage({ type, data });
+  return true;
+}
+
+// ════════════════════════════════════════════════════
+// OVERRIDE startBot to use SW
+// ════════════════════════════════════════════════════
+const _origStart = startBot;
+startBot = async function() {
+  if (!BOT_TOKEN || !CHANNEL_ID) {
+    showToast('⚠️ Pehle CONFIG pe jao → Token & ID daalo!', true);
+    goPage('config');
+    return;
+  }
+
+  running   = true;
+  sessStart = Date.now();
+
+  document.getElementById('btnStart').style.display = 'none';
+  document.getElementById('btnStop').style.display  = 'block';
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge running';
+  document.getElementById('statusTxt').textContent = 'RUNNING';
+  document.getElementById('cdEmoji').textContent = '⚡';
+
+  timerSess = setInterval(updateSession, 1000);
+
+  // Countdown display timer
+  let cdLeft = ivSec;
+  timerCD = setInterval(() => {
+    cdLeft--;
+    if (cdLeft <= 0) cdLeft = ivSec;
+    const m = String(Math.floor(cdLeft/60)).padStart(2,'0');
+    const s2 = String(cdLeft%60).padStart(2,'0');
+    document.getElementById('cdVal').textContent = m+':'+s2;
+    document.getElementById('kNext').textContent = m+':'+s2;
+  }, 1000);
+
+  // Try SW first
+  if (swReady) {
+    const ok = swSend('START', {
+      token: BOT_TOKEN,
+      channel: CHANNEL_ID,
+      interval: ivSec
+    });
+    if (ok) {
+      addLog('🚀 Bot started in BACKGROUND mode! Tab change karo — koi fark nahi!', 's');
+      showToast('✅ Bot started — background mode ON!');
+      return;
+    }
+  }
+
+  // Fallback: direct mode
+  addLog('🚀 Bot started — direct mode', 's');
+  showToast('✅ Bot started!');
+  sendMessage();
+  let lastSend = Date.now();
+  clearInterval(timerCD);
+  timerCD = setInterval(() => {
+    const elapsed = Math.floor((Date.now()-lastSend)/1000);
+    const left = ivSec - elapsed;
+    const cdL = Math.max(0, left);
+    const m = String(Math.floor(cdL/60)).padStart(2,'0');
+    const s2 = String(cdL%60).padStart(2,'0');
+    document.getElementById('cdVal').textContent = m+':'+s2;
+    document.getElementById('kNext').textContent = m+':'+s2;
+    if (left <= 0) { lastSend = Date.now(); sendMessage(); }
+  }, 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (!running || document.hidden) return;
+    const elapsed = Math.floor((Date.now()-lastSend)/1000);
+    if (elapsed >= ivSec) { lastSend = Date.now(); sendMessage(); }
+  });
+};
+
+const _origStop = stopBot;
+stopBot = function() {
+  running = false;
+  clearInterval(timerCD);
+  clearInterval(timerSess);
+  if (swReady) swSend('STOP', {});
+  document.getElementById('btnStart').style.display = 'block';
+  document.getElementById('btnStop').style.display  = 'none';
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge';
+  document.getElementById('statusTxt').textContent = 'IDLE';
+  document.getElementById('cdEmoji').textContent = '⏸';
+  document.getElementById('cdVal').textContent = '--:--';
+  document.getElementById('kNext').textContent  = '--:--';
+  document.getElementById('cdType').textContent = 'Bot stopped';
+  addLog('⏹ Bot stopped', 'w');
+  showToast('⏹ Bot stopped');
+};
+
+const _origSendNow = sendNow;
+sendNow = function() {
+  if (!BOT_TOKEN || !CHANNEL_ID) {
+    showToast('⚠️ Pehle CONFIG set karo!', true);
+    goPage('config');
+    return;
+  }
+  if (swReady) {
+    swSend('SEND_NOW', { token: BOT_TOKEN, channel: CHANNEL_ID, interval: ivSec });
+  } else {
+    sendMessage();
+  }
+};
+
+// ════════════════════════════════════════════════════
+// INIT — Load saved config + init SW
+// ════════════════════════════════════════════════════
+window.addEventListener('load', async () => {
   try {
     const t = localStorage.getItem('ppi_token');
     const c = localStorage.getItem('ppi_channel');
@@ -1318,6 +1473,7 @@ window.addEventListener('load', () => {
     if (t && c) addLog('✅ Config loaded from memory!', 's');
   } catch(e) {}
   buildChart();
+  await initSW();
 });
 </script>
 </body>
