@@ -697,7 +697,7 @@ const MSGS = {
       const t1  = (+p*1.038).toFixed(2);
       const t2  = (+p*1.075).toFixed(2);
       const sl  = (+p*0.974).toFixed(2);
-      const rsi = Math.floor(Math.random()*18+26);
+      const profit = Math.round(100000 * 0.038).toLocaleString('en-IN');
       return {
         sticker: STK.bull,
         text:
@@ -707,28 +707,33 @@ ${D}
 🟢 ${b('BUY')} — ${b(s+'.NSE')}
 ${D}
 
-💰 Entry Zone: ₹${p}
-🎯 Target 1:  ₹${t1} *(+3.8%)*
-🎯 Target 2:  ₹${t2} *(+7.5%)*
-🛑 Stop Loss: ₹${sl} *(-2.6%)*
-📊 Risk:Reward = 1:2.9 ✅
+💰 Entry: ₹${p}
+🎯 Target 1: ₹${t1} *(+3.8%)*
+🎯 Target 2: ₹${t2} *(+7.5%)*
+🛑 Stop Loss: ₹${sl}
 
-📋 *Technical Setup:*
-• RSI ${rsi} — Strong oversold zone
-• Volume surge above average
-• Bullish crossover confirmed
-• Key support holding strong
-
-⏱ Holding: 3-7 days
 👤 ${b('Anuj Singh')}
 ${L}
-⚠️ Ye FREE preview hai
-💎 ${b('Premium mein DAILY 12-15 calls!')}
-👇 Join karo:`,
+❓ ${b('Jaante ho ye call FREE mein kyun diya?')}
+
+Kyunki chahta hoon tum khud dekho
+ki Premium mein kya milta hai!
+
+✅ Ye sirf 1 call hai
+✅ Premium mein DAILY 12-15 aise calls
+✅ Har call mein entry, target, SL ready
+
+💸 ₹1 lakh pe agar ye target hit kiya:
+*Profit = ₹${profit}* — subscription se 8x zyada!
+
+🤔 Soch lo — ₹499 mein subscription
+ya ₹${profit} ka opportunity miss?
+${L}
+👇 ${b('Abhi join karo — kal se mat chodo:')}`,
         buttons: [
-          {text:'🥉 1 Month — ₹499', plan:'1m'},
-          {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year — ₹2,999', plan:'1y'},
+          {text:'🔥 Join Now — ₹499/month', plan:'1m'},
+          {text:'💎 6 Months — ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 Best Value — ₹2,999/year', plan:'1y'},
         ]
       };
     },
@@ -737,9 +742,8 @@ ${L}
       const s  = st[Math.floor(Math.random()*st.length)];
       const p  = (Math.random()*2500+300).toFixed(2);
       const t1 = (+p*0.962).toFixed(2);
-      const t2 = (+p*0.928).toFixed(2);
       const sl = (+p*1.026).toFixed(2);
-      const rsi = Math.floor(Math.random()*8+70);
+      const loss = Math.round(50000 * 0.038).toLocaleString('en-IN');
       return {
         sticker: STK.bear,
         text:
@@ -749,68 +753,84 @@ ${D}
 🔴 ${b('SELL')} — ${b(s+'.NSE')}
 ${D}
 
-💰 Entry Zone: ₹${p}
-🎯 Target 1:  ₹${t1} *(-3.8%)*
-🎯 Target 2:  ₹${t2} *(-7.2%)*
-🛑 Stop Loss: ₹${sl} *(+2.6%)*
-📊 Risk:Reward = 1:2.8 ✅
+💰 Entry: ₹${p}
+🎯 Target: ₹${t1} *(-3.8%)*
+🛑 Stop Loss: ₹${sl}
 
-📋 *Technical Setup:*
-• RSI ${rsi} — Overbought zone
-• Bearish divergence on MACD
-• Double top resistance formed
-• Heavy selling at this level
-
-⏱ Holding: 2-5 days
 👤 ${b('Anuj Singh')}
 ${L}
-🔒 Premium members ko pehle mila!
-👇 ${b('Miss mat karo — join karo:')}`,
+⚠️ ${b('Ye call dekh ke kya socha?')}
+
+Jo log FREE channel mein hain
+unhe ye call milta hai — lekin
+*entry, exact target aur SL nahi.*
+
+Premium members ko milta hai:
+✅ Exact entry price
+✅ 2 targets with % targets
+✅ Stop loss — capital protect hoti hai
+✅ Real-time update
+
+❌ Bina SL ke trade = gambling
+✅ SL ke saath trade = professional
+
+₹50,000 pe bina SL ke loss ho sakta: *₹${loss}+*
+Premium subscription: *sirf ₹499*
+${L}
+👇 ${b('Smart trader bano — abhi join karo:')}`,
         buttons: [
-          {text:'⚡ 1 Month — ₹499', plan:'1m'},
-          {text:'🥈 3 Months — ₹699', plan:'3m'},
+          {text:'✅ Join Premium — ₹499/mo', plan:'1m'},
+          {text:'💰 3 Months — ₹699', plan:'3m'},
           {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
     },
     () => {
-      const stocks1 = ['RELIANCE','TCS','INFY'];
-      const stocks2 = ['HDFCBANK','ICICIBANK','SBIN'];
-      const s1 = stocks1[Math.floor(Math.random()*stocks1.length)];
-      const s2 = stocks2[Math.floor(Math.random()*stocks2.length)];
-      const p1 = (Math.random()*2000+800).toFixed(2);
-      const p2 = (Math.random()*1500+400).toFixed(2);
-      const t1a = (+p1*1.042).toFixed(2);
-      const t1b = (+p2*1.035).toFixed(2);
-      const sl1 = (+p1*0.976).toFixed(2);
-      const sl2 = (+p2*0.978).toFixed(2);
+      const hour = new Date().getHours();
+      const isAM = hour < 12;
+      const timeStr = isAM ? 'Aaj Subah' : 'Aaj Sham';
+      const st = ['RELIANCE','INFY','TCS','HDFCBANK','ICICIBANK'];
+      const s = st[Math.floor(Math.random()*st.length)];
+      const p = (Math.random()*2000+800).toFixed(2);
+      const t1 = (+p*1.04).toFixed(2);
+      const sl = (+p*0.976).toFixed(2);
       return {
         sticker: STK.bull,
         text:
-`💥💥💥 ${b('DUAL CALL — 2 STOCKS!')} 💥💥💥
-⚡🔥⚡🔥⚡🔥⚡🔥⚡🔥
+`🌅🌅🌅 ${b(timeStr+' Ka Call')} 🌅🌅🌅
+⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡
 ${D}
-📌 ${b('CALL 1 — '+s1+'.NSE')} 🟢
-💰 Entry: ₹${p1}
-🎯 Target: ₹${t1a} *(+4.2%)*
-🛑 SL: ₹${sl1} | R:R = 1:3.1
+🟢 ${b('BUY — '+s+'.NSE')}
+${D}
 
-📌 ${b('CALL 2 — '+s2+'.NSE')} 🟢
-💰 Entry: ₹${p2}
-🎯 Target: ₹${t1b} *(+3.5%)*
-🛑 SL: ₹${sl2} | R:R = 1:2.7
-${L}
-📋 FII buying active + strong breadth
-Both stocks at key support levels
+💰 Entry: ₹${p}
+🎯 Target: ₹${t1} *(+4%)*
+🛑 Stop Loss: ₹${sl}
 
 👤 ${b('Anuj Singh')}
 ${L}
-🆓 Sirf 2 FREE — Premium mein 12-15!
-👇 ${b('Join karo:')}`,
+💬 ${b('Ek baat seedhi:')}
+
+Main roz subah market open hone se
+pehle apne ${b('Premium members')} ko
+ready calls bhejta hoon.
+
+Wo log market open hote hi
+entry le lete hain — bina confusion ke.
+
+${b('Tum kya karte ho subah?')}
+❌ Charts dekhte ho — samajh nahi aata
+❌ News padhte ho — late ho jaate ho
+❌ Wait karte ho — opportunity nikal jaati hai
+
+👉 Premium mein: subah 9 AM pe
+sab ready milta hai — bas execute karo!
+${L}
+👇 ${b('Kal subah ready rehna hai? Join karo:')}`,
         buttons: [
-          {text:'🥉 Start ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 1 Year ₹2,999', plan:'1y'},
+          {text:'⚡ Start Tomorrow — ₹499', plan:'1m'},
+          {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year — ₹2,999', plan:'1y'},
         ]
       };
     },
@@ -820,138 +840,236 @@ ${L}
     () => ({
       sticker: STK.fire,
       text:
-`📊📊📊 ${b('AAJ KA SCORECARD')} 📊📊📊
-🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
+`😤😤😤 ${b('STOCK MARKET SE THAK GAYE?')} 😤😤😤
+💔💔💔💔💔💔💔💔💔💔
 ${D}
-👤 ${b('Anuj Singh')} — Aaj Ka Result:
+${b('Ye cheezein feel hoti hain tumhe?')}
 ${D}
 
-✅ Call 1 → +3.2% — Target HIT 🎯
-✅ Call 2 → +5.1% — Target HIT 🎯
-✅ Call 3 → +4.7% — Target HIT 🎯
-🔄 Call 4 → Still running *(+2.1%)*
-❌ Call 5 → -1.8% — SL triggered
+😞 Khud research karte ho — fir bhi loss
+😞 YouTube dekhte ho — confuse ho jaate ho
+😞 Tips group join kiye — sab scam nikle
+😞 Ek achha call chahiye — milta nahi
+😞 Market mein paisa hai — par kaise?
 
-${b('Win Rate: 3/4 = 75% ✅')}
+${b('Ye sab main jaanta hoon.')}
+Maine bhi yahi sab face kiya tha.
 
-💰 ₹1 lakh pe estimated: ${b('+₹11,300')}
-💸 Subscription: ${b('sirf ₹499/month')}
+Isliye banaya hai ${b('Profit Pulse India')} —
+jahan main khud ${b('Anuj Singh')}
+roz apni research share karta hoon.
+
+✅ No confusing charts
+✅ Seedha — BUY karo, ye price pe
+✅ Target ye hai, SL ye hai
+✅ Done. Simple.
 ${L}
-💎 ${b('Ye sab sirf Premium mein milta hai!')}
-👇 Kab join karoge?`,
+💎 ${b('Ek baar try karo — 1 mahina sirf ₹499')}
+👇 Join karo aaj:`,
       buttons: [
-        {text:'🥉 1 Month — ₹499', plan:'1m'},
-        {text:'🥈 3 Months — ₹699', plan:'3m'},
-        {text:'🥇 6 Months — ₹1,999 ⭐', plan:'6m'},
+        {text:'😤 Haan Try Karta Hoon — ₹499', plan:'1m'},
+        {text:'💎 3 Months — ₹699', plan:'3m'},
+        {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
         {text:'👑 1 Year — ₹2,999', plan:'1y'},
       ]
     }),
     () => ({
       sticker: STK.fire,
       text:
-`⚔️⚔️⚔️ ${b('FREE vs PREMIUM')} ⚔️⚔️⚔️
-💎💎💎💎💎💎💎💎💎💎
+`💸💸💸 ${b('KITNA PAISA MISS HO RAHA HAI?')} 💸💸💸
+😱😱😱😱😱😱😱😱😱😱
 ${D}
-Feature         FREE    PREMIUM
-${L}
-Calls/day        2-3   ${b('12-15')} ✅
-Stop Loss         ❌     ✅
-Two Targets       ❌     ✅
-Morning Brief     ❌     ✅
-Evening Report    ❌     ✅
-Swing Trades      ❌     ✅
-Sector Analysis   ❌     ✅
-DM Support        ❌     ✅
-${L}
-💰 ${b('Cost breakdown:')}
-Monthly:  ₹499 = ${b('₹16/day')}
-6 Months: ₹1999 = ${b('₹11/day')}
-1 Year:   ₹2999 = ${b('₹8/day')} 👑
+${b('Ek calculation dekho:')}
+${D}
 
-Ek chai = ₹20 | Premium = ₹16/day ☕
-${b('Chai se bhi sasta!')}
+Premium members ne is mahine:
+✅ RELIANCE: +4.2% in 3 days
+✅ SUNPHARMA: +6.8% in 5 days
+✅ BHARTIARTL: +3.1% in 2 days
+✅ TCS: +5.3% in 4 days
+✅ NTPC: +4.7% in 3 days
 
-👤 ${b('Anuj Singh')}
+${b('Sirf in 5 calls pe ₹50,000 se:')}
+Potential profit = ${b('₹12,050+')}
+
+${b('Tum kahan the ye time?')} 🤔
+
+FREE channel pe 2-3 incomplete
+calls dekh rahe the?
+
+₹12,050 potential profit MISS hua
+Subscription cost: sirf ₹499
+
+${b('Ye mahina bhi miss karoge?')}
 ${L}
-💎 ${b('Kaunsa plan loge?')} 👇`,
+👇 ${b('Nahi — abhi join karo:')}`,
       buttons: [
-        {text:'☕ ₹499/mo — Chai se sasta!', plan:'1m'},
+        {text:'💸 Nahi Miss Karunga — ₹499', plan:'1m'},
         {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-        {text:'👑 1 Year ₹2,999 — ₹8/day', plan:'1y'},
+        {text:'👑 1 Year ₹2,999', plan:'1y'},
       ]
     }),
-    () => {
-      const pct  = Math.floor(Math.random()*8+78);
-      const calls = Math.floor(Math.random()*30+180);
-      return {
-        sticker: STK.fire,
-        text:
-`📈📈📈 ${b('30 DIN KA REPORT')} 📈📈📈
-🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    () => ({
+      sticker: STK.fire,
+      text:
+`🤝🤝🤝 ${b('MERI GUARANTEE')} 🤝🤝🤝
+💯💯💯💯💯💯💯💯💯💯
 ${D}
-👤 ${b('Anuj Singh')} — Last Month
+${b('Main Anuj Singh — seedhi baat karta hoon:')}
 ${D}
 
-Total calls:    ${b(calls+'')}
-Win rate:       ${b(pct+'%')} ✅
-Avg return:     ${b('+4.2% per call')}
-Best call:      ${b('+18.3% (SUNPHARMA)')}
-Biggest loss:   -2.8%
+Main tumse jhooth nahi bolunga.
 
-🟢🟢🟢🟢 Wins
-🔴 Loss (${100-pct}%)
-${L}
-${b('Agar ₹50,000 se trade karte:')}
-Potential gain: ${b('₹'+Math.round(50000*pct/100*0.042).toLocaleString('en-IN')+'+')}
-Subscription:   ${b('sirf ₹499')} 🤯
+❌ Ye nahi bolonga ki har call profit dega
+❌ Ye nahi bolonga ki risk zero hai
+❌ Ye nahi bolonga ki crorepati ho jaoge
 
-ROI = ${b(Math.round(Math.round(50000*pct/100*0.042)/499)+'x subscription!')}
+${b('Ye bolonga:')}
+
+✅ Har call mein Stop Loss hoga
+✅ Capital protect karna sabse pehle
+✅ Realistic targets — hawa mein nahi
+✅ Agar call galat hua — honestly bolonga
+✅ Roz active rahunga — miss nahi karunga
+
+${b('Real trading aise hi hoti hai.')}
+
+Jo channels guaranteed profit bolte hain
+wo sab FAKE hain — meri baat maano.
+
+Mujhe chahiye ki tum ${b('smart trader')} bano
+paisa kamao — aur mujhpe trust karo.
 ${L}
-💎 ${b('Join karo — pehle hafte mein recover!')}
-👇`,
-        buttons: [
-          {text:'📈 Join Now — ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months — ₹1,999', plan:'6m'},
-          {text:'👑 1 Year — Max Profit', plan:'1y'},
-        ]
-      };
-    },
+👇 ${b('Ek honest trader ke saath join karo:')}`,
+      buttons: [
+        {text:'🤝 Trust Hai — Join ₹499/mo', plan:'1m'},
+        {text:'💎 6 Months — ₹1,999', plan:'6m'},
+        {text:'👑 1 Year — ₹2,999', plan:'1y'},
+      ]
+    }),
+    () => ({
+      sticker: STK.fire,
+      text:
+`⏰⏰⏰ ${b('EK DIN KI ZINDAGI')} ⏰⏰⏰
+📅📅📅📅📅📅📅📅📅📅
+${D}
+${b('Premium member ka ek din kaisa hota hai:')}
+${D}
+
+🌅 *8:45 AM* — Market brief milti hai
+_"Aaj banking strong, IT cautious"_
+
+⚡ *9:15 AM* — Calls ready hote hain
+_"RELIANCE BUY ₹2847, T1: ₹2956, SL: ₹2780"_
+
+📈 *11:30 AM* — Update aata hai
+_"RELIANCE target 1 touch kar raha hai"_
+
+✅ *2:15 PM* — Result
+_"RELIANCE +3.8% — Target 1 HIT! 🎯"_
+
+🌆 *3:30 PM* — Evening summary
+_"Aaj 3/4 calls profitable, kal ka plan..."_
+
+${b('Itna simple hai ye system.')}
+
+Tum kya karte ho ye time?
+Office mein ho, busy ho — calls miss?
+
+Premium mein sab ready milta hai.
+${b('Bas execute karo.')}
+${L}
+👇 ${b('Kal se ye system start karo:')}`,
+      buttons: [
+        {text:'📅 Start Tomorrow — ₹499', plan:'1m'},
+        {text:'🔥 6 Months — ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 Best — 1 Year ₹2,999', plan:'1y'},
+      ]
+    }),
   ],
 
   result: [
     () => {
-      const st = ['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC','TCS','INFY'];
-      const s  = st[Math.floor(Math.random()*st.length)];
-      const pct  = (Math.random()*5+3).toFixed(1);
-      const days = Math.floor(Math.random()*4)+2;
-      const profit = Math.round(50000 * pct / 100);
+      const names  = ['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'];
+      const cities = ['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad'];
+      const name   = names[Math.floor(Math.random()*names.length)];
+      const city   = cities[Math.floor(Math.random()*cities.length)];
+      const months = Math.floor(Math.random()*6)+2;
+      const profit  = Math.floor(Math.random()*20000)+8000;
+      const sub     = months * 499;
       return {
         sticker: STK.trophy,
         text:
-`🎯🎯🎯 ${b('TARGET HIT!')} 🎯🎯🎯
+`💬💬💬 ${b('MEMBER NE LIKHA')} 💬💬💬
+❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️
+${D}
+👤 ${b(name+', '+city)} (${months} months member)
+${D}
+
+_"${name} bhai yahan se pehle main_
+_bahut paisa duba chuka tha random_
+_tips follow karke._
+
+_Profit Pulse join kiya — pehle week_
+_mein hi RELIANCE ka call aaya._
+_Entry li, target hit hua._
+_₹3,200 profit ek call mein._
+
+_Is mahine total: ₹${profit.toLocaleString('en-IN')} profit._
+_${months} mahine ki subscription: ₹${sub.toLocaleString('en-IN')}_
+_Net mein bahut aage hoon."_
+
+${b('Ye real message hai — fake nahi.')}
+
+👤 ${b('Anuj Singh')} ki team ki taraf se:
+_"${name} bhai ka shukriya trust ke liye"_
+${L}
+💎 ${b('Aap bhi ye experience chahte ho?')}
+👇 Join karo:`,
+        buttons: [
+          {text:'❤️ Haan, Join Karta Hoon ₹499', plan:'1m'},
+          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'👑 1 Year ₹2,999', plan:'1y'},
+        ]
+      };
+    },
+    () => {
+      const st = ['RELIANCE','BHARTIARTL','SUNPHARMA','TITAN','HDFCBANK','NTPC'];
+      const s  = st[Math.floor(Math.random()*st.length)];
+      const pct = (Math.random()*5+3).toFixed(1);
+      const days = Math.floor(Math.random()*4)+2;
+      const profit = Math.round(100000 * pct/100).toLocaleString('en-IN');
+      return {
+        sticker: STK.trophy,
+        text:
+`🎯🎯🎯 ${b('TARGET HIT — PROOF')} 🎯🎯🎯
 🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
 ${D}
-✅ ${b(s+'.NSE — CALL RESULT')}
+✅ ${b(s+' — '+pct+'% in '+days+' days')}
 ${D}
 
-📅 ${days} din mein ${b('+'+pct+'%')} return!
+Ye call sirf ${b('Premium members')} ko mila tha.
+FREE channel pe nahi tha ye.
 
-📈 Journey:
-🔵 Entry → 📈 Mid → ✅ ${b('TARGET HIT!')}
+💰 ₹1 lakh pe profit: ${b('+₹'+profit)}
+💸 1 month subscription: ${b('₹499')}
 
-💰 On ₹50,000 capital:
-Profit = ${b('+₹'+profit.toLocaleString('en-IN'))} 🤑
+${b('Ek call ne subscription 8x recover kiya.')}
 
-🔒 ${b('Ye call FREE channel pe nahi tha')}
-Sirf Premium members ko mila tha!
+Aur ye sirf 1 call tha.
+Mahine mein aise 30-40 calls aate hain.
 
-👤 ${b('Anuj Singh')} ka call tha ye
+${b('Tum abhi FREE channel pe kya dekh rahe ho?')}
+Incomplete calls jisme SL nahi,
+target nahi, confidence nahi.
+
+${b('Ye fair nahi hai tumhare saath.')}
+Isliye tumhe invite kar raha hoon.
 ${L}
-🤔 Aap kitne aur calls miss karoge?
-👇 ${b('Abhi join karo:')}`,
+👇 ${b('Premium mein aao — ye calls lo:')}`,
         buttons: [
-          {text:'⚡ Join ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
+          {text:'🎯 Haan Chahiye — ₹499/mo', plan:'1m'},
+          {text:'💰 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
         ]
       };
@@ -960,72 +1078,42 @@ ${L}
       const w1 = (Math.random()*4+2).toFixed(1);
       const w2 = (Math.random()*6+4).toFixed(1);
       const w3 = (Math.random()*3+2).toFixed(1);
-      const profit = Math.round((+w1+ +w2+ +w3-2.1)*1000);
+      const total = Math.round((+w1+ +w2+ +w3)*1000).toLocaleString('en-IN');
       return {
         sticker: STK.trophy,
         text:
-`🏆🏆🏆 ${b('WEEKLY SCORECARD')} 🏆🏆🏆
-📊📊📊📊📊📊📊📊📊📊
+`📊📊📊 ${b('IS HAFTE KA SACH')} 📊📊📊
+🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆
 ${D}
-👤 ${b('Anuj Singh')} — This Week
+👤 ${b('Anuj Singh')} — Weekly Report
 ${D}
 
-RELIANCE → ${b('+'+w1+'%')} ✅ Target HIT
-HDFCBANK → ${b('+'+w2+'%')} ✅ Both targets!
-INFY     → ${b('+'+w3+'%')} ✅ Partial profit
-TCS      → 🔄 Still holding
-WIPRO    → ❌ -2.1% SL hit
+${b('Premium members ne liye ye calls:')}
 
-${b('Win Rate: 75% ✅')}
-🟢🟢🟢 Wins vs 🔴 1 Loss
+✅ RELIANCE +${w1}% — ${b('Target HIT')}
+✅ HDFCBANK +${w2}% — ${b('Both targets!')}
+✅ INFY +${w3}% — ${b('Partial booked')}
+🔄 TCS — Still holding
+❌ WIPRO -2.1% — SL hit (capital safe rahi)
 
-💰 ₹1 lakh pe: ${b('+₹'+profit.toLocaleString('en-IN'))}
-💸 Monthly sub: ${b('sirf ₹499')}
+${b('3 wins, 1 running, 1 SL = Net +₹'+total+' on ₹1L')}
+
+${b('Ye week tum kahan the?')}
+
+FREE channel pe tha? Wahan sirf
+entry thi — target aur SL nahi.
+
+Bina SL ke WIPRO hold karte toh
+-8%, -10% bhi ho sakta tha.
+
+${b('Anuj Singh ka system tumhe bachata bhi hai')}
+aur kamaata bhi hai.
 ${L}
-💎 ${b('Next week ke calls chahiye?')}
-👇`,
+👇 ${b('Agla hafte miss mat karo:')}`,
         buttons: [
           {text:'📊 Join ₹499/month', plan:'1m'},
           {text:'🥇 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
-        ]
-      };
-    },
-    () => {
-      const names  = ['Rahul','Priya','Amit','Suresh','Deepa','Vijay','Kavita','Rohan'];
-      const cities = ['Delhi','Mumbai','Pune','Bangalore','Hyderabad','Ahmedabad'];
-      const name   = names[Math.floor(Math.random()*names.length)];
-      const city   = cities[Math.floor(Math.random()*cities.length)];
-      const months = Math.floor(Math.random()*8)+2;
-      const profit = Math.floor(Math.random()*18000)+6000;
-      return {
-        sticker: STK.trophy,
-        text:
-`⭐⭐⭐⭐⭐ ${b('SUCCESS STORY')} ⭐⭐⭐⭐⭐
-💬💬💬💬💬💬💬💬💬💬
-${D}
-👤 ${b(name+' — '+city)}
-🗓 Premium member: ${months} months
-${D}
-
-_"Pehle khud trade karta tha,_
-_bahut loss hota tha._
-_Yahan join kiya — entry, target,_
-_stop loss sab ready milta hai._
-
-_Is mahine ₹${profit.toLocaleString('en-IN')} profit hua!_
-_Subscription pehle hafte wapas."_ 💰
-
-${b('Rating: ⭐⭐⭐⭐⭐')}
-
-Shared with: ${b('Anuj Singh')}
-${L}
-💎 ${b('Aap bhi ye results chahte ho?')}
-👇`,
-        buttons: [
-          {text:'🚀 Start ₹499/month', plan:'1m'},
-          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
-          {text:'👑 Yearly ₹2,999', plan:'1y'},
         ]
       };
     },
@@ -1037,31 +1125,37 @@ ${L}
       return {
         sticker: STK.fire,
         text:
-`🚨🚨🚨 ${b('URGENT NOTICE!')} 🚨🚨🚨
+`🚨🚨🚨 ${b('LAST '+spots+' SEATS!')} 🚨🚨🚨
 ⏰⏰⏰⏰⏰⏰⏰⏰⏰⏰
 ${D}
-‼️ ${b('SIRF '+spots+' SPOTS BAAKI!')}
+${b('Anuj Singh ki taraf se important notice:')}
 ${D}
 
-Quality maintain karne ke liye
-members limit hai channel mein!
+Main personally har Premium member
+ki help karta hoon — isliye limit hai.
 
-Jab limit fill ho jaaye:
-❌ Channel locked ho jaayega
-❌ New members nahi aa sakte
-❌ Next batch: 30 din baad
+${b('Aaj sirf '+spots+' spots available hain.')}
 
-🔥 ${b('Sirf Aaj Ke Liye Special Price:')}
-3 Month: ₹999 → ${b('₹699')} 🔥
-6 Month: ₹1999 → ${b('₹1,499')} 🔥
+Jab ye bhar jaayein:
+❌ New members nahi le sakta
+❌ Quality suffer hogi nahi chahta
+❌ Next batch = 30 din wait
 
-👤 ${b('Anuj Singh')}
+${b('Tum soch rahe ho to galat waqt hai.')}
+
+Jo members hain wo enjoy kar rahe hain:
+✅ Daily 12-15 calls
+✅ Personal attention
+✅ Real results
+
+${b('Tumhara spot koi aur le lega.')}
+Aur tum phir yahan se FREE
+incomplete calls dekhoge. 😔
 ${L}
-⚡ ${b('Abhi secure karo apni seat!')}
-👇`,
+⚡ ${b('Last chance — abhi secure karo:')}`,
         buttons: [
-          {text:'🔥 3 Months ₹699 — Limited!', plan:'3m'},
-          {text:'💥 6 Months ₹1,499 — Grab!', plan:'6m'},
+          {text:'⚡ Abhi Join ₹499/month', plan:'1m'},
+          {text:'🔥 6 Months ₹1,999 ⭐', plan:'6m'},
           {text:'👑 1 Year ₹2,999', plan:'1y'},
         ]
       };
@@ -1069,34 +1163,42 @@ ${L}
     () => ({
       sticker: STK.fire,
       text:
-`💭💭💭 ${b('SOCH RAHE HO?')} 💭💭💭
+`😰😰😰 ${b('EK SAWAL TUMSE')} 😰😰😰
 🤔🤔🤔🤔🤔🤔🤔🤔🤔🤔
 ${D}
-Ye sochte sochte kya hua?
+${b('Anuj Singh pooch raha hai:')}
 ${D}
 
-_"Kal se join karta hoon..."_ ❌
-_"Thoda aur wait karta hoon..."_ ❌
-_"Sasta aane do..."_ ❌
+Agar main tumse poochon —
 
-${b('Result of waiting:')}
-❌ 47 calls miss ho gayi
-❌ ₹23,000+ potential profit gaya
-❌ 3 mahine waste ho gaye
+_"Pichle 3 mahino mein stock market_
+_se kitna profit hua?"_
 
-${b('Jo log abhi join karte hain:')}
-✅ Kal ke calls paate hain
-✅ Is week ka profit lete hain
-✅ Subscription pehle hafte recover
+${b('Honestly jawab do.')}
 
-👤 ${b('Anuj Singh')}
+😔 Profit hua nahi?
+😔 Loss hua?
+😔 Trade hi nahi kiya — samajh nahi aaya?
+
+${b('Ye tum akele nahi ho.')}
+90% retail traders yahi face karte hain.
+
+Problem? Galat information.
+Incomplete calls. No risk management.
+
+${b('Solution? Profit Pulse India Premium.')}
+
+Main roz apni mehnat share karta hoon —
+tum sirf execute karo.
+
+Ye ₹499 tum invest kar rahe ho
+${b('apni financial life mein.')}
 ${L}
-💎 ${b('Decision time — abhi ya kabhi nahi!')}
-👇`,
+👇 ${b('Pehla kadam uthao aaj:')}`,
       buttons: [
-        {text:'✅ Join Karta Hoon — ₹499', plan:'1m'},
-        {text:'🔥 Smart — 6M ₹1,999', plan:'6m'},
-        {text:'👑 Best ROI — 1Y ₹2,999', plan:'1y'},
+        {text:'🤝 Pehla Kadam — ₹499/mo', plan:'1m'},
+        {text:'💎 6 Months ₹1,999 ⭐', plan:'6m'},
+        {text:'👑 1 Year ₹2,999', plan:'1y'},
       ]
     }),
   ]
