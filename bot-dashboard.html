@@ -914,16 +914,20 @@ function setIvM(s,el){
 }
 
 function saveMobileConfig(){
-  const t=document.getElementById('mCfgToken').value.trim();
-  const c=document.getElementById('mCfgChannel').value.trim();
+  const t=(document.getElementById('mCfgToken').value||'').trim();
+  const c=(document.getElementById('mCfgChannel').value||'').trim();
+  if(!t){toast('⚠️ Bot Token daalo!');document.getElementById('mCfgToken').focus();return;}
+  if(!c){toast('⚠️ Channel ID daalo!');document.getElementById('mCfgChannel').focus();return;}
   // Sync to desktop inputs
   document.getElementById('cfgToken').value=t;
   document.getElementById('cfgChannel').value=c;
-  if(!t||!c){toast('⚠️ Bot Token aur Channel ID daalo!');return;}
-  log('✅ Config saved!','s');
-  toast('✅ Saved! Home pe jao aur START karo 🚀');
+  log('✅ Config saved! Token: ...'+t.slice(-6),'s');
+  // Show saved indicator
+  const ind=document.getElementById('savedIndicator');
+  if(ind){ind.style.display='block';setTimeout(()=>ind.style.display='none',4000);}
+  toast('✅ Config saved! START karo ab! 🚀');
   syncMobileLog();
-  switchPage('home');
+  setTimeout(()=>switchPage('home'),1500);
 }
 
 function startBotM(){
@@ -1090,16 +1094,52 @@ setTimeout(()=>{
       <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);">⚙️ CONFIGURATION</div>
     </div>
 
-    <div class="cfg-box" style="display:block !important;">
-      <div style="margin-bottom:14px;">
-        <label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px;">BOT TOKEN</label>
-        <input id="mCfgToken" class="fi-input" style="width:100%;padding:13px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:var(--text);font-size:12px;font-family:'Share Tech Mono',monospace;outline:none;" placeholder="123456789:ABCdef..."/>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;">
+      
+      <div style="margin-bottom:18px;">
+        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:8px;font-weight:600;">🤖 BOT TOKEN</label>
+        <textarea id="mCfgToken" 
+          rows="2"
+          style="width:100%;padding:14px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:#00ff88;font-size:13px;font-family:'Share Tech Mono',monospace;outline:none;resize:none;line-height:1.5;-webkit-user-select:text;user-select:text;"
+          placeholder="Yahan Bot Token paste karo&#10;Example: 123456789:ABCdef..."
+          onclick="this.focus()"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
+        <div style="font-size:10px;color:var(--muted);margin-top:5px;">BotFather se mila token yahan daalo</div>
       </div>
-      <div style="margin-bottom:14px;">
-        <label style="font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px;">FREE CHANNEL ID</label>
-        <input id="mCfgChannel" class="fi-input" style="width:100%;padding:13px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:var(--text);font-size:12px;font-family:'Share Tech Mono',monospace;outline:none;" placeholder="-1001234567890"/>
+
+      <div style="margin-bottom:18px;">
+        <label style="font-size:11px;color:var(--gold);letter-spacing:1px;display:block;margin-bottom:8px;font-weight:600;">📢 FREE CHANNEL ID</label>
+        <textarea id="mCfgChannel"
+          rows="2"
+          style="width:100%;padding:14px;border-radius:10px;background:#07090f;border:1px solid var(--border);color:#00ff88;font-size:13px;font-family:'Share Tech Mono',monospace;outline:none;resize:none;line-height:1.5;-webkit-user-select:text;user-select:text;"
+          placeholder="Yahan Channel ID paste karo&#10;Example: -1001234567890"
+          onclick="this.focus()"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
+        <div style="font-size:10px;color:var(--muted);margin-top:5px;">@userinfobot se mila channel ID</div>
       </div>
-      <button onclick="saveMobileConfig()" style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold3),var(--gold2));color:#06080f;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;">💾 SAVE CONFIG</button>
+
+      <button onclick="saveMobileConfig()" 
+        style="width:100%;padding:16px;border-radius:14px;border:none;
+        background:linear-gradient(135deg,var(--gold3),var(--gold2));
+        color:#06080f;font-family:'Orbitron',monospace;font-size:14px;
+        font-weight:900;letter-spacing:1px;cursor:pointer;
+        box-shadow:0 6px 20px rgba(247,201,72,0.3);">
+        💾 SAVE &amp; ACTIVATE
+      </button>
+
+      <!-- Saved indicator -->
+      <div id="savedIndicator" style="display:none;margin-top:12px;text-align:center;
+        color:var(--green);font-size:12px;font-weight:600;">
+        ✅ Config saved! Home pe jao aur START karo 🚀
+      </div>
     </div>
 
     <!-- Payment Links Info -->
