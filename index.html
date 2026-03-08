@@ -513,7 +513,7 @@ function startBot() {
 
   running   = true;
   sessStart = Date.now();
-  countdown = 0; // send immediately
+  countdown = ivSec;
 
   // UI update
   document.getElementById('btnStart').style.display = 'none';
@@ -529,19 +529,46 @@ function startBot() {
   // Send first message immediately
   sendMessage();
 
-  // Countdown timer
+  // Use timestamp-based approach — works even when tab is hidden
+  let lastSendTime = Date.now();
+  countdown = ivSec;
+
   timerCD = setInterval(() => {
     if (!running) return;
-    countdown--;
-    updateCD();
+
+    const now = Date.now();
+    const elapsed = Math.floor((now - lastSendTime) / 1000);
+    countdown = ivSec - elapsed;
+
     if (countdown <= 0) {
-      sendMessage();
+      lastSendTime = now;
       countdown = ivSec;
+      sendMessage();
     }
+
+    updateCD();
   }, 1000);
 
   // Session timer
   timerSess = setInterval(updateSession, 1000);
+
+  // Handle page visibility — wake up when tab comes back
+  document.addEventListener('visibilitychange', () => {
+    if (!running) return;
+    if (!document.hidden) {
+      // Tab visible again — check if we missed any sends
+      const now = Date.now();
+      const elapsed = Math.floor((now - lastSendTime) / 1000);
+      if (elapsed >= ivSec) {
+        lastSendTime = now;
+        countdown = ivSec;
+        sendMessage();
+      } else {
+        countdown = ivSec - elapsed;
+      }
+      addLog('👁 Tab active — bot check kiya ✅', 'i');
+    }
+  });
 }
 
 function stopBot() {
